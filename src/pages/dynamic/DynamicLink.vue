@@ -1,19 +1,10 @@
-<!-- <div>
-    <h2>Appointment Details</h2>
-    <p>
-      {{ appointmentId }}
-    </p>
-    <p>
-      {{ appointment }}
-    </p>
-  </div> -->
 <template>
+  <!-- POPUP -->
   <q-dialog v-model="login" persistent>
     <q-card style="min-width: 350px">
       <q-card-section>
         <div class="text-h6">Username eingeben</div>
       </q-card-section>
-
       <q-card-section v-model="popupVisible">
         <q-input
           v-model="username"
@@ -52,6 +43,7 @@
     </q-card>
   </q-dialog>
 
+  <!-- Page   -->
   <q-page>
     <q-card class="q-mb-md">
       <q-card-section class="q-pa-md">
@@ -90,6 +82,24 @@
       </div>
     </div>
   </q-page>
+
+  <!-- List of options -->
+  <div class="q-pa-md">
+    <q-table
+      flat
+      bordered
+      title="Terminübersicht"
+      :rows="rows"
+      :columns="columns"
+      row-key="id"
+      selection="single"
+      v-model:selected="selected"
+      color="blue"
+    >
+    </q-table>
+
+    <div class="q-mt-md">Selected: {{ JSON.stringify(selected) }}</div>
+  </div>
 </template>
 
 <script setup>
@@ -101,6 +111,40 @@ import LStore from "src/stores/user";
 const $my_usern = LStore.useStore();
 const { username } = storeToRefs($my_usern);
 const login = ref(true);
+
+const rows = ref([]);
+const selected = ref([]);
+
+//TODO: Hier noch den Ersteller des Termins irgendwie mit reinbringen (vllt. auch über die Termine)
+const columns = [
+  {
+    name: "id",
+    required: true,
+    align: "left",
+    sortable: true,
+  },
+  {
+    name: "datum",
+    label: "Datum",
+    field: "datum",
+    sortable: true,
+    align: "left",
+  },
+  {
+    name: "teilnehmerYes",
+    label: "Zugesagt",
+    field: "teilnehmerYes",
+    sortable: true,
+    align: "left",
+  },
+  {
+    name: "teilnehmerNo",
+    label: "Abgesagt",
+    field: "teilnehmerNo",
+    sortable: true,
+    align: "left",
+  },
+];
 
 //TODO: Das hier nur ausführen wenn eingabe valide und man auf weiter geklickt hat
 //      anschließend zwischenspeicherung des username und beim senden des post mitgeben
@@ -122,14 +166,23 @@ const beschreibung = ref(null);
 const appointmentId = ref(null);
 const route = useRoute();
 
+//FIXME: Das hier ist nur testweise so gelöst
+const appointmentOption = {
+  id: "",
+  datum: "2023-10-21 11:00",
+  teilnehmerYes: "Hans, Peter",
+  teilnehmerNo: "Jocha",
+  fk_appID: "b0f80c25-a631-478a-ada3-4c7b962e819f",
+};
+
 const appointment2 = ref({
-  id: "noID",
-  bez: "noBez",
-  datum: "noDate",
-  ort: "noOrt",
-  teilnehmer: "nobody",
-  beschreibung: "noBeschr",
-  fk_userID: "irgendneId",
+  id: "",
+  bez: "",
+  datum: "",
+  ort: "",
+  teilnehmer: "",
+  beschreibung: "",
+  fk_userID: "",
 });
 
 async function getAppointmentById() {
@@ -158,14 +211,10 @@ async function getAppointmentById() {
   }
 }
 
-const appointmentOption = {
-  datum: "2023-10-21 11:00",
-};
-
 async function createNewOption() {
   try {
-    console.log(appointmentOption);
-    const URL_GETAPPBYID = `http://localhost:8080/api/updateAppById/${appointmentId.value}`;
+    // const URL_GETAPPBYID = `http://localhost:8080/api/updateAppById/${appointmentId.value}`;
+    const URL_GETAPPBYID = `http://localhost:8080/api/updateAppById/${"b0f80c25-a631-478a-ada3-4c7b962e819f"}`;
     const response = await fetch(URL_GETAPPBYID, {
       method: "POST",
       headers: {
@@ -181,8 +230,8 @@ async function createNewOption() {
     }
 
     const responseData = await response.json();
-
-    console.log("Response Data:", responseData);
+    //FIXME
+    console.log("All possible Times for this App:", responseData);
 
     return responseData;
   } catch (error) {
@@ -201,6 +250,8 @@ onMounted(async () => {
     teilnehmer.value = appointment2.value[0].teilnehmer;
     beschreibung.value = appointment2.value[0].beschreibung;
   }
+
+  // rows.value = appointment;
 });
 
 // Function to reload the page
