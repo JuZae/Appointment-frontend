@@ -27,9 +27,38 @@
 import { ref } from "vue";
 
 const guestEmail = ref("");
+const EMAIL_API = "http://localhost:8080/sendEmail";
 
-const sendDynamicLink = () => {
+//TODO: Hier noch inputfelder für die Email machen (oder direkt erzeugen)
+const emailRequestBody = ref({
+  from: "",
+  to: "",
+  subject: "",
+  text: "",
+});
+
+const sendDynamicLink = async () => {
   // Implement the logic to generate and send dynamic links to the provided email.
   // You will need to make an API request to your Spring Boot backend to send the email.
+  try {
+    const response = await fetch(EMAIL_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(emailRequestBody),
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Request failed with status ${response.status}: ${response.statusText}`
+      );
+    }
+
+    const responseData = await response.json();
+    console.log("Response Data:", responseData);
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
 };
 </script>
