@@ -12,7 +12,7 @@
             required
           />
           <q-btn
-            label="Send Dynamic Link"
+            label="Send Invite"
             color="primary"
             type="submit"
             class="q-mt-md"
@@ -32,7 +32,7 @@ const EMAIL_API = "http://localhost:8080/sendEmail";
 //TODO: Hier noch inputfelder für die Email machen (oder direkt erzeugen)
 const emailRequestBody = ref({
   from: "",
-  to: "",
+  to: guestEmail.value,
   subject: "",
   text: "",
 });
@@ -61,4 +61,8 @@ const sendDynamicLink = async () => {
     console.error("Error:", error.message);
   }
 };
+
+onMounted(async () => {
+  //TODO: Hier hier das jeweilige Appointment holen und dann die Bezeichnung als subject und in den Text den Dynamic Link rein
+});
 </script>
