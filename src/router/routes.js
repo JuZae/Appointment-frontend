@@ -18,10 +18,13 @@ const routes = [
         path: "/registration",
         component: () => import("pages/login/RegistrationPage.vue"),
       },
-
       {
-        path: "/event",
+        path: "/mailevent",
         component: () => import("pages/dynamic/EventPage.vue"),
+      },
+      {
+        path: "/google",
+        component: () => import("pages/test/TestRegistration.vue"),
       },
       {
         path: "/dynamic-link/:appointmentId",

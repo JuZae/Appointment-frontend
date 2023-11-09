@@ -67,23 +67,16 @@
 import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import LStore from "src/stores/user";
-import { RouterLink, useRouter } from "vue-router";
+import { RouterLink } from "vue-router";
 
 const $my_usern = LStore.useStore();
 const { username } = storeToRefs($my_usern);
 const registration = ref(true);
-const router = useRouter();
 const password = ref("");
 const isPwd = ref(true);
 
 const saveUserName = (username) => {
   $my_usern.update(username);
-};
-
-const redirectUser = ($event) => {
-  if ($event.keyCode === 13) {
-    router.push("/overviewpage");
-  }
 };
 </script>
 

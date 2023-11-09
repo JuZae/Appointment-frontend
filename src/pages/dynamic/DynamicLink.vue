@@ -81,25 +81,24 @@
         >
       </div>
     </div>
+    <!-- List of options -->
+    <div class="q-pa-md">
+      <q-table
+        flat
+        bordered
+        title="Terminübersicht"
+        :rows="rows"
+        :columns="columns"
+        row-key="id"
+        selection="single"
+        v-model:selected="selected"
+        color="blue"
+      >
+      </q-table>
+
+      <div class="q-mt-md">Selected: {{ JSON.stringify(selected) }}</div>
+    </div>
   </q-page>
-
-  <!-- List of options -->
-  <div class="q-pa-md">
-    <q-table
-      flat
-      bordered
-      title="Terminübersicht"
-      :rows="rows"
-      :columns="columns"
-      row-key="id"
-      selection="single"
-      v-model:selected="selected"
-      color="blue"
-    >
-    </q-table>
-
-    <div class="q-mt-md">Selected: {{ JSON.stringify(selected) }}</div>
-  </div>
 </template>
 
 <script setup>
