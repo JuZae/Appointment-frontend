@@ -27,11 +27,6 @@ import { storeToRefs } from "pinia";
 import LStore from "src/stores/user";
 const $my_usern = LStore.useStore();
 const { username } = storeToRefs($my_usern);
-
-const saveUserName = (username) => {
-  $my_usern.update(username);
-};
-
 const password = ref("");
 const isPwd = ref(true);
 </script>

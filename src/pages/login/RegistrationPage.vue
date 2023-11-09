@@ -103,11 +103,6 @@ body {
 
 input[type="text"],
 textarea {
-  /* width: auto;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 10px; */
   margin-top: 10px;
   width: 100%;
   height: 70%;
@@ -121,18 +116,4 @@ h4 {
   text-align: center;
   margin-bottom: 20px;
 }
-
-/* button {
-  display: block;
-  position: absolute;
-  width: auto;
-  padding: 10px;
-  margin-bottom: 10px;
-  color: #fff;
-  background-color: #0056b3;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  right: 10px;
-} */
 </style>

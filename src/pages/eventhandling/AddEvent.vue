@@ -115,7 +115,6 @@ import { ref, toRaw } from "vue";
 
 const selection = ref(null);
 const options = ref([""]);
-const inputValue = ref("");
 
 const bez = ref("");
 const date = ref("");
@@ -177,9 +176,6 @@ const onInput = async (event) => {
   //Mit dem selection habt Ihr Zugriff auf das DOM element
   //und mit showPopUp macht Ihr das Fenster auf
   selection.value.showPopup();
-  // console.log("-----Begin ----- > event");
-  // console.log(event);
-  // console.log("-----Ende ----- > event");
 
   try {
     const response = await fetch(`${URL_ADDR}?location=${event}`);
@@ -314,6 +310,4 @@ button:hover {
     font-size: 12px;
   }
 }
-
-/* Adjust any other responsive styles as needed */
 </style>
