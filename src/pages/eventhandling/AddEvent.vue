@@ -37,6 +37,9 @@
             />
           </div>
         </td>
+        <td>
+          <button type="button" id="btnAdd">Neue Uhrzeit hinzufügen</button>
+        </td>
       </tr>
       <tr>
         <td><i class="material-icons"> schedule</i></td>

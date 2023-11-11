@@ -67,35 +67,18 @@
       </q-card-section>
     </q-card>
 
-    <table>
-      <tr>
-        <td><i class="material-icons">today</i></td>
-        <td><label for="datum">Datum:</label></td>
-        <td>
-          <div class="q-pa-md">
-            <q-date
-              v-model="date"
-              landscape
-              @input-value="test($event)"
-              mask="YYYY-MM-DD"
-            />
-          </div>
-        </td>
-        <div class="flex-container">
-          <div class="flex-item">
-            <q-btn
-              id="hinzufügen"
-              fab
-              icon="add"
-              color="orange"
-              @click="createNewOption()"
-              >Abschicken</q-btn
-            >
-          </div>
-        </div>
-      </tr>
-    </table>
-
+    <div class="flex-container">
+      <div class="flex-item">
+        <q-btn
+          id="hinzufügen"
+          fab
+          icon="add"
+          color="orange"
+          @click="createNewOption()"
+          >Abschicken</q-btn
+        >
+      </div>
+    </div>
     <!-- List of options -->
     <div class="q-pa-md">
       <q-table
