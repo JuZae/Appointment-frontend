@@ -71,13 +71,6 @@ const columns = [
     sortable: true,
     align: "left",
   },
-  {
-    name: "datum",
-    label: "Datum",
-    field: "datum",
-    sortable: true,
-    align: "left",
-  },
   { name: "ort", label: "Ort", field: "ort", sortable: true, align: "left" },
   {
     name: "teilnehmer",

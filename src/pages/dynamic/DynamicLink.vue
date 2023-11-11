@@ -51,9 +51,6 @@
           <q-item label="Bezeichnung" sublabel="Label for 'bez' property">
             {{ bez }}
           </q-item>
-          <q-item label="Datum" sublabel="Label for 'datum' property">
-            {{ datum }}
-          </q-item>
           <q-item label="Ort" sublabel="Label for 'ort' property">
             {{ ort }}
           </q-item>
@@ -123,13 +120,6 @@ const columns = [
     sortable: true,
   },
   {
-    name: "datum",
-    label: "Datum",
-    field: "datum",
-    sortable: true,
-    align: "left",
-  },
-  {
     name: "teilnehmerYes",
     label: "Zugesagt",
     field: "teilnehmerYes",
@@ -157,7 +147,6 @@ const saveUserName = ($username) => {
 };
 
 const bez = ref(null);
-const datum = ref(null);
 const ort = ref(null);
 const teilnehmer = ref(null);
 const beschreibung = ref(null);
@@ -171,13 +160,12 @@ const appointmentOption = {
   datum: "2023-10-21 11:00",
   teilnehmerYes: "Hans, Peter",
   teilnehmerNo: "Jocha",
-  fk_appID: "b0f80c25-a631-478a-ada3-4c7b962e819f",
+  fk_appID: "a09b625b-ef0a-4f18-9937-f7032e214c49",
 };
 
 const appointment2 = ref({
   id: "",
   bez: "",
-  datum: "",
   ort: "",
   teilnehmer: "",
   beschreibung: "",
@@ -238,30 +226,24 @@ async function createNewOption() {
   }
 }
 
-onMounted(async () => {
-  appointmentId.value = route.params.appointmentId;
-  const appointment = await getAppointmentById();
-  appointment2.value = appointment;
-  if (appointment2.value[0]) {
-    bez.value = appointment2.value[0].bez;
-    datum.value = appointment2.value[0].datum;
-    ort.value = appointment2.value[0].ort;
-    teilnehmer.value = appointment2.value[0].teilnehmer;
-    beschreibung.value = appointment2.value[0].beschreibung;
-  }
-
-  // rows.value = appointment;
-});
-
 // Function to reload the page
 const reloadPage = () => {
   location.reload();
 };
 
 // Listen for the popstate event (e.g., when the URL is manually changed)
-onMounted(() => {
+onMounted(async () => {
   window.addEventListener("popstate", reloadPage);
   //TODO: Here we should make an API call to the backend using our AppointmentID to get all the necessary information
+  appointmentId.value = route.params.appointmentId;
+  const appointment = await getAppointmentById();
+  appointment2.value = appointment;
+  if (appointment2.value[0]) {
+    bez.value = appointment2.value[0].bez;
+    ort.value = appointment2.value[0].ort;
+    teilnehmer.value = appointment2.value[0].teilnehmer;
+    beschreibung.value = appointment2.value[0].beschreibung;
+  }
 });
 
 // Remove the event listener when the component is unmounted
