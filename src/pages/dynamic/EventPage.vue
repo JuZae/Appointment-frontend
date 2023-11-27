@@ -2,21 +2,25 @@
   <q-page>
     <q-card>
       <q-card-section>
-        <q-form @submit="sendDynamicLink">
+        <q-form @submit="sendEmail">
           <q-input
-            v-model="guestEmail"
-            label="Guest Email"
+            v-model="recipient"
+            label="Recipient Email"
             type="email"
             outlined
             dense
             required
           />
-          <q-btn
-            label="Send Invite"
-            color="primary"
-            type="submit"
-            class="q-mt-md"
-          />
+          <q-input v-model="subject" label="Subject" outlined dense required />
+          <textarea v-model="body" label="Email Body" outlined dense required />
+          <div>
+            <q-btn
+              label="Send Email"
+              color="primary"
+              type="submit"
+              class="q-mt-md"
+            />
+          </div>
         </q-form>
       </q-card-section>
     </q-card>
@@ -26,27 +30,26 @@
 <script setup>
 import { ref } from "vue";
 
-const guestEmail = ref("");
-const EMAIL_API = "http://localhost:8080/sendEmail";
+const recipient = ref("");
+const subject = ref("");
+const body = ref("");
 
-//TODO: Hier noch inputfelder für die Email machen (oder direkt erzeugen)
-const emailRequestBody = ref({
-  from: "",
-  to: guestEmail.value,
-  subject: "",
-  text: "",
-});
+const sendEmail = async (event) => {
+  event.preventDefault();
 
-const sendDynamicLink = async () => {
-  // Implement the logic to generate and send dynamic links to the provided email.
-  // You will need to make an API request to your Spring Boot backend to send the email.
+  const emailData = {
+    to: recipient.value.trim(),
+    subject: subject.value,
+    body: body.value,
+  };
+
   try {
-    const response = await fetch(EMAIL_API, {
+    const response = await fetch("http://localhost:8080/sendEmail", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(emailRequestBody),
+      body: JSON.stringify(emailData),
     });
 
     if (!response.ok) {
@@ -61,8 +64,4 @@ const sendDynamicLink = async () => {
     console.error("Error:", error.message);
   }
 };
-
-onMounted(async () => {
-  //TODO: Hier hier das jeweilige Appointment holen und dann die Bezeichnung als subject und in den Text den Dynamic Link rein
-});
 </script>
