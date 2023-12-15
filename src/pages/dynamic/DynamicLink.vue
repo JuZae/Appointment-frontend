@@ -156,13 +156,13 @@ const appointmentId = ref(null);
 const route = useRoute();
 
 //FIXME: Das hier ist nur testweise so gelöst
-const appointmentOption = {
-  id: "",
-  datum: "2023-10-21 11:00",
-  teilnehmerYes: "Hans, Peter",
-  teilnehmerNo: "Jocha",
-  fk_appID: "a09b625b-ef0a-4f18-9937-f7032e214c49",
-};
+// const appointmentOption = {
+//   id: "",
+//   datum: "2023-10-21 11:00",
+//   teilnehmerYes: "Hans, Peter",
+//   teilnehmerNo: "Jocha",
+//   fk_appID: "a09b625b-ef0a-4f18-9937-f7032e214c49",
+// };
 
 const appointment2 = ref({
   id: "",

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A Quasar Project",
   "productName": "Appoint",
-  "author": "Lucas <luke707y804@users.noreply.github.com>",
+  "author": "JuZae <julian.zaehring@web.de>",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",

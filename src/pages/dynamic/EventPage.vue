@@ -61,6 +61,7 @@ const sendEmail = async (event) => {
     const responseData = await response.json();
     console.log("Response Data:", responseData);
   } catch (error) {
+    //Email could not get sent (either invalid or server side Problem)
     console.error("Error:", error.message);
   }
 };
