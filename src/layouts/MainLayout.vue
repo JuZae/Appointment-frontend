@@ -3,9 +3,10 @@
     <q-header elevated>
       <q-toolbar>
         <q-toolbar-title id="title">A-Point </q-toolbar-title>
+        <q-toolbar-title id="username"> {{ status }} </q-toolbar-title>
         <q-toolbar-title id="username"> {{ username }} </q-toolbar-title>
         <RouterLink to="/registration">
-          <q-btn id="logout" @click="clear()" color="primary" no-caps
+          <q-btn id="logout" @click="logout()" color="primary" no-caps
             >Abmelden</q-btn
           >
         </RouterLink>
@@ -23,10 +24,16 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import UserStore from "src/stores/user";
-const $my_usern = UserStore.useStore();
-const { username } = storeToRefs($my_usern);
+import AuthStore from "src/stores/authStore";
+import router from "src/router";
 
-const clear = () => {
+const $my_usern = UserStore.useStore();
+const authStore = AuthStore.useStore();
+const { username } = storeToRefs($my_usern);
+const { status } = storeToRefs(authStore);
+
+const logout = () => {
+  authStore.logout();
   $my_usern.clear();
 };
 </script>

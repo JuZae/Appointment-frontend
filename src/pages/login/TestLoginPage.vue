@@ -3,11 +3,7 @@
     <q-card>
       <q-card-section>
         <q-form @submit.prevent="onSubmitLogin" @reset="onReset">
-          <q-input
-            v-model="login.username"
-            label="Username"
-            :rules="[(val) => !!val || 'Username is required']"
-          />
+          <q-input v-model="login.email" label="Email" :rules="emailRules" />
           <q-input
             v-model="login.password"
             type="password"
@@ -32,21 +28,56 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+
+import AuthStore from "src/stores/authStore";
+const authStore = AuthStore.useStore();
+
+const { authStatusInStore } = storeToRefs(authStore);
+
+const status = false;
+
+const message = "";
 
 const login = ref({
-  username: "",
+  email: "",
   password: "",
 });
 
+const emailRules = [
+  (val) => !!val || "Email is required",
+  (val) => /.+@.+\..+/.test(val) || "Email must be valid",
+];
+
 const router = useRouter();
 
-const onSubmitLogin = () => {
-  console.log("Login data:", login.value);
-  // Implement your logic or HTTP request here
+const onSubmitLogin = async () => {
+  try {
+    const response = await fetch("http://localhost:8080/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(login.value),
+    });
+
+    if (!response.ok) {
+      throw new Error("Login failed");
+    }
+
+    const data = await response.json();
+
+    authStore.setAuthStatus(data.status);
+
+    //TODO: MAKE THIS A POP UP!
+    console.log("MESSAGE:" + data.message);
+  } catch (error) {
+    console.error("Login error:", error);
+  }
 };
 
 const onReset = () => {
-  login.value.username = "";
+  login.value.email = "";
   login.value.password = "";
 };
 

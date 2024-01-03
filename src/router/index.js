@@ -1,37 +1,44 @@
-import { route } from "quasar/wrappers";
 import {
   createRouter,
   createMemoryHistory,
   createWebHistory,
   createWebHashHistory,
 } from "vue-router";
-import routes from "./routes";
+import { useStore } from "src/stores/authStore.js"; // Import your auth store
+import routes from "src/router/routes.js";
 
-/*
- * If not building with SSR mode, you can
- * directly export the Router instantiation;
- *
- * The function below can be async too; either use
- * async/await or return a Promise which resolves
- * with the Router instance.
- */
-
-export default route(function (/* { store, ssrContext } */) {
+export default function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : process.env.VUE_ROUTER_MODE === "history"
     ? createWebHistory
     : createWebHashHistory;
 
-  const Router = createRouter({
-    scrollBehavior: () => ({ left: 0, top: 0 }),
-    routes,
-
-    // Leave this as is and make changes in quasar.conf.js instead!
-    // quasar.conf.js -> build -> vueRouterMode
-    // quasar.conf.js -> build -> publicPath
+  const router = createRouter({
     history: createHistory(process.env.VUE_ROUTER_BASE),
+    routes,
+  });
+  router.beforeEach((to, from, next) => {
+    const authStore = useStore();
+
+    if (
+      (to.path === "/login" || to.path === "/register") &&
+      authStore.isAuthenticated
+    ) {
+      // If authenticated and trying to access login or register, redirect to home/dashboard
+      next("/"); // Replace '/' with your home or dashboard path
+    } else if (
+      to.path !== "/login" &&
+      to.path !== "/register" &&
+      !authStore.isAuthenticated
+    ) {
+      // If not authenticated and trying to access a non-login/register page, redirect to login
+      next("/login");
+    } else {
+      // Otherwise, proceed as normal
+      next();
+    }
   });
 
-  return Router;
-});
+  return router;
+}

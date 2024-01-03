@@ -16,7 +16,12 @@
             :rules="passwordRules"
           />
           <div>
-            <q-btn label="Register" type="submit" color="primary" />
+            <q-btn
+              label="Register"
+              type="submit"
+              color="primary"
+              @click="registerUser"
+            />
             <q-btn
               label="Back to Login"
               color="primary"
@@ -51,6 +56,32 @@ const passwordRules = [
   (val) => !!val || "Password is required",
   (val) => val.length >= 8 || "Password must be at least 8 characters",
 ];
+
+const registerUser = async () => {
+  try {
+    const response = await fetch("http://localhost:8080/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: register.value.username,
+        email: register.value.email,
+        password: register.value.password,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Registration failed");
+    }
+
+    const data = await response.json();
+    console.log("Registration successful", data);
+    // Redirect to login or another page
+  } catch (error) {
+    console.error("Registration error:", error);
+  }
+};
 
 const onSubmitRegister = () => {
   console.log("Registration data:", register.value);
