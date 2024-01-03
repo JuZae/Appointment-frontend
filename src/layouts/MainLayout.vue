@@ -22,8 +22,8 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import LStore from "src/stores/user";
-const $my_usern = LStore.useStore();
+import UserStore from "src/stores/user";
+const $my_usern = UserStore.useStore();
 const { username } = storeToRefs($my_usern);
 
 const clear = () => {

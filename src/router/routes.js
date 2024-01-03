@@ -5,6 +5,14 @@ const routes = [
     children: [
       { path: "", component: () => import("pages/IndexPage.vue") },
       {
+        path: "/login",
+        component: () => import("pages/login/TestLoginPage.vue"),
+      },
+      {
+        path: "/register",
+        component: () => import("pages/login/TestRegisterPage.vue"),
+      },
+      {
         path: "/overviewpage",
         component: () => import("pages/eventhandling/OverviewPage.vue"),
       },
@@ -13,7 +21,7 @@ const routes = [
         component: () => import("pages/eventhandling/AddEvent.vue"),
       },
 
-      { path: "/login", component: () => import("pages/login/LoginPage.vue") },
+      // { path: "/login", component: () => import("pages/login/LoginPage.vue") },
       {
         path: "/registration",
         component: () => import("pages/login/RegistrationPage.vue"),
@@ -29,6 +37,10 @@ const routes = [
       {
         path: "/dynamic-link/:appointmentId",
         component: () => import("pages/dynamic/DynamicLink.vue"),
+      },
+      {
+        path: "/signIn",
+        component: () => import("pages/login/SignInPage.vue"),
       },
     ],
   },
