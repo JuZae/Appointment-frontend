@@ -6,6 +6,7 @@ import {
 } from "vue-router";
 import { useStore } from "src/stores/authStore.js"; // Import your auth store
 import routes from "src/router/routes.js";
+import { useRouter } from "vue-router";
 
 export default function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
@@ -20,7 +21,6 @@ export default function (/* { store, ssrContext } */) {
   });
   router.beforeEach((to, from, next) => {
     const authStore = useStore();
-
     if (
       (to.path === "/login" || to.path === "/register") &&
       authStore.isAuthenticated

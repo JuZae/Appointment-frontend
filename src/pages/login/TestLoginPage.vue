@@ -2,7 +2,11 @@
   <q-page class="flex flex-center">
     <q-card>
       <q-card-section>
-        <q-form @submit.prevent="onSubmitLogin" @reset="onReset">
+        <q-form
+          @submit.prevent="onSubmitLogin"
+          @reset="onReset"
+          v-on:keyup.enter="goToOverview"
+        >
           <q-input v-model="login.email" label="Email" :rules="emailRules" />
           <q-input
             v-model="login.password"
@@ -11,7 +15,12 @@
             :rules="[(val) => !!val || 'Password is required']"
           />
           <div>
-            <q-btn label="Login" type="submit" color="primary" />
+            <q-btn
+              label="Login"
+              type="submit"
+              color="primary"
+              @click="goToOverview"
+            />
             <q-btn
               label="Register"
               color="primary"
@@ -29,15 +38,22 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
-
 import AuthStore from "src/stores/authStore";
+import UserStore from "src/stores/user";
+
 const authStore = AuthStore.useStore();
+
+const userStore = UserStore.useStore();
 
 const { authStatusInStore } = storeToRefs(authStore);
 
 const status = false;
 
 const message = "";
+
+const API_LOGIN = "http://localhost:8080/api/auth/login";
+
+const API_GETUSER = "http://localhost:8080/api/user/getOne/";
 
 const login = ref({
   email: "",
@@ -53,7 +69,7 @@ const router = useRouter();
 
 const onSubmitLogin = async () => {
   try {
-    const response = await fetch("http://localhost:8080/api/auth/login", {
+    const response = await fetch(API_LOGIN, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -68,6 +84,34 @@ const onSubmitLogin = async () => {
     const data = await response.json();
 
     authStore.setAuthStatus(data.status);
+    if (authStore.isAuthenticated) {
+      getUser(login.value.email);
+    }
+    //TODO: MAKE THIS A POP UP!
+    console.log("MESSAGE:" + data.message);
+  } catch (error) {
+    console.error("Login error:", error);
+  }
+};
+
+const getUser = async (username) => {
+  console.log("USERNAME PARAM" + username);
+  const URL = API_GETUSER + username;
+  try {
+    const response = await fetch(URL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Login failed");
+    }
+
+    const data = await response.json();
+    console.log("USERNAMERETURN" + data.username);
+    userStore.update(data.username);
 
     //TODO: MAKE THIS A POP UP!
     console.log("MESSAGE:" + data.message);
@@ -81,12 +125,21 @@ const onReset = () => {
   login.value.password = "";
 };
 
+const goToEnter = () => {
+  console.log("!!!WORKS!!!");
+  router.push("/overviewpage");
+};
+
+const goToOverview = () => {
+  router.push("/overviewpage");
+};
+
 const goToRegister = () => {
   router.push("/register");
 };
 </script>
 
-<style>
+<!-- <style>
 /* General Styles */
 body,
 html {
@@ -169,4 +222,4 @@ html {
     box-shadow: none;
   }
 }
-</style>
+</style> -->

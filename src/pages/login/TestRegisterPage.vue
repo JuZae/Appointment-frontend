@@ -99,7 +99,7 @@ const goToLogin = () => {
 };
 </script>
 
-<style>
+<!-- <style>
 /* General Styles */
 body,
 html {
@@ -157,4 +157,4 @@ html {
     box-shadow: none;
   }
 }
-</style>
+</style> -->

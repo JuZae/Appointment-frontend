@@ -26,6 +26,7 @@ import { storeToRefs } from "pinia";
 import UserStore from "src/stores/user";
 import AuthStore from "src/stores/authStore";
 import router from "src/router";
+import { onMounted } from "vue";
 
 const $my_usern = UserStore.useStore();
 const authStore = AuthStore.useStore();
