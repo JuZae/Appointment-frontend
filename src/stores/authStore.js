@@ -9,8 +9,6 @@ export const useStore = defineStore({
   actions: {
     setAuthStatus(status) {
       this.isAuthenticated = status;
-      console.log("STORE-status" + status);
-      console.log("STORE-isAuthenticated" + this.isAuthenticated);
     },
     logout() {
       this.isAuthenticated = false;

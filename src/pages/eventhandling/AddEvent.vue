@@ -113,8 +113,11 @@
 
 <script setup>
 import { ref, toRaw } from "vue";
-//die selectionVariable ist null, sie nimmt das DomElement auf
-//Im <q-select ist dann ref="selection", damit hat man das Element am Griffel
+import { storeToRefs } from "pinia";
+import UserStore from "src/stores/user";
+
+const userStore = UserStore.useStore();
+userStore.userId;
 
 const selection = ref(null);
 const options = ref([""]);

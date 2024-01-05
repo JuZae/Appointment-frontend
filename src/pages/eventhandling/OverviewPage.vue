@@ -117,6 +117,7 @@ const navigateToErrorPage = () => {
 
 const URL_GETALL = "http://localhost:8080/api/getAll";
 
+const URL_GETALLBYUID = "";
 /**
  * Get Data from Backend
  */

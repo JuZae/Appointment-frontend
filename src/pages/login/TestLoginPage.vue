@@ -12,7 +12,7 @@
             v-model="login.password"
             type="password"
             label="Password"
-            :rules="[(val) => !!val || 'Password is required']"
+            :rules="passwordRules"
           />
           <div>
             <q-btn
@@ -31,6 +31,18 @@
         </q-form>
       </q-card-section>
     </q-card>
+
+    <q-dialog v-model="isDialogOpen">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">{{ message }}</div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Schließen" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -41,31 +53,36 @@ import { storeToRefs } from "pinia";
 import AuthStore from "src/stores/authStore";
 import UserStore from "src/stores/user";
 
-const authStore = AuthStore.useStore();
+//Router
+const router = useRouter();
 
+//Stores
+const authStore = AuthStore.useStore();
 const userStore = UserStore.useStore();
 
-const { authStatusInStore } = storeToRefs(authStore);
-
+//Login status
 const status = false;
 
-const message = "";
+//Dialog open with message after Login attempt
+const isDialogOpen = ref(false);
+const message = ref("");
 
+//APIs
 const API_LOGIN = "http://localhost:8080/api/auth/login";
+const API_GETUSERBYMAIL = "http://localhost:8080/api/user/getOne/";
 
-const API_GETUSER = "http://localhost:8080/api/user/getOne/";
-
+//LoginDTO that is sent to backend
 const login = ref({
   email: "",
   password: "",
 });
 
+//Rules
 const emailRules = [
   (val) => !!val || "Email is required",
   (val) => /.+@.+\..+/.test(val) || "Email must be valid",
 ];
-
-const router = useRouter();
+const passwordRules = [(val) => !!val || "Password is required"];
 
 const onSubmitLogin = async () => {
   try {
@@ -83,20 +100,25 @@ const onSubmitLogin = async () => {
 
     const data = await response.json();
 
+    //get auth status and check if user is authenticated
     authStore.setAuthStatus(data.status);
     if (authStore.isAuthenticated) {
+      //get user info from backend
       getUser(login.value.email);
     }
+
     //TODO: MAKE THIS A POP UP!
     console.log("MESSAGE:" + data.message);
+    checkMessageAndOpenDialog(data);
   } catch (error) {
     console.error("Login error:", error);
   }
 };
 
-const getUser = async (username) => {
-  console.log("USERNAME PARAM" + username);
-  const URL = API_GETUSER + username;
+//get user info by email
+const getUser = async (email) => {
+  console.log("USERNAME PARAM" + email);
+  const URL = API_GETUSERBYMAIL + email;
   try {
     const response = await fetch(URL, {
       method: "GET",
@@ -110,30 +132,49 @@ const getUser = async (username) => {
     }
 
     const data = await response.json();
-    console.log("USERNAMERETURN" + data.username);
+
+    console.log("DATARETURN " + JSON.stringify(data));
+
+    console.log("USERNAMERETURN " + data.username);
     userStore.update(data.username);
 
-    //TODO: MAKE THIS A POP UP!
-    console.log("MESSAGE:" + data.message);
+    console.log("USERIDRETURN " + data.id);
+    userStore.setUserId(data.id);
   } catch (error) {
     console.error("Login error:", error);
   }
 };
 
+//Check for Message and open Dialog
+const checkMessageAndOpenDialog = (data) => {
+  if (data.message && data.message.trim() !== "") {
+    message.value = data.message;
+    isDialogOpen.value = true;
+  }
+};
+
+//Reset Email and Password input fields
 const onReset = () => {
   login.value.email = "";
   login.value.password = "";
 };
 
+/**
+ * Routing stuff
+ */
+
+//Reroute to /overviewpage on Enter key press
 const goToEnter = () => {
   console.log("!!!WORKS!!!");
   router.push("/overviewpage");
 };
 
+//Reroute to /overviewpage when called
 const goToOverview = () => {
   router.push("/overviewpage");
 };
 
+//Reroute to /register when called
 const goToRegister = () => {
   router.push("/register");
 };
