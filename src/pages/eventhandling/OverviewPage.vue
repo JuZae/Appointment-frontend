@@ -51,10 +51,13 @@
  */
 import { ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
-import LStore from "src/stores/user";
+import UserStore from "src/stores/user";
 
-const $my_usern = LStore.useStore();
-const { username } = storeToRefs($my_usern);
+const user = UserStore.useStore();
+
+//APIs
+const URL_GETALL = "http://localhost:8080/api/app/getAll";
+const URL_GETALLBYUID = "http://localhost:8080/api/app/getAppById/";
 
 const columns = [
   {
@@ -106,7 +109,7 @@ const generateHref = async () => {
     const isSelected = `http://localhost:9000/#/dynamic-link/${dynamicId}`;
     return isSelected;
   } else {
-    const isNotSelected = `http://localhost:9000/#/`;
+    const isNotSelected = `http://localhost:9000/#/overviewpage`;
     return isNotSelected;
   }
 };
@@ -115,15 +118,14 @@ const navigateToErrorPage = () => {
   console.log("ERRORPAGE NOW");
 };
 
-const URL_GETALL = "http://localhost:8080/api/app/getAll";
-
-const URL_GETALLBYUID = "";
 /**
  * Get Data from Backend
  */
-async function getAllAppointments() {
+async function getAllAppointmentsByUserID() {
+  let fullURL = URL_GETALLBYUID + user.userId;
+  console.log("ABCDEFGHIJKLMNOP " + fullURL);
   try {
-    const response = await fetch(URL_GETALL, {
+    const response = await fetch(fullURL, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -138,7 +140,7 @@ async function getAllAppointments() {
 
     const responseData = await response.json();
 
-    console.log("Response Data:", responseData);
+    console.log("Overviewpage RESPONSE DATA: " + JSON.stringify(responseData));
 
     return responseData;
   } catch (error) {
@@ -147,7 +149,7 @@ async function getAllAppointments() {
 }
 
 onMounted(async () => {
-  const appointments = await getAllAppointments();
+  const appointments = await getAllAppointmentsByUserID();
   rows.value = appointments;
   // Update the reactive ref with the fetched data
 });

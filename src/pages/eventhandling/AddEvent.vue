@@ -128,7 +128,7 @@ const parti = ref(null);
 const descr = ref("");
 
 //APIs
-const URL_GETOBJ = "http://localhost:8080/api/app/getObj";
+const URL_SAVEAPP = "http://localhost:8080/api/app/saveApp";
 const URL_ADDR = "http://localhost:8080/api/address";
 
 //Required LocalDatemTime pattern: "yyyy-MM-dd HH:mm"
@@ -144,7 +144,6 @@ const createAppointment = async () => {
     beschreibung: descr.value,
     fk_userID: userStore.userId,
   };
-  console.log("AAAAAAAAAAAAAA " + userStore.userId);
   try {
     const response = await fetch(URL_GETOBJ, {
       method: "POST",
