@@ -113,11 +113,9 @@
 
 <script setup>
 import { ref, toRaw } from "vue";
-import { storeToRefs } from "pinia";
 import UserStore from "src/stores/user";
 
 const userStore = UserStore.useStore();
-userStore.userId;
 
 const selection = ref(null);
 const options = ref([""]);
@@ -129,20 +127,12 @@ const select = ref("");
 const parti = ref(null);
 const descr = ref("");
 
-const URL_GETOBJ = "http://localhost:8080/api/getObj";
+//APIs
+const URL_GETOBJ = "http://localhost:8080/api/app/getObj";
 const URL_ADDR = "http://localhost:8080/api/address";
 
 //Required LocalDatemTime pattern: "yyyy-MM-dd HH:mm"
 //f.ex. "2023-08-23 12:25"
-
-//TODO: Formatierung anpassen & mit korrekten Werten befüllen
-/**
- * Die Art und Weise wie das ganze formatiert ist und was ich zurück schicke stimmt nicht mit meinem Model von User im backend überein
- * Das backend will es so:
- * (id=a851fc36-5efe-47e5-9d98-0e363a8105fb, username=null, password=null, appointments=null)
- * (id = automatisch generiert, username = String, password = String, appointments = List<Appointment)
- *  Appointment ist eigentlich wie gehabt, das hat ja so auch eig schon funktioniert
- */
 
 const createAppointment = async () => {
   let formattedDateTime = date.value + " " + time.value;
@@ -152,10 +142,9 @@ const createAppointment = async () => {
     ort: select.value.value,
     teilnehmer: toRaw(parti.value).toString(),
     beschreibung: descr.value,
+    fk_userID: userStore.userId,
   };
-
-  console.log("BEZ: " + bez.value);
-
+  console.log("AAAAAAAAAAAAAA " + userStore.userId);
   try {
     const response = await fetch(URL_GETOBJ, {
       method: "POST",
@@ -201,13 +190,6 @@ const onInput = async (event) => {
   } catch (error) {
     console.error("Error:", error);
   }
-
-  //Hier müsst Ihr das event weiterschicken an den Store
-  //und den DatenBankzugriff machen und die Options im Store
-  //aktualisieren. Also im Store das update rufen. Sind die options
-  //aktualisisert sollte die Dropdownliste automatisch ändern weil die
-  //ja über storeToRefs automatisch gebunden werden.....
-  //cool oder ;-)
 };
 </script>
 

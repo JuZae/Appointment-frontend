@@ -115,7 +115,7 @@ const navigateToErrorPage = () => {
   console.log("ERRORPAGE NOW");
 };
 
-const URL_GETALL = "http://localhost:8080/api/getAll";
+const URL_GETALL = "http://localhost:8080/api/app/getAll";
 
 const URL_GETALLBYUID = "";
 /**
