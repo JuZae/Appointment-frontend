@@ -145,7 +145,7 @@ const createAppointment = async () => {
     fk_userID: userStore.userId,
   };
   try {
-    const response = await fetch(URL_GETOBJ, {
+    const response = await fetch(URL_SAVEAPP, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

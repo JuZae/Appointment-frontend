@@ -19,24 +19,23 @@ export default function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
     routes,
   });
-  router.beforeEach((to, from, next) => {
+
+  router.beforeEach(async (to, from, next) => {
     const authStore = useStore();
+    const isAuthenticated = authStore.isAuthenticated;
+
+    // Array of public routes
+    const publicRoutes = ["/login", "/register", "/dynamic-link"];
+
     if (
-      (to.path === "/login" || to.path === "/register") &&
-      authStore.isAuthenticated
+      publicRoutes.some((route) => to.path.startsWith(route)) ||
+      isAuthenticated
     ) {
-      // If authenticated and trying to access login or register, redirect to home/dashboard
-      next("/"); // Replace '/' with your home or dashboard path
-    } else if (
-      to.path !== "/login" &&
-      to.path !== "/register" &&
-      !authStore.isAuthenticated
-    ) {
-      // If not authenticated and trying to access a non-login/register page, redirect to login
-      next("/login");
-    } else {
-      // Otherwise, proceed as normal
+      // If the route starts with any public route or the user is authenticated, allow access
       next();
+    } else {
+      // If the route is not public and the user is not authenticated, redirect to login
+      next("/login");
     }
   });
 

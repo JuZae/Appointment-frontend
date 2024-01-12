@@ -57,7 +57,7 @@ const user = UserStore.useStore();
 
 //APIs
 const URL_GETALL = "http://localhost:8080/api/app/getAll";
-const URL_GETALLBYUID = "http://localhost:8080/api/app/getAppById/";
+const URL_GETALLBYUID = "http://localhost:8080/api/app/getAppByUserId/";
 
 const columns = [
   {
