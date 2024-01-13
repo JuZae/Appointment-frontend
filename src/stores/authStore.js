@@ -43,8 +43,7 @@ export const useStore = defineStore("auth", {
       );
       this.setToken(data.token);
       this.setUserId(data.userId);
-      const userStore = UserStore.useStore();
-      userStore.setUserId(data.userId);
+      this.setUserId(data.userId);
     },
 
     logout() {

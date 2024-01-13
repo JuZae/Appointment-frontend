@@ -10,6 +10,7 @@ export const useStore = defineStore({
   // }),
   state: () => ({
     userId: localStorage.getItem("userId") || null,
+    username: "",
   }),
   actions: {
     update(input) {
@@ -17,8 +18,16 @@ export const useStore = defineStore({
       //console.log("Username: " + this.username);
     },
 
-    setUserId(id) {
-      this.userId = id;
+    getUsername() {
+      return this.username;
+    },
+
+    // setUserId(id) {
+    //   this.userId = id;
+    // },
+
+    setUserId() {
+      this.userId = localStorage.getItem("userId");
     },
 
     clear() {

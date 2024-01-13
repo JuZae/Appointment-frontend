@@ -51,6 +51,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import AuthStore from "src/stores/authStore";
 import UserStore from "src/stores/user";
+import { data } from "autoprefixer";
 
 //Router
 const router = useRouter();
@@ -58,15 +59,6 @@ const router = useRouter();
 //Stores
 const authStore = AuthStore.useStore();
 const userStore = UserStore.useStore();
-
-//Authentication stuff
-const jwtToken = authStore.token; //JWT Token (if exists)
-// Create the authorization header
-const headers = {
-  Authorization: `Bearer ${jwtToken}`,
-  "Content-Type": "application/json",
-  Accept: "application/json", // You can include other headers as needed
-};
 
 //Login status
 // const status = false;
@@ -98,10 +90,8 @@ const login = async () => {
     await authStore.login(loginDTO.value.email, loginDTO.value.password);
 
     if (authStore.isAuthenticated) {
-      getUser(userStore.userId);
+      getUser(localStorage.getItem("userId"));
     }
-
-    console.log("WORKZZZZZ");
     router.push("/overviewpage");
   } catch (error) {
     console.error("Login error:", error);
@@ -141,8 +131,16 @@ const login = async () => {
 
 //get user info by email
 const getUser = async (userId) => {
+  const jwtToken = authStore.token; // JWT Token (if exists)
+  const headers = {
+    Authorization: `Bearer ${jwtToken}`,
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  };
+
   const URL = API_GETUSERBYID + userId;
   console.log("GETUSERURL " + URL);
+
   try {
     const response = await fetch(URL, {
       method: "GET",
@@ -150,19 +148,16 @@ const getUser = async (userId) => {
     });
 
     if (!response.ok) {
-      throw new Error("Login failed");
+      throw new Error(`Request failed with status ${response.status}`);
     }
 
-    const data = await response.json();
-    console.log("INFOSUSER: " + JSON.stringify(data));
+    const userData = await response.json();
+    console.log("User data received:", userData);
 
-    userStore.update(data.username);
-    // userStore.setUserId(data.id);
-    userStore.setUserMail(data.email);
-    userStore.setUserPassword(data.password);
-    checkMessageAndOpenDialog(data);
+    // Here, you can update the user store with the received data
+    // For example: userStore.update(userData.username);
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("Error fetching user data:", error);
   }
 };
 

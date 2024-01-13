@@ -113,9 +113,21 @@
 
 <script setup>
 import { ref, toRaw } from "vue";
-import UserStore from "src/stores/user";
+import UserStore from "src/stores/user.js";
+import AuthStore from "src/stores/authStore.js";
 
+//Stores
 const userStore = UserStore.useStore();
+const authStore = AuthStore.useStore();
+
+//Authentication stuff
+const jwtToken = authStore.token; //JWT Token (if exists)
+// Create the authorization header
+const headers = {
+  Authorization: `Bearer ${jwtToken}`,
+  "Content-Type": "application/json",
+  Accept: "application/json", // You can include other headers as needed
+};
 
 const selection = ref(null);
 const options = ref([""]);
@@ -147,9 +159,7 @@ const createAppointment = async () => {
   try {
     const response = await fetch(URL_SAVEAPP, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: headers,
       body: JSON.stringify(data),
     });
 
@@ -172,7 +182,10 @@ const onInput = async (event) => {
   selection.value.showPopup();
 
   try {
-    const response = await fetch(`${URL_ADDR}?location=${event}`);
+    const response = await fetch(`${URL_ADDR}?location=${event}`, {
+      method: "GET",
+      headers: headers,
+    });
 
     if (!response.ok) {
       console.error("Error:", response.statusText);
