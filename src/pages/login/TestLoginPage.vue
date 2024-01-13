@@ -51,6 +51,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import AuthStore from "src/stores/authStore";
 import UserStore from "src/stores/user";
+import MainLayout from "src/layouts/MainLayout.vue";
 import { data } from "autoprefixer";
 
 //Router
@@ -153,6 +154,8 @@ const getUser = async (userId) => {
 
     const userData = await response.json();
     console.log("User data received:", userData);
+
+    userStore.saveUserInfo(userData.username, userData.email);
 
     // Here, you can update the user store with the received data
     // For example: userStore.update(userData.username);

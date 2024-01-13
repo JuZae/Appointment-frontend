@@ -3,7 +3,9 @@
     <q-header elevated>
       <q-toolbar>
         <q-toolbar-title id="title">A-Point </q-toolbar-title>
-        <q-toolbar-title id="username">{{ username }}</q-toolbar-title>
+        <q-toolbar-title id="username"
+          ><div>{{ username }}</div></q-toolbar-title
+        >
         <RouterLink to="/registration">
           <q-btn id="logout" @click="logout()" color="primary" no-caps
             >Abmelden</q-btn
@@ -21,8 +23,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { storeToRefs } from "pinia";
+import { ref, watch } from "vue";
 import UserStore from "src/stores/user";
 import AuthStore from "src/stores/authStore";
 
@@ -30,21 +31,33 @@ import AuthStore from "src/stores/authStore";
 const userStore = UserStore.useStore();
 const authStore = AuthStore.useStore();
 
-const { username } = userStore.username;
-
-//Authentication stuff
-const jwtToken = authStore.token; //JWT Token (if exists)
-// Create the authorization header
-const headers = {
-  Authorization: `Bearer ${jwtToken}`,
-  "Content-Type": "application/json",
-  Accept: "application/json", // You can include other headers as needed
-};
+// Reactive reference for the username
+const username = ref("");
 
 const logout = () => {
   authStore.logout();
   userStore.clear();
 };
+
+// onMounted(() => {
+//   // Fetch username from store and update div accordingly
+//   console.log("OnMounted is called after login");
+//   console.log("Username: " + userStore.username);
+//   username.value = userStore.username;
+// });
+
+// Initialize username if it's already available in the store
+if (userStore.username) {
+  username.value = userStore.username;
+}
+
+// Watch for changes in the user store's username
+watch(
+  () => userStore.username,
+  (newUsername) => {
+    username.value = newUsername;
+  }
+);
 </script>
 
 <style>

@@ -10,7 +10,8 @@ export const useStore = defineStore({
   // }),
   state: () => ({
     userId: localStorage.getItem("userId") || null,
-    username: "",
+    username: localStorage.getItem("username") || null,
+    userMail: localStorage.getItem("userMail") || null,
   }),
   actions: {
     update(input) {
@@ -22,9 +23,12 @@ export const useStore = defineStore({
       return this.username;
     },
 
-    // setUserId(id) {
-    //   this.userId = id;
-    // },
+    saveUserInfo(username, userMail) {
+      localStorage.setItem("username", username);
+      localStorage.setItem("userMail", userMail);
+      this.username = localStorage.getItem("username");
+      this.userMail = localStorage.getItem("userMail");
+    },
 
     setUserId() {
       this.userId = localStorage.getItem("userId");
