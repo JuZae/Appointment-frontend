@@ -35,11 +35,16 @@
     <q-dialog v-model="isDialogOpen">
       <q-card>
         <q-card-section>
-          <div class="text-h6">{{ message }}</div>
+          {{ errorMessage }}
         </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Schließen" color="primary" v-close-popup />
+        <q-card-actions>
+          <q-btn
+            flat
+            label="Close"
+            color="primary"
+            v-close-popup
+            @click="closeDialog"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -47,12 +52,10 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import AuthStore from "src/stores/authStore";
 import UserStore from "src/stores/user";
-import MainLayout from "src/layouts/MainLayout.vue";
-import { data } from "autoprefixer";
 
 //Router
 const router = useRouter();
@@ -61,16 +64,13 @@ const router = useRouter();
 const authStore = AuthStore.useStore();
 const userStore = UserStore.useStore();
 
-//Login status
-// const status = false;
-
-//Dialog open with message after Login attempt
-const isDialogOpen = ref(false);
-const message = ref("");
+//Error handling after failed login attempt
+const errorMessage = computed(() => authStore.errorMessage);
+const isDialogOpen = computed(() => !!authStore.errorMessage);
+// const errorMessage = ref('');
+// const isDialogOpen = ref(false);
 
 //APIs
-// const API_LOGIN = "http://localhost:8080/api/auth/login";
-// const API_GETUSERBYEMAIL = "http://localhost:8080/api/user/getOne/";
 const API_GETUSERBYID = "http://localhost:8080/api/user/get/";
 
 //LoginDTO that is sent to backend
@@ -98,37 +98,6 @@ const login = async () => {
     console.error("Login error:", error);
   }
 };
-
-// const onSubmitLogin = async () => {
-//   try {
-//     const response = await fetch(API_LOGIN, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(login.value),
-//     });
-
-//     if (!response.ok) {
-//       throw new Error("Login failed");
-//     }
-
-//     const data = await response.json();
-
-//     //get auth status and check if user is authenticated
-//     authStore.setAuthStatus(data.status);
-//     if (authStore.isAuthenticated) {
-//       //get user info from backend
-//       getUser(login.value.email);
-//     }
-
-//TODO: MAKE THIS A POP UP!
-//     console.log("MESSAGE:" + data.message);
-//     checkMessageAndOpenDialog(data);
-//   } catch (error) {
-//     console.error("Login error:", error);
-//   }
-// };
 
 //get user info by email
 const getUser = async (userId) => {
@@ -196,6 +165,22 @@ const goToOverview = () => {
 //Reroute to /register when called
 const goToRegister = () => {
   router.push("/register");
+};
+
+/**
+ * Error Message Popup
+ */
+// Watch for changes in the error message
+watch(errorMessage, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    isDialogOpen.value = !!newVal;
+  }
+});
+
+// Reset the error message when the dialog is closed
+const closeDialog = () => {
+  authStore.setErrorMessage(""); // Reset the error message in the store
+  isDialogOpen.value = false;
 };
 </script>
 
