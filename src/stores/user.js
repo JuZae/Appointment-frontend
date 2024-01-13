@@ -2,9 +2,14 @@ import { defineStore } from "pinia";
 
 export const useStore = defineStore({
   id: "mainStore",
+  // state: () => ({
+  //   username: "", // Initial empty value
+  //   userId: "",
+  //   userMail: "",
+  //   userPassword: "",
+  // }),
   state: () => ({
-    username: "", // Initial empty value
-    userId: "",
+    userId: localStorage.getItem("userId") || null,
   }),
   actions: {
     update(input) {
@@ -18,6 +23,17 @@ export const useStore = defineStore({
 
     clear() {
       this.username = "";
+      this.userId = "";
+      this.userMail = "";
+      this.userPassword = "";
+    },
+
+    setUserMail(mail) {
+      this.mail = mail;
+    },
+
+    setUserPassword(password) {
+      this.password = password;
     },
   },
 });

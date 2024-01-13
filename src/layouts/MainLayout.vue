@@ -3,7 +3,6 @@
     <q-header elevated>
       <q-toolbar>
         <q-toolbar-title id="title">A-Point </q-toolbar-title>
-        <q-toolbar-title id="username"> {{ status }} </q-toolbar-title>
         <q-toolbar-title id="username"> {{ username }} </q-toolbar-title>
         <RouterLink to="/registration">
           <q-btn id="logout" @click="logout()" color="primary" no-caps
@@ -22,20 +21,28 @@
 </template>
 
 <script setup>
-import { storeToRefs } from "pinia";
 import UserStore from "src/stores/user";
 import AuthStore from "src/stores/authStore";
-import router from "src/router";
-import { onMounted } from "vue";
 
-const $my_usern = UserStore.useStore();
+//Stores
+const userStore = UserStore.useStore();
 const authStore = AuthStore.useStore();
-const { username } = storeToRefs($my_usern);
-const { status } = storeToRefs(authStore);
+
+//Authentication stuff
+const jwtToken = authStore.token; //JWT Token (if exists)
+// Create the authorization header
+const headers = {
+  Authorization: `Bearer ${jwtToken}`,
+  "Content-Type": "application/json",
+  Accept: "application/json", // You can include other headers as needed
+};
+
+//Infos about User
+const username = userStore.username;
 
 const logout = () => {
   authStore.logout();
-  $my_usern.clear();
+  userStore.clear();
 };
 </script>
 

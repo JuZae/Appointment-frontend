@@ -3,13 +3,13 @@
     <q-card>
       <q-card-section>
         <q-form
-          @submit.prevent="onSubmitLogin"
+          @submit.prevent="login"
           @reset="onReset"
           v-on:keyup.enter="goToOverview"
         >
-          <q-input v-model="login.email" label="Email" :rules="emailRules" />
+          <q-input v-model="loginDTO.email" label="Email" :rules="emailRules" />
           <q-input
-            v-model="login.password"
+            v-model="loginDTO.password"
             type="password"
             label="Password"
             :rules="passwordRules"
@@ -49,7 +49,6 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
 import AuthStore from "src/stores/authStore";
 import UserStore from "src/stores/user";
 
@@ -60,19 +59,29 @@ const router = useRouter();
 const authStore = AuthStore.useStore();
 const userStore = UserStore.useStore();
 
+//Authentication stuff
+const jwtToken = authStore.token; //JWT Token (if exists)
+// Create the authorization header
+const headers = {
+  Authorization: `Bearer ${jwtToken}`,
+  "Content-Type": "application/json",
+  Accept: "application/json", // You can include other headers as needed
+};
+
 //Login status
-const status = false;
+// const status = false;
 
 //Dialog open with message after Login attempt
 const isDialogOpen = ref(false);
 const message = ref("");
 
 //APIs
-const API_LOGIN = "http://localhost:8080/api/auth/login";
-const API_GETUSERBYMAIL = "http://localhost:8080/api/user/getOne/";
+// const API_LOGIN = "http://localhost:8080/api/auth/login";
+// const API_GETUSERBYEMAIL = "http://localhost:8080/api/user/getOne/";
+const API_GETUSERBYID = "http://localhost:8080/api/user/get/";
 
 //LoginDTO that is sent to backend
-const login = ref({
+const loginDTO = ref({
   email: "",
   password: "",
 });
@@ -84,14 +93,60 @@ const emailRules = [
 ];
 const passwordRules = [(val) => !!val || "Password is required"];
 
-const onSubmitLogin = async () => {
+const login = async () => {
   try {
-    const response = await fetch(API_LOGIN, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(login.value),
+    await authStore.login(loginDTO.value.email, loginDTO.value.password);
+
+    if (authStore.isAuthenticated) {
+      getUser(userStore.userId);
+    }
+
+    console.log("WORKZZZZZ");
+    router.push("/overviewpage");
+  } catch (error) {
+    console.error("Login error:", error);
+  }
+};
+
+// const onSubmitLogin = async () => {
+//   try {
+//     const response = await fetch(API_LOGIN, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(login.value),
+//     });
+
+//     if (!response.ok) {
+//       throw new Error("Login failed");
+//     }
+
+//     const data = await response.json();
+
+//     //get auth status and check if user is authenticated
+//     authStore.setAuthStatus(data.status);
+//     if (authStore.isAuthenticated) {
+//       //get user info from backend
+//       getUser(login.value.email);
+//     }
+
+//TODO: MAKE THIS A POP UP!
+//     console.log("MESSAGE:" + data.message);
+//     checkMessageAndOpenDialog(data);
+//   } catch (error) {
+//     console.error("Login error:", error);
+//   }
+// };
+
+//get user info by email
+const getUser = async (userId) => {
+  const URL = API_GETUSERBYID + userId;
+  console.log("GETUSERURL " + URL);
+  try {
+    const response = await fetch(URL, {
+      method: "GET",
+      headers: headers,
     });
 
     if (!response.ok) {
@@ -99,53 +154,19 @@ const onSubmitLogin = async () => {
     }
 
     const data = await response.json();
+    console.log("INFOSUSER: " + JSON.stringify(data));
 
-    //get auth status and check if user is authenticated
-    authStore.setAuthStatus(data.status);
-    if (authStore.isAuthenticated) {
-      //get user info from backend
-      getUser(login.value.email);
-    }
-
-    //TODO: MAKE THIS A POP UP!
-    console.log("MESSAGE:" + data.message);
+    userStore.update(data.username);
+    // userStore.setUserId(data.id);
+    userStore.setUserMail(data.email);
+    userStore.setUserPassword(data.password);
     checkMessageAndOpenDialog(data);
   } catch (error) {
     console.error("Login error:", error);
   }
 };
 
-//get user info by email
-const getUser = async (email) => {
-  console.log("USERNAME PARAM" + email);
-  const URL = API_GETUSERBYMAIL + email;
-  try {
-    const response = await fetch(URL, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Login failed");
-    }
-
-    const data = await response.json();
-
-    console.log("DATARETURN " + JSON.stringify(data));
-
-    console.log("USERNAMERETURN " + data.username);
-    userStore.update(data.username);
-
-    console.log("USERIDRETURN " + data.id);
-    userStore.setUserId(data.id);
-  } catch (error) {
-    console.error("Login error:", error);
-  }
-};
-
-//Check for Message and open Dialog
+// Check for Message and open Dialog
 const checkMessageAndOpenDialog = (data) => {
   if (data.message && data.message.trim() !== "") {
     message.value = data.message;
@@ -180,87 +201,4 @@ const goToRegister = () => {
 };
 </script>
 
-<!-- <style>
-/* General Styles */
-body,
-html {
-  height: 100%;
-  margin: 0;
-  font-family: "Arial", sans-serif;
-  background-color: #1a1a1a; /* JetBrains dark background */
-  color: #a9b7c6; /* JetBrains text color */
-}
-
-/* Page Layout */
-.q-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-/* Card Styles */
-.q-card {
-  width: 100%;
-  max-width: 400px;
-  padding: 20px;
-  background-color: #2b2b2b; /* JetBrains card background */
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Form Styles */
-.q-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.q-input,
-.q-btn {
-  margin-bottom: 15px;
-  border-color: #3c3f41; /* JetBrains input border */
-}
-
-.q-input {
-  /* background-color: #2b2b2b; */
-  color: #a9b7c6;
-}
-
-/* Input focus color */
-.q-input:focus {
-  border-color: #6897bb; /* JetBrains focus color */
-}
-
-/* Button Styles */
-.q-btn {
-  /* background-color: #1a1a1a; */
-  color: #a9b7c6;
-  border: 1px solid #3c3f41;
-  cursor: pointer;
-}
-
-.q-btn:hover {
-  background-color: #6897bb; /* JetBrains hover color */
-}
-
-/* Link Styles */
-.link {
-  text-align: center;
-  margin-top: 15px;
-  color: #6d9cbe; /* JetBrains link color */
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.link:hover {
-  text-decoration: underline;
-}
-
-/* Responsive Design */
-@media (max-width: 600px) {
-  .q-card {
-    margin: 20px;
-    box-shadow: none;
-  }
-}
-</style> -->
+<style></style>

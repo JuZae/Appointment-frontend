@@ -50,14 +50,26 @@
  * 4. Beschreibung als Popup aufklappen können wenn sie etwas länger ist
  */
 import { ref, onMounted } from "vue";
-import { storeToRefs } from "pinia";
 import UserStore from "src/stores/user";
+import AuthStore from "src/stores/authStore";
 
-const user = UserStore.useStore();
+//Stores
+const userStore = UserStore.useStore();
+const authStore = AuthStore.useStore();
+
+//Authentication stuff
+const jwtToken = authStore.token; //JWT Token (if exists)
+// Create the authorization header
+const headers = {
+  Authorization: `Bearer ${jwtToken}`,
+  "Content-Type": "application/json",
+  Accept: "application/json", // You can include other headers as needed
+};
 
 //APIs
-const URL_GETALL = "http://localhost:8080/api/app/getAll";
 const URL_GETALLBYUID = "http://localhost:8080/api/app/getAppByUserId/";
+const TEST =
+  "http://localhost:8080/api/app/getAppByUserId/b7501200-c9cd-4589-90c1-ad35e2a40b1f";
 
 const columns = [
   {
@@ -121,15 +133,13 @@ const navigateToErrorPage = () => {
 /**
  * Get Data from Backend
  */
+
 async function getAllAppointmentsByUserID() {
-  let fullURL = URL_GETALLBYUID + user.userId;
-  console.log("ABCDEFGHIJKLMNOP " + fullURL);
+  let fullURL = URL_GETALLBYUID + userStore.userId;
   try {
     const response = await fetch(fullURL, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: headers,
     });
 
     if (!response.ok) {
