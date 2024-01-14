@@ -24,7 +24,7 @@
         icon="add"
         color="orange"
         @click="navigateToDynamicLink"
-        >Bearbeiten</q-btn
+        >Appointment öffnen</q-btn
       >
     </div>
   </div>
@@ -39,19 +39,13 @@
 </template>
 
 <script setup>
-/**
-//TODO
- * Ideen:
- * 1. Man könnte hier noch für den Ort ein Icon das auf einen auf
- *    Google Maps weiterleitet einbauen
- * 2. Button rechts pro Termin um ihn direkt in Google Calendar einzutragen
- *    oder halt als .ics Datei zu exportieren
- * 3. Teilnehmer als Liste ausklappen
- * 4. Beschreibung als Popup aufklappen können wenn sie etwas länger ist
- */
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import UserStore from "src/stores/user";
 import AuthStore from "src/stores/authStore";
+
+//Router
+const router = useRouter(); // Vue Router instance
 
 //Stores
 const userStore = UserStore.useStore();
@@ -66,10 +60,10 @@ const headers = {
   Accept: "application/json", // You can include other headers as needed
 };
 
-//APIs
-const URL_GETALLBYUID = "http://localhost:8080/api/app/getAppByUserId/";
-const TEST =
-  "http://localhost:8080/api/app/getAppByUserId/b7501200-c9cd-4589-90c1-ad35e2a40b1f";
+//TODO: Reload Page after routing from AddEvent to Overviewpage
+const rows = ref([]);
+
+const selected = ref([]);
 
 const columns = [
   {
@@ -101,40 +95,34 @@ const columns = [
     sortable: true,
     align: "left",
   },
+  {
+    name: "deadline",
+    label: "Deadline",
+    field: "deadline",
+    sortable: true,
+    align: "left",
+  },
 ];
-//TODO: Reload Page after routing from AddEvent to Overviewpage
-const rows = ref([]);
 
-const selected = ref([]);
-
-//FIXME: This is not how you should reroute in VueJS -> should rather use the router (didn't work when i tried)
-const navigateToDynamicLink = async () => {
-  const link = await generateHref();
-  if (link) {
-    window.location.href = link;
-  }
-};
-
-const generateHref = async () => {
+// Navigates to the dynamic link based on the selected appointment
+const navigateToDynamicLink = () => {
   if (selected.value && selected.value.length > 0) {
     const dynamicId = selected.value[0].id;
-    const isSelected = `http://localhost:9000/#/dynamic-link/${dynamicId}`;
-    return isSelected;
+    router.push(`/dynamic-link/${dynamicId}`);
   } else {
-    const isNotSelected = `http://localhost:9000/#/overviewpage`;
-    return isNotSelected;
+    router.push("/overviewpage"); // Navigate back to overview page if no selection
   }
-};
-
-const navigateToErrorPage = () => {
-  console.log("ERRORPAGE NOW");
 };
 
 /**
  * Get Data from Backend
  */
+//API
+const URL_GETALLBYUID = "http://localhost:8080/api/app/getAppByUserId/";
 
-async function getAllAppointmentsByUserID() {
+//GET Call
+const getAllAppointmentsByUserID = async () => {
+  // console.log("TOKEN: " + localStorage.getItem("userToken"));
   let fullURL = URL_GETALLBYUID + userStore.userId;
   try {
     const response = await fetch(fullURL, {
@@ -149,19 +137,15 @@ async function getAllAppointmentsByUserID() {
     }
 
     const responseData = await response.json();
-
-    console.log("Overviewpage RESPONSE DATA: " + JSON.stringify(responseData));
-
-    return responseData;
+    rows.value = responseData; //Update rows
   } catch (error) {
     console.error("Error:", error.message);
   }
-}
+};
 
 onMounted(async () => {
-  const appointments = await getAllAppointmentsByUserID();
-  rows.value = appointments;
-  // Update the reactive ref with the fetched data
+  console.log("TOKEN :" + localStorage.getItem("userToken"));
+  await getAllAppointmentsByUserID();
 });
 </script>
 

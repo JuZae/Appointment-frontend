@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import AuthStore from "src/stores/authStore";
 import UserStore from "src/stores/user";
@@ -64,11 +64,21 @@ const router = useRouter();
 const authStore = AuthStore.useStore();
 const userStore = UserStore.useStore();
 
-//Error handling after failed login attempt
-const errorMessage = computed(() => authStore.errorMessage);
-const isDialogOpen = computed(() => !!authStore.errorMessage);
-// const errorMessage = ref('');
-// const isDialogOpen = ref(false);
+/**
+ * Error handling after failed login attempt
+ */
+//Error message from the auth store
+const errorMessage = ref("");
+//Dialog visibility
+const isDialogOpen = ref(false);
+// Watch for changes in the error message from the auth store
+watch(
+  () => authStore.errorMessage,
+  (newMessage) => {
+    errorMessage.value = newMessage;
+    isDialogOpen.value = !!newMessage;
+  }
+);
 
 //APIs
 const API_GETUSERBYID = "http://localhost:8080/api/user/get/";
@@ -166,16 +176,6 @@ const goToOverview = () => {
 const goToRegister = () => {
   router.push("/register");
 };
-
-/**
- * Error Message Popup
- */
-// Watch for changes in the error message
-watch(errorMessage, (newVal, oldVal) => {
-  if (newVal !== oldVal) {
-    isDialogOpen.value = !!newVal;
-  }
-});
 
 // Reset the error message when the dialog is closed
 const closeDialog = () => {

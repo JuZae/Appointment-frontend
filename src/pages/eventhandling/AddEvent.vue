@@ -137,6 +137,7 @@ const date = ref("");
 const time = ref("");
 const select = ref("");
 const parti = ref(null);
+// const parti = ref([""]);
 const descr = ref("");
 
 //APIs
@@ -148,6 +149,16 @@ const URL_ADDR = "http://localhost:8080/api/address";
 
 const createAppointment = async () => {
   let formattedDateTime = date.value + " " + time.value;
+  // const data = {
+  //   bez: bez.value,
+  //   datum: formattedDateTime,
+  //   ort: select.value.value,
+  //   teilnehmer: toRaw(parti.value).toString(),
+  //   beschreibung: descr.value,
+  //   fk_userID: userStore.userId,
+  //   deadline: "2023-08-23 12:25",
+  // };
+
   const data = {
     bez: bez.value,
     datum: formattedDateTime,
@@ -155,13 +166,28 @@ const createAppointment = async () => {
     teilnehmer: toRaw(parti.value).toString(),
     beschreibung: descr.value,
     fk_userID: userStore.userId,
+    deadline: "2023-08-23 12:25",
   };
+
+  console.log("DATA that is sent: " + JSON.stringify(data));
+
+  // const data = {
+  //   bez: "Testoderso",
+  //   datum: "2024-01-01T12:00:00",
+  //   ort: "testort",
+  //   teilnehmer: "Teilnehmer1,Teilnehmer2",
+  //   beschreibung: "testbescgreubzbg des Events",
+  //   fk_userID: "36a010f6-8cf2-4317-9b88-472eb99d5703",
+  //   deadline: "2024-01-01T12:00:00",
+  // };
   try {
     const response = await fetch(URL_SAVEAPP, {
       method: "POST",
       headers: headers,
       body: JSON.stringify(data),
     });
+
+    console.log("DAS KOMMT ZURUECK: " + JSON.stringify(response));
 
     if (!response.ok) {
       throw new Error(
