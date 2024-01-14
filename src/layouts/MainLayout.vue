@@ -39,13 +39,6 @@ const logout = () => {
   userStore.clear();
 };
 
-// onMounted(() => {
-//   // Fetch username from store and update div accordingly
-//   console.log("OnMounted is called after login");
-//   console.log("Username: " + userStore.username);
-//   username.value = userStore.username;
-// });
-
 // Initialize username if it's already available in the store
 if (userStore.username) {
   username.value = userStore.username;
