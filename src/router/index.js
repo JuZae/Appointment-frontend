@@ -11,10 +11,11 @@ export default function () {
 
   router.beforeEach((to, from, next) => {
     const authStore = AuthStore.useStore();
-    const publicRoutes = ["/login", "/register", "/dynamic-link"];
-    const authRequired = !publicRoutes.includes(to.path);
+    const isPublicRoute =
+      to.path.startsWith("/dynamic-link") ||
+      ["/login", "/register"].includes(to.path);
 
-    if (authRequired && !authStore.isAuthenticated) {
+    if (!isPublicRoute && !authStore.isAuthenticated) {
       next("/login");
     } else {
       next();

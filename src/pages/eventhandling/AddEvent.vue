@@ -173,7 +173,7 @@
                       <div class="row items-center justify-end">
                         <q-btn
                           v-close-popup
-                          label="Close"
+                          label="Save"
                           color="primary"
                           flat
                         />
@@ -197,7 +197,7 @@
                       <div class="row items-center justify-end">
                         <q-btn
                           v-close-popup
-                          label="Close"
+                          label="Save"
                           color="primary"
                           flat
                         />
