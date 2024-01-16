@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <!-- NEW -->
+    <!-- Participant Selection Dialog -->
     <q-dialog v-model="isDialogOpen">
       <q-card>
         <q-card-section class="row items-center justify-between">
@@ -32,15 +32,25 @@
       </q-card>
     </q-dialog>
 
-    <!-- Event Details and Date Options -->
-    <div v-if="eventDetails">
-      <h2>{{ eventDetails.title }}</h2>
-      <p>{{ eventDetails.description }}</p>
-      <!-- Display date options with toggle switches -->
-      <div v-for="option in eventDetails.dateOptions" :key="option.id">
-        <q-toggle v-model="userResponses[option.id]" :label="option.date" />
+    <!-- Event Details -->
+    <div v-if="eventDetails" class="event-details">
+      <h2>{{ eventDetails.bez }}</h2>
+      <p><strong>Location:</strong> {{ eventDetails.ort }}</p>
+      <p><strong>Description:</strong> {{ eventDetails.beschreibung }}</p>
+      <p><strong>Deadline:</strong> {{ eventDetails.deadline }}</p>
+      <p><strong>Organizer ID:</strong> {{ eventDetails.fk_userID }}</p>
+
+      <!-- Display AppointmentOptions with toggle switches -->
+      <div
+        v-for="option in appointmentOptions"
+        :key="option.id"
+        class="q-mb-md"
+      >
+        <div>{{ option.datum }}</div>
+        <q-toggle v-model="userResponses[option.id]" />
       </div>
-      <q-btn label="Submit Response" @click="openDialog" />
+
+      <q-btn label="Submit Response" @click="submitUserResponses" />
     </div>
   </q-page>
 </template>
@@ -63,37 +73,25 @@ const userResponses = ref({});
 const user = ref(null);
 
 const participants = ref([]);
-
 participants.value = ["Alice", "Bob", "Charlie"];
+
+const appointmentOptions = ref([]);
 
 function selectParticipant(participant) {
   console.log("Selected participant:", participant);
   if (participant) {
     user.value = participant;
     userStore.update(participant);
+    userName.value = participant;
   }
   // Handle participant selection logic here
   isDialogOpen.value = false;
 }
 
 //API Call to get Appointment by id
-const API_GET_APP = "http://localhost:8080/public/opt/getParti/";
+const API_GET_APP = "http://localhost:8080/public/opt/getApp/";
 
-// async function fetchParticipants(appointmentId) {
-//   let fullURL = API_GET_APP + appointmentId;
-//   try {
-//     const response = await fetch(fullURL);
-//     if (!response.ok) {
-//       throw new Error("Failed to fetch participants");
-//     }
-//     const participantsStr = await response.text();
-//     participants.value = participantsStr.split(",");
-//   } catch (error) {
-//     console.error("Error fetching participants:", error);
-//   }
-// }
-
-const fetchParticipants = async (appointmentId) => {
+const fetchAppointment = async (appointmentId) => {
   let fullURL = API_GET_APP + appointmentId;
   try {
     const response = await fetch(fullURL, {
@@ -107,12 +105,78 @@ const fetchParticipants = async (appointmentId) => {
         `Request failed with status ${response.status}: ${response.statusText}`
       );
     }
-    // const responseData = await response.json();
-    const participantsStr = await response.text();
-    participants.value = participantsStr.split(",");
+
+    const responseData = await response.json();
+
+    if (responseData) {
+      //Teilnehmer in Liste packen
+      const participantsStr = responseData.teilnehmer;
+      participants.value = participantsStr.split(",");
+
+      //TODO:Hier dann das Appointment für die Darstellung setzen
+      eventDetails.value = {
+        bez: responseData.bez,
+        ort: responseData.ort,
+        beschreibung: responseData.beschreibung,
+        deadline: responseData.deadline,
+        fk_userID: responseData.fk_userID,
+        dateOptions: fetchAppointmentOptions(appointmentId).datum, // Define how date options are structured
+      };
+
+      return responseData;
+    }
   } catch (error) {
     console.error("Error:", error.message);
   }
+};
+
+////API Call to get AppointmentOptions by Appoinment id
+const API_GET_APP_OPT = "http://localhost:8080/public/opt/getOpt/";
+const fetchAppointmentOptions = async (appointmentId) => {
+  let fullURL = API_GET_APP_OPT + appointmentId;
+  try {
+    const response = await fetch(fullURL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error(
+        `Request failed with status ${response.status}: ${response.statusText}`
+      );
+    }
+
+    const responseData = await response.json();
+
+    if (responseData) {
+      //TODO:Hier dann die AppointmentOptions für die Darstellung setzen
+      appointmentOptions.value = responseData;
+
+      // Initialize userResponses
+      responseData.forEach((opt) => {
+        userResponses.value[opt.id] = false; // Initialize as false
+      });
+
+      return responseData;
+    }
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+};
+
+// Submit user responses
+const submitUserResponses = async () => {
+  appointmentOptions.value.forEach(async (option) => {
+    const userResponse = userResponses.value[option.id];
+    const updatedOption = {
+      ...option,
+      teilnehmerYes: userResponse ? [userName.value] : option.teilnehmerYes,
+      teilnehmerNo: !userResponse ? [userName.value] : option.teilnehmerNo,
+    };
+
+    await editAppointmentOption(updatedOption); // Method to send update to backend
+  });
 };
 
 // Submit User Response
@@ -136,13 +200,17 @@ function openDialog() {
 //API to Edit the participants on an appointmentOption
 const API_EDIT_APPOPT = "http://localhost:8080/api/opt/edit";
 // Example of a method to edit an appointment
-const editAppointment = async (appointmentOption) => {
+const editAppointmentOption = async (appointmentOption) => {
+  console.log("Wird geschickt" + JSON.stringify(appointmentOption));
+  console.log(
+    "TeilnehmerYes" + JSON.stringify(appointmentOption.teilnehmerYes)
+  );
+
   try {
     const response = await fetch(API_EDIT_APPOPT, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        // Include other headers as required, such as Authorization header for JWT
       },
       body: JSON.stringify(appointmentOption),
     });
@@ -166,6 +234,30 @@ const editAppointment = async (appointmentOption) => {
 
 onMounted(async () => {
   const appointmentId = route.params.appointmentId;
-  await fetchParticipants(appointmentId);
+
+  console.log(
+    "Appointment" + JSON.stringify(await fetchAppointment(appointmentId))
+  );
+  console.log(
+    "Options" + JSON.stringify(await fetchAppointmentOptions(appointmentId))
+  );
 });
 </script>
+
+<style>
+.event-details {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+.event-details h2 {
+  margin-bottom: 10px;
+  color: #333;
+}
+.event-details p {
+  margin-bottom: 5px;
+  color: #555;
+}
+</style>
