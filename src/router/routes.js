@@ -3,22 +3,30 @@ const routes = [
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      { path: "", component: () => import("pages/IndexPage.vue") },
+      {
+        path: "/",
+        component: () => import("pages/LandingPage.vue"),
+        name: "landingPage",
+      },
       {
         path: "/login",
         component: () => import("pages/login/TestLoginPage.vue"),
+        name: "loginPage",
       },
       {
         path: "/register",
         component: () => import("pages/login/TestRegisterPage.vue"),
+        name: "registerPage",
       },
       {
         path: "/overviewpage",
         component: () => import("pages/eventhandling/OverviewPage.vue"),
+        name: "overviewPage",
       },
       {
         path: "/addEvent",
         component: () => import("pages/eventhandling/AddEvent.vue"),
+        name: "addEvent",
       },
 
       // { path: "/login", component: () => import("pages/login/LoginPage.vue") },
@@ -41,6 +49,11 @@ const routes = [
       {
         path: "/signIn",
         component: () => import("pages/login/SignInPage.vue"),
+      },
+      {
+        path: "/editAppointment/:appointmentId",
+        component: () => import("pages/eventhandling/EditAppointment.vue"),
+        name: "editAppointment",
       },
     ],
   },

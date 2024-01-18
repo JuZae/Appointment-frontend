@@ -24,7 +24,17 @@
         icon="add"
         color="orange"
         @click="navigateToDynamicLink"
-        >Appointment öffnen</q-btn
+        >Abstimmung öffnen</q-btn
+      >
+    </div>
+    <div class="flex-item">
+      <q-btn
+        id="edit"
+        fab
+        icon="edit"
+        color="secondary"
+        @click="navigateToEditPage"
+        >Bearbeiten</q-btn
       >
     </div>
   </div>
@@ -111,6 +121,16 @@ const navigateToDynamicLink = () => {
     router.push(`/dynamic-link/${dynamicId}`);
   } else {
     router.push("/overviewpage"); // Navigate back to overview page if no selection
+  }
+};
+
+// Navigates to page to edit appointment
+const navigateToEditPage = () => {
+  if (selected.value && selected.value.length > 0) {
+    const appointmentId = selected.value[0].id;
+    router.push({ name: "editAppointment", params: { appointmentId } });
+  } else {
+    // Handle the case when no appointment is selected
   }
 };
 

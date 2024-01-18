@@ -8,7 +8,7 @@
         >
         <RouterLink to="/registration">
           <q-btn id="logout" @click="logout()" color="primary" no-caps
-            >Abmelden</q-btn
+            >Logout</q-btn
           >
         </RouterLink>
       </q-toolbar>

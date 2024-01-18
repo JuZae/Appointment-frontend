@@ -20,6 +20,7 @@
               label="Register"
               type="submit"
               color="primary"
+              :disable="!isFormValid"
               @click="registerUser"
             />
             <q-btn
@@ -36,8 +37,19 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+
+// Computed property to check if the form is valid
+const isFormValid = computed(() => {
+  const isEmailValid = emailRules.every(
+    (rule) => rule(register.value.email) === true
+  );
+  const isPasswordValid = passwordRules.every(
+    (rule) => rule(register.value.password) === true
+  );
+  return register.value.username && isEmailValid && isPasswordValid;
+});
 
 const register = ref({
   username: "",
@@ -72,12 +84,19 @@ const registerUser = async () => {
     });
 
     if (!response.ok) {
-      throw new Error("Registration failed");
+      throw new Error(`Registration failed: ${response.status}`);
     }
 
-    const data = await response.json();
-    console.log("Registration successful", data);
-    // Redirect to login or another page
+    // Handle non-JSON responses gracefully
+    const textData = await response.text();
+    try {
+      const data = JSON.parse(textData);
+      console.log("Registration successful", data);
+      router.push({ name: "loginPage" });
+    } catch (error) {
+      console.log("Registration successful", textData);
+      router.push({ name: "loginPage" });
+    }
   } catch (error) {
     console.error("Registration error:", error);
   }
@@ -85,7 +104,7 @@ const registerUser = async () => {
 
 const onSubmitRegister = () => {
   console.log("Registration data:", register.value);
-  // Implement your logic or HTTP request here
+  registerUser();
 };
 
 const onReset = () => {

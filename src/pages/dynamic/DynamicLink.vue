@@ -38,7 +38,6 @@
       <p><strong>Location:</strong> {{ eventDetails.ort }}</p>
       <p><strong>Description:</strong> {{ eventDetails.beschreibung }}</p>
       <p><strong>Deadline:</strong> {{ eventDetails.deadline }}</p>
-      <p><strong>Organizer ID:</strong> {{ eventDetails.fk_userID }}</p>
 
       <!-- Display AppointmentOptions with toggle switches -->
       <div
@@ -47,11 +46,36 @@
         class="q-mb-md"
       >
         <div>{{ option.datum }}</div>
-        <q-toggle v-model="userResponses[option.id]" />
+        <q-toggle
+          color="green"
+          checked-icon="check"
+          unchecked-icon="clear"
+          v-model="userResponses[option.id]"
+        />
       </div>
 
-      <q-btn label="Submit Response" @click="submitUserResponses" />
+      <q-btn label="Submit" color="green" @click="submitUserResponses" />
     </div>
+
+    <!-- Success/Error Popup Dialog -->
+    <q-dialog v-model="isPopupOpen">
+      <q-card>
+        <q-card-section class="row items-center justify-between">
+          <div
+            class="text-h6"
+            :class="{
+              'text-green': popupType === 'success',
+              'text-red': popupType === 'error',
+            }"
+          >
+            {{ popupMessage }}
+          </div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Close" @click="isPopupOpen = false" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -76,6 +100,10 @@ const participants = ref([]);
 participants.value = ["Alice", "Bob", "Charlie"];
 
 const appointmentOptions = ref([]);
+
+const isPopupOpen = ref(false);
+const popupMessage = ref("");
+const popupType = ref(""); // 'success' or 'error'
 
 function selectParticipant(participant) {
   console.log("Selected participant:", participant);
@@ -208,24 +236,6 @@ const submitUserResponses = async () => {
   });
 };
 
-// Submit User Response
-function submitResponse() {
-  // Implement submission logic here...
-  isDialogOpen.value = false;
-}
-
-// Open Dialog for User Name Input
-function openDialog() {
-  isDialogOpen.value = true;
-}
-
-/**
- * /api/opt/edit/{id}
- * /api/opt/getOpt{id}
- * /api/opt/getApp{id}
- * /api/opt/getParti{id}
- */
-
 //API to Edit the participants on an appointmentOption
 const API_EDIT_APPOPT = "http://localhost:8080/public/opt/edit";
 // Example of a method to edit an appointment
@@ -247,17 +257,25 @@ const editAppointmentOption = async (appointmentOption) => {
     if (!response.ok) {
       // If the response status is 403, it means the deadline has passed
       if (response.status === 403) {
-        alert("The deadline for editing this appointment has passed.");
+        popupMessage.value =
+          "The deadline for editing this appointment has passed.";
+        popupType.value = "error";
       } else {
         // Handle other errors
-        console.error("Error editing appointment:", response.statusText);
+        popupMessage.value = `Error editing appointment: ${response.statusText}`;
+        popupType.value = "error";
       }
     } else {
       // Handle successful edit
-      console.log("Appointment edited successfully");
+      popupMessage.value = "Appointment edited successfully";
+      popupType.value = "success";
     }
+    isPopupOpen.value = true; // Show the popup
   } catch (error) {
     console.error("Error editing appointment:", error);
+    popupMessage.value = `Error editing appointment: ${error.message}`;
+    popupType.value = "error";
+    isPopupOpen.value = true; // Show the popup
   }
 };
 
@@ -288,5 +306,11 @@ onMounted(async () => {
 .event-details p {
   margin-bottom: 5px;
   color: #555;
+}
+.text-green {
+  color: green;
+}
+.text-red {
+  color: red;
 }
 </style>
