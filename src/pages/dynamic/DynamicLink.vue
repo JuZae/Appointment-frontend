@@ -27,11 +27,7 @@
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Cancel" @click="isDialogOpen = false" />
-          <q-btn
-            flat
-            label="Submit"
-            @click="selectParticipant(userName), addParticipantToAppointment"
-          />
+          <q-btn flat label="Submit" @click="selectParticipant(userName)" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -60,7 +56,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import UserStore from "src/stores/user";
 
@@ -83,6 +79,7 @@ const appointmentOptions = ref([]);
 
 function selectParticipant(participant) {
   console.log("Selected participant:", participant);
+  addParticipantToAppointment();
   if (participant) {
     user.value = participant;
     userStore.update(participant);
@@ -93,41 +90,30 @@ function selectParticipant(participant) {
 }
 
 //API Call to add new participant if input field is filled
-const API_ADD_PARTI = "http://localhost:8080/public/add/addParticipant";
+const API_ADD_PARTI = "http://localhost:8080/public/opt/add/addParticipant";
 const addParticipantToAppointment = async () => {
-  if (!userName.value.trim()) {
-    alert("Please enter a name.");
-    return;
-  }
+  if (userName.value) {
+    try {
+      const response = await fetch(API_ADD_PARTI, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          appointmentId: route.params.appointmentId, // Make sure eventDetails has the id
+          participant: userName.value,
+        }),
+      });
 
-  const data = {
-    appointmentId: eventDetails.value.id,
-    participant: userName.value,
-  };
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
-  try {
-    const response = await fetch(API_ADD_PARTICIPANT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        `Request failed with status ${response.status}: ${response.statusText}`
-      );
+      const responseData = await response.json();
+      console.log("Participant added:", responseData);
+    } catch (error) {
+      console.error("Error adding participant:", error);
     }
-
-    const responseData = await response.json();
-    console.log("Participant added:", responseData);
-
-    // Update the participants list in the frontend
-    participants.value.push(userName.value);
-    userName.value = ""; // Clear the input field
-  } catch (error) {
-    console.error("Error:", error.message);
   }
 };
 
