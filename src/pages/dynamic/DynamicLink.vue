@@ -27,7 +27,11 @@
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Cancel" @click="isDialogOpen = false" />
-          <q-btn flat label="Submit" @click="selectParticipant(userName)" />
+          <q-btn
+            flat
+            label="Submit"
+            @click="selectParticipant(userName), addParticipantToAppointment"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -87,6 +91,45 @@ function selectParticipant(participant) {
   // Handle participant selection logic here
   isDialogOpen.value = false;
 }
+
+//API Call to add new participant if input field is filled
+const API_ADD_PARTI = "http://localhost:8080/public/add/addParticipant";
+const addParticipantToAppointment = async () => {
+  if (!userName.value.trim()) {
+    alert("Please enter a name.");
+    return;
+  }
+
+  const data = {
+    appointmentId: eventDetails.value.id,
+    participant: userName.value,
+  };
+
+  try {
+    const response = await fetch(API_ADD_PARTICIPANT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Request failed with status ${response.status}: ${response.statusText}`
+      );
+    }
+
+    const responseData = await response.json();
+    console.log("Participant added:", responseData);
+
+    // Update the participants list in the frontend
+    participants.value.push(userName.value);
+    userName.value = ""; // Clear the input field
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+};
 
 //API Call to get Appointment by id
 const API_GET_APP = "http://localhost:8080/public/opt/getApp/";
@@ -198,7 +241,7 @@ function openDialog() {
  */
 
 //API to Edit the participants on an appointmentOption
-const API_EDIT_APPOPT = "http://localhost:8080/api/opt/edit";
+const API_EDIT_APPOPT = "http://localhost:8080/public/opt/edit";
 // Example of a method to edit an appointment
 const editAppointmentOption = async (appointmentOption) => {
   console.log("Wird geschickt" + JSON.stringify(appointmentOption));

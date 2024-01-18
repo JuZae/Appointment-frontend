@@ -124,6 +124,7 @@
             @input-value="onInput($event)"
             option-value="value"
             option-label="label"
+            clearable
           >
           </q-select>
         </td>
