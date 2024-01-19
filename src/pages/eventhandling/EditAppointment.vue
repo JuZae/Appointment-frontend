@@ -16,12 +16,14 @@
           multiple
           hide-dropdown-icon
           input-debounce="0"
-          new-value-mode="add" />
+          new-value-mode="add"
+        />
 
         <q-input
           type="textarea"
           v-model="appointment.beschreibung"
-          label="Beschreibung" />
+          label="Beschreibung"
+        />
 
         <!-- NEW -->
         <div class="q-pa-md deadline-input-container">
@@ -54,6 +56,7 @@
                   <q-time
                     v-model="appointment.deadline"
                     mask="YYYY-MM-DD HH:mm"
+                    label="Deadline"
                     format24h
                   >
                     <div class="row items-center justify-end">
@@ -66,7 +69,7 @@
           </q-input>
         </div>
         <!-- Appointment Options Section -->
-        <div class="appointment-options">
+        <!-- <div class="appointment-options">
           <h5>Appointment Options</h5>
           <div
             class="appointment-option"
@@ -90,12 +93,17 @@
             color="primary"
             @click="addAppointmentOption"
           />
-        </div>
-        <!-- NEW AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -->
-        <tr>
-          <td>
+        </div> -->
+        <!-- NEW -->
+        <div class="appointment-options">
+          <h5>Appointment Options</h5>
+          <div
+            class="appointment-option"
+            v-for="(option, index) in appointmentOptions"
+            :key="index"
+          >
             <div class="q-pa-md deadline-input-container">
-              <q-input filled v-model="date" class="deadline-input">
+              <q-input filled v-model="option.datum" class="deadline-input">
                 <template v-slot:prepend>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy
@@ -103,7 +111,7 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="date" mask="YYYY-MM-DD HH:mm">
+                      <q-date v-model="option.datum" mask="YYYY-MM-DD HH:mm">
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -123,7 +131,11 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-time v-model="date" mask="YYYY-MM-DD HH:mm" format24h>
+                      <q-time
+                        v-model="option.datum"
+                        mask="YYYY-MM-DD HH:mm"
+                        format24h
+                      >
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -138,52 +150,25 @@
                 </template>
               </q-input>
             </div>
-          </td>
-          <td>
             <q-btn
-              v-close-popup
-              icon="add"
-              label="Add"
-              color="primary"
-              @click="addDateToList"
+              icon="delete"
+              color="negative"
+              @click="removeAppointmentOption(index)"
             />
-          </td>
-        </tr>
-        <tr>
-          <td />
-          <td />
-          <td>
-            <div class="added-dates-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Mögliche Zeitpunkte</th>
-                    <th>Löschen</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(addedDate, index) in addedDates" :key="index">
-                    <td>{{ addedDate }}</td>
-                    <td>
-                      <q-btn
-                        icon="delete"
-                        flat
-                        @click="deleteDateFromList(index)"
-                      ></q-btn>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <!-- NEW AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
-          <div class="row justify-center q-mt-md">
-            <q-btn label="Speichern" type="submit" color="primary" />
-            <q-btn label="Abbrechen" color="negative" @click="cancel" />
-          </div></tr
-      ></q-form>
+          </div>
+          <q-btn
+            label="Add Option"
+            color="primary"
+            @click="addAppointmentOption"
+          />
+        </div>
+        <!-- NEW -->
+        <div class="row justify-center q-mt-md">
+          <q-btn label="Speichern" type="submit" color="primary" />
+          <q-btn label="Abbrechen" color="negative" @click="cancel" />
+        </div>
+        ></q-form
+      >
     </div>
 
     <!-- Success Dialog -->
@@ -290,7 +275,7 @@ const fetchAppointmentOptions = async () => {
 
     if (responseData) {
       appointmentOptions.value = responseData;
-      console.log("OPtions oder so: " + JSON.stringify(responseData));
+      // console.log("OPtions oder so: " + JSON.stringify(responseData));
     }
   } catch (error) {
     console.error("Error fetching appointment:", error);
@@ -299,7 +284,7 @@ const fetchAppointmentOptions = async () => {
 
 const saveChanges = async () => {
   saveAppointment();
-  saveAppointmentOptions();
+  // saveAppointmentOptions();
   isSuccessDialogOpen.value = true;
 };
 
@@ -342,7 +327,12 @@ const saveAppointment = async () => {
 };
 
 const addAppointmentOption = () => {
-  appointmentOptions.value.push({ datum: "", id: null }); // Add new option
+  // Ensure that fk_appID is set to the current appointment's ID
+  appointmentOptions.value.push({
+    datum: "",
+    id: null, // id being null is fine since db will handle it and generate a UUID
+    fk_appID: appointmentId, //set FK to appointmentId
+  });
 };
 
 const removeAppointmentOption = async (index) => {

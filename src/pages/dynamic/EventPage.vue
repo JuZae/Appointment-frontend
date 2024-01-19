@@ -44,7 +44,7 @@ const sendEmail = async (event) => {
   };
 
   try {
-    const response = await fetch("http://localhost:8080/sendEmail", {
+    const response = await fetch("http://localhost:8080/email/sendEmail", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

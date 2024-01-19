@@ -39,6 +39,16 @@
     </div>
     <div class="flex-item">
       <q-btn
+        id="mail"
+        fab
+        icon="mail"
+        color="primary"
+        @click="navigateToMailPage"
+        >Send E-Mail</q-btn
+      >
+    </div>
+    <div class="flex-item">
+      <q-btn
         color="negative"
         icon="delete"
         fab
@@ -162,6 +172,10 @@ const navigateToEditPage = () => {
   } else {
     // Handle the case when no appointment is selected
   }
+};
+
+const navigateToMailPage = () => {
+  router.push({ name: "mailPage" });
 };
 
 /**

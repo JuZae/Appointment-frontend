@@ -53,7 +53,39 @@
           v-model="userResponses[option.id]"
         />
       </div>
-
+      <!-- NEW -->
+      <div
+        v-for="option in appointmentOptions"
+        :key="option.id"
+        class="appointment-option q-mb-md"
+      >
+        <div class="q-mb-md">
+          <strong>{{ option.datum }}</strong>
+        </div>
+        <div class="participant-list">
+          <div class="participant-yes">
+            <strong>Verfügbar:</strong>
+            <span
+              v-for="participant in option.teilnehmerYes"
+              :key="participant"
+              class="participant participant-available"
+            >
+              {{ participant }}
+            </span>
+          </div>
+          <div class="participant-no">
+            <strong>Nicht Verfügbar:</strong>
+            <span
+              v-for="participant in option.teilnehmerNo"
+              :key="participant"
+              class="participant participant-not-available"
+            >
+              {{ participant }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- NEW -->
       <q-btn label="Abstimmen" color="green" @click="submitUserResponses" />
     </div>
 
@@ -107,11 +139,11 @@ const popupType = ref(""); // 'success' or 'error'
 
 function selectParticipant(participant) {
   console.log("Selected participant:", participant);
-  addParticipantToAppointment();
   if (participant) {
     user.value = participant;
     userStore.update(participant);
     userName.value = participant;
+    addParticipantToAppointment();
   }
   // Handle participant selection logic here
   isDialogOpen.value = false;
@@ -209,6 +241,7 @@ const fetchAppointmentOptions = async (appointmentId) => {
     if (responseData) {
       //TODO:Hier dann die AppointmentOptions für die Darstellung setzen
       appointmentOptions.value = responseData;
+      console.log("APPOPTIONSDYNAMIC: " + JSON.stringify(appointmentOptions));
 
       // Initialize userResponses
       responseData.forEach((opt) => {
@@ -312,5 +345,35 @@ onMounted(async () => {
 }
 .text-red {
   color: red;
+}
+
+/* NEW */
+.appointment-option {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.participant-list {
+  display: flex;
+  justify-content: space-between;
+}
+
+.participant {
+  margin-right: 5px;
+  padding: 2px 5px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.participant-available {
+  background-color: #c8e6c9; /* Light green background */
+  color: #256029; /* Dark green text */
+}
+
+.participant-not-available {
+  background-color: #ffcdd2; /* Light red background */
+  color: #c63737; /* Dark red text */
 }
 </style>

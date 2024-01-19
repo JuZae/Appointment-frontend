@@ -37,6 +37,7 @@ const routes = [
       {
         path: "/mailevent",
         component: () => import("pages/dynamic/EventPage.vue"),
+        name: "mailPage",
       },
       {
         path: "/google",
