@@ -4,7 +4,7 @@
     <q-dialog v-model="isDialogOpen">
       <q-card>
         <q-card-section class="row items-center justify-between">
-          <div class="text-h6">Select a Participant</div>
+          <div class="text-h6">Wähle einen Teilnehmer</div>
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
 
@@ -22,12 +22,12 @@
           </q-list>
         </q-card-section>
         <q-card-section>
-          <div class="text-h6">Enter Your Name</div>
+          <div class="text-h6">Username eingeben</div>
           <q-input v-model="userName" label="Name" />
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" @click="isDialogOpen = false" />
-          <q-btn flat label="Submit" @click="selectParticipant(userName)" />
+          <q-btn flat label="Abbrechen" @click="isDialogOpen = false" />
+          <q-btn flat label="Weiter" @click="selectParticipant(userName)" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -35,8 +35,8 @@
     <!-- Event Details -->
     <div v-if="eventDetails" class="event-details">
       <h2>{{ eventDetails.bez }}</h2>
-      <p><strong>Location:</strong> {{ eventDetails.ort }}</p>
-      <p><strong>Description:</strong> {{ eventDetails.beschreibung }}</p>
+      <p><strong>Ort:</strong> {{ eventDetails.ort }}</p>
+      <p><strong>Beschreibung:</strong> {{ eventDetails.beschreibung }}</p>
       <p><strong>Deadline:</strong> {{ eventDetails.deadline }}</p>
 
       <!-- Display AppointmentOptions with toggle switches -->
@@ -54,7 +54,7 @@
         />
       </div>
 
-      <q-btn label="Submit" color="green" @click="submitUserResponses" />
+      <q-btn label="Abstimmen" color="green" @click="submitUserResponses" />
     </div>
 
     <!-- Success/Error Popup Dialog -->

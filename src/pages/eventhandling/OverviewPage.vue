@@ -3,7 +3,7 @@
     <q-table
       flat
       bordered
-      title="Terminübersicht"
+      title="Appointment Übersicht"
       :rows="rows"
       :columns="columns"
       row-key="id"
@@ -37,7 +37,38 @@
         >Bearbeiten</q-btn
       >
     </div>
+    <div class="flex-item">
+      <q-btn
+        color="negative"
+        icon="delete"
+        fab
+        label="Löschen"
+        @click="confirmDelete"
+        :disable="!selected.length"
+      />
+    </div>
   </div>
+
+  <!-- Confirmation Dialog -->
+  <q-dialog v-model="isDeleteDialogOpen">
+    <q-card>
+      <q-card-section class="row items-center">
+        <div class="text-h6">Confirm Delete</div>
+      </q-card-section>
+      <q-card-section>
+        Are you sure you want to delete this appointment?
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn flat label="Cancel" color="primary" v-close-popup />
+        <q-btn
+          flat
+          label="Delete"
+          color="negative"
+          @click="deleteAppointment"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 
   <RouterLink to="/addEvent">
     <div>
@@ -70,7 +101,6 @@ const headers = {
   Accept: "application/json", // You can include other headers as needed
 };
 
-//TODO: Reload Page after routing from AddEvent to Overviewpage
 const rows = ref([]);
 
 const selected = ref([]);
@@ -137,12 +167,11 @@ const navigateToEditPage = () => {
 /**
  * Get Data from Backend
  */
-//API
-const URL_GETALLBYUID = "http://localhost:8080/api/app/getAppByUserId/";
 
-//GET Call
+//GET Call for all app by userid
 const getAllAppointmentsByUserID = async () => {
-  // console.log("TOKEN: " + localStorage.getItem("userToken"));
+  //API
+  const URL_GETALLBYUID = "http://localhost:8080/api/app/getAppByUserId/";
   let fullURL = URL_GETALLBYUID + userStore.userId;
   try {
     const response = await fetch(fullURL, {
@@ -163,8 +192,41 @@ const getAllAppointmentsByUserID = async () => {
   }
 };
 
+const isDeleteDialogOpen = ref(false);
+
+// Show confirmation dialog
+const confirmDelete = () => {
+  isDeleteDialogOpen.value = true;
+};
+
+// Handle delete confirmation
+const deleteAppointment = async () => {
+  if (selected.value && selected.value.length > 0) {
+    const appointmentId = selected.value[0].id; // Assuming single selection
+    const API_DELETE_APP = `http://localhost:8080/api/app/deleteAppById/${appointmentId}`;
+
+    try {
+      const response = await fetch(API_DELETE_APP, {
+        method: "DELETE",
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Deletion failed: ${response.status}`);
+      }
+
+      console.log("Appointment deleted successfully!");
+      isDeleteDialogOpen.value = false;
+      // Refresh the table by fetching the appointments again
+      await getAllAppointmentsByUserID();
+    } catch (error) {
+      console.error("Error deleting appointment:", error);
+    }
+  }
+};
+
 onMounted(async () => {
-  console.log("TOKEN :" + localStorage.getItem("userToken"));
+  // console.log("TOKEN :" + localStorage.getItem("userToken"));
   await getAllAppointmentsByUserID();
 });
 </script>

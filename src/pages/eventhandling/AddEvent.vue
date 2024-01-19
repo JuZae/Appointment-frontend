@@ -1,6 +1,6 @@
 <template>
   <head>
-    <title>Terminerstellung</title>
+    <title>Appointment Erstellen</title>
     <title>Buttons</title>
     <title>Icons</title>
     <link
@@ -9,7 +9,7 @@
     />
   </head>
   <body>
-    <h4>Terminerstellung</h4>
+    <h4>Appointment Erstellen</h4>
 
     <table>
       <tr>
