@@ -30,26 +30,22 @@ const routes = [
       },
 
       // { path: "/login", component: () => import("pages/login/LoginPage.vue") },
-      {
-        path: "/registration",
-        component: () => import("pages/login/RegistrationPage.vue"),
-      },
+      // {
+      //   path: "/registration",
+      //   component: () => import("pages/login/RegistrationPage.vue"),
+      // },
       {
         path: "/mailevent",
         component: () => import("pages/dynamic/EventPage.vue"),
         name: "mailPage",
       },
-      {
-        path: "/google",
-        component: () => import("pages/test/TestRegistration.vue"),
-      },
+      // {
+      //   path: "/google",
+      //   component: () => import("pages/test/TestRegistration.vue"),
+      // },
       {
         path: "/dynamic-link/:appointmentId",
         component: () => import("pages/dynamic/DynamicLink.vue"),
-      },
-      {
-        path: "/signIn",
-        component: () => import("pages/login/SignInPage.vue"),
       },
       {
         path: "/editAppointment/:appointmentId",

@@ -21,7 +21,6 @@
               type="submit"
               color="primary"
               :disable="!isFormValid"
-              @click="registerUser"
             />
             <q-btn
               label="Back to Login"
@@ -33,12 +32,38 @@
         </q-form>
       </q-card-section>
     </q-card>
+
+    <q-dialog v-model="isDialogOpen">
+      <q-card>
+        <q-card-section class="row items-center justify-between">
+          <div
+            class="text-h6"
+            :class="{
+              'text-green': dialogType === 'success',
+              'text-red': dialogType === 'error',
+            }"
+          >
+            {{ dialogMessage }}
+          </div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Close" color="primary" @click="closeDialog" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+// Dialog state
+const isDialogOpen = ref(false);
+const dialogMessage = ref("");
+const dialogType = ref(""); // 'success' or 'error'
 
 // Computed property to check if the form is valid
 const isFormValid = computed(() => {
@@ -51,13 +76,12 @@ const isFormValid = computed(() => {
   return register.value.username && isEmailValid && isPasswordValid;
 });
 
+// Registration Request Object
 const register = ref({
   username: "",
   email: "",
   password: "",
 });
-
-const router = useRouter();
 
 const emailRules = [
   (val) => !!val || "Email is required",
@@ -83,27 +107,39 @@ const registerUser = async () => {
       }),
     });
 
+    const responseData = await response.json();
     if (!response.ok) {
-      throw new Error(`Registration failed: ${response.status}`);
+      throw new Error(`Registration failed: ${responseData.message}`);
     }
 
-    // Handle non-JSON responses gracefully
-    const textData = await response.text();
-    try {
-      const data = JSON.parse(textData);
-      console.log("Registration successful", data);
+    console.log("Registration successful", responseData.message);
+    // Display success message and navigate to login page
+    displayMessage("Registration successful. Please log in.", "success");
+    // Wait for 2 seconds before navigating to login page
+    setTimeout(() => {
       router.push({ name: "loginPage" });
-    } catch (error) {
-      console.log("Registration successful", textData);
-      router.push({ name: "loginPage" });
-    }
+    }, 3000);
   } catch (error) {
     console.error("Registration error:", error);
+    // Display error message
+    displayMessage(error.message, "error");
   }
 };
 
+// Function to display messages in a dialog
+const displayMessage = (message, type) => {
+  dialogMessage.value = message;
+  dialogType.value = type;
+  isDialogOpen.value = true;
+};
+
+// Function to close the dialog
+const closeDialog = () => {
+  isDialogOpen.value = false;
+};
+
 const onSubmitRegister = () => {
-  console.log("Registration data:", register.value);
+  // console.log("Registration data:", register.value);
   registerUser();
 };
 
@@ -118,62 +154,12 @@ const goToLogin = () => {
 };
 </script>
 
-<!-- <style>
-/* General Styles */
-body,
-html {
-  height: 100%;
-  margin: 0;
-  font-family: "Arial", sans-serif;
+<style>
+.text-green {
+  color: green;
 }
 
-/* Page Layout */
-.q-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+.text-red {
+  color: red;
 }
-
-/* Card Styles */
-.q-card {
-  width: 100%;
-  max-width: 400px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-}
-
-/* Form Styles */
-.q-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.q-input {
-  margin-bottom: 20px;
-}
-
-/* Button Styles */
-.q-btn {
-  width: 100%;
-  margin-top: 10px;
-}
-
-/* Link Styles */
-.link {
-  text-align: center;
-  margin-top: 15px;
-  color: #007bff;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-/* Responsive Design */
-@media (max-width: 600px) {
-  .q-card {
-    margin: 20px;
-    box-shadow: none;
-  }
-}
-</style> -->
+</style>
