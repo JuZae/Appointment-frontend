@@ -34,8 +34,9 @@ export const useStore = defineStore("auth", {
     },
 
     async login(email, password) {
+      const URL_LOGIN = "http://49.13.170.189:8080/" + "api/auth/login";
       try {
-        const response = await fetch("http://localhost:8080/api/auth/login", {
+        const response = await fetch(URL_LOGIN, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),

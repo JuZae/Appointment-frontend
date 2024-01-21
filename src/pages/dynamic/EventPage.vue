@@ -43,8 +43,9 @@ const sendEmail = async (event) => {
     body: body.value,
   };
 
+  const URL_EMAIL = "http://49.13.170.189:8080/" + "email/sendEmail";
   try {
-    const response = await fetch("http://localhost:8080/email/sendEmail", {
+    const response = await fetch(URL_EMAIL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -275,7 +275,8 @@ const deleteDateFromList = (index) => {
 const deadlineDate = ref("");
 
 //API for saving an appointment
-const URL_SAVEAPP = "http://localhost:8080/api/app/saveApp";
+// const URL_SAVEAPP = "http://localhost:8080/api/app/saveApp";
+const URL_SAVEAPP = "http://49.13.170.189:8080/" + "api/app/saveApp";
 
 //Create a new Appointment
 //Required LocalDatemTime pattern: "yyyy-MM-dd HH:mm"
@@ -313,7 +314,8 @@ const createAppointment = async () => {
 };
 
 //Google Places API
-const URL_ADDR = "http://localhost:8080/api/address";
+// const URL_ADDR = "http://localhost:8080/api/address";
+const URL_ADDR = "http://49.13.170.189:8080/" + "api/address";
 const onInput = async (event) => {
   //Mit dem selection habt Ihr Zugriff auf das DOM element
   //und mit showPopUp macht Ihr das Fenster auf
@@ -343,7 +345,8 @@ const onInput = async (event) => {
 };
 
 //API for saving an appointmentOption
-const URL_SAVEAPPOPT = "http://localhost:8080/api/app/saveAppOption";
+// const URL_SAVEAPPOPT = "http://localhost:8080/api/app/saveAppOption";
+const URL_SAVEAPPOPT = "http://49.13.170.189:8080/" + "api/app/saveAppOption";
 const createAppointmentOptions = async (appointmentId) => {
   console.log("APPOPT-ISCALLED!!!" + appointmentId);
   for (const date of addedDates.value) {

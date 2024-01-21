@@ -148,9 +148,10 @@ function selectParticipant(participant) {
   // Handle participant selection logic here
   isDialogOpen.value = false;
 }
-
 //API Call to add new participant if input field is filled
-const API_ADD_PARTI = "http://localhost:8080/public/opt/add/addParticipant";
+const API_ADD_PARTI =
+  "http://49.13.170.189:8080/" + "public/opt/add/addParticipant";
+// const API_ADD_PARTI = "http://localhost:8080/public/opt/add/addParticipant";
 const addParticipantToAppointment = async () => {
   if (userName.value) {
     try {
@@ -178,7 +179,8 @@ const addParticipantToAppointment = async () => {
 };
 
 //API Call to get Appointment by id
-const API_GET_APP = "http://localhost:8080/public/opt/getApp/";
+// const API_GET_APP = "http://localhost:8080/public/opt/getApp/";
+const API_GET_APP = "http://49.13.170.189:8080/" + "public/opt/getApp/";
 
 const fetchAppointment = async (appointmentId) => {
   let fullURL = API_GET_APP + appointmentId;
@@ -220,7 +222,8 @@ const fetchAppointment = async (appointmentId) => {
 };
 
 ////API Call to get AppointmentOptions by Appoinment id
-const API_GET_APP_OPT = "http://localhost:8080/public/opt/getOpt/";
+// const API_GET_APP_OPT = "http://localhost:8080/public/opt/getOpt/";
+const API_GET_APP_OPT = "http://49.13.170.189:8080/" + "public/opt/getOpt/";
 const fetchAppointmentOptions = async (appointmentId) => {
   let fullURL = API_GET_APP_OPT + appointmentId;
   try {
@@ -270,7 +273,8 @@ const submitUserResponses = async () => {
 };
 
 //API to Edit the participants on an appointmentOption
-const API_EDIT_APPOPT = "http://localhost:8080/public/opt/edit";
+// const API_EDIT_APPOPT = "http://localhost:8080/public/opt/edit";
+const API_EDIT_APPOPT = "http://49.13.170.189:8080/" + "public/opt/edit";
 // Example of a method to edit an appointment
 const editAppointmentOption = async (appointmentOption) => {
   console.log("Wird geschickt" + JSON.stringify(appointmentOption));

@@ -185,7 +185,9 @@ const navigateToMailPage = () => {
 //GET Call for all app by userid
 const getAllAppointmentsByUserID = async () => {
   //API
-  const URL_GETALLBYUID = "http://localhost:8080/api/app/getAppByUserId/";
+  const URL_GETALLBYUID =
+    "http://49.13.170.189:8080/" + "api/app/getAppByUserId/";
+  // const URL_GETALLBYUID = "http://localhost:8080/api/app/getAppByUserId/";
   let fullURL = URL_GETALLBYUID + userStore.userId;
   try {
     const response = await fetch(fullURL, {
@@ -217,7 +219,8 @@ const confirmDelete = () => {
 const deleteAppointment = async () => {
   if (selected.value && selected.value.length > 0) {
     const appointmentId = selected.value[0].id; // Assuming single selection
-    const API_DELETE_APP = `http://localhost:8080/api/app/deleteAppById/${appointmentId}`;
+    const API_DELETE_APP = `http://49.13.170.189:8080/api/app/deleteAppById/${appointmentId}`;
+    // const API_DELETE_APP = `http://localhost:8080/api/app/deleteAppById/${appointmentId}`;
 
     try {
       const response = await fetch(API_DELETE_APP, {

@@ -81,7 +81,8 @@ watch(
 );
 
 //APIs
-const API_GETUSERBYID = "http://localhost:8080/api/user/get/";
+// const API_GETUSERBYID = "http://localhost:8080/api/user/get/";
+const API_GETUSERBYID = "http://49.13.170.189:8080/" + "api/user/get/";
 
 //LoginDTO that is sent to backend
 const loginDTO = ref({
