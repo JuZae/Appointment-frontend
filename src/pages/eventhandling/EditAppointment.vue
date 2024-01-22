@@ -204,7 +204,7 @@ const route = useRoute();
 const authStore = AuthStore.useStore();
 const userStore = UserStore.useStore();
 
-// const appointmentId = route.params.appointmentId;
+const appointmentId = route.params.appointmentId;
 const appointment = ref(null);
 
 const appointmentOptions = ref([]);
