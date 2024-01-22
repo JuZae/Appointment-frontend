@@ -204,7 +204,7 @@ const route = useRoute();
 const authStore = AuthStore.useStore();
 const userStore = UserStore.useStore();
 
-const appointmentId = route.params.appointmentId;
+// const appointmentId = route.params.appointmentId;
 const appointment = ref(null);
 
 const appointmentOptions = ref([]);
@@ -224,8 +224,8 @@ const headers = {
   Accept: "application/json", // You can include other headers as needed
 };
 
-const fetchAppointment = async () => {
-  const appointmentId = route.params.appointmentId;
+const fetchAppointment = async (appointmentId) => {
+  // const appointmentId = route.params.appointmentId;
   // const API_GET_APP =
   //   "http://localhost:8080/api/app/getAppById/" + appointmentId;
   const API_GET_APP =
@@ -255,8 +255,8 @@ const fetchAppointment = async () => {
   }
 };
 
-const fetchAppointmentOptions = async () => {
-  const appointmentId = route.params.appointmentId;
+const fetchAppointmentOptions = async (appointmentId) => {
+  // const appointmentId = route.params.appointmentId;
   // const API_GET_APP =
   //   "http://localhost:8080/public/opt/getOpt/" + appointmentId;
   const API_GET_APP =
@@ -373,9 +373,10 @@ const cancel = () => {
 };
 
 onMounted(async () => {
+  // const appointmentId = route.params.appointmentId;
   const appointmentId = route.params.appointmentId;
-  await fetchAppointment();
-  await fetchAppointmentOptions();
+  await fetchAppointment(appointmentId);
+  await fetchAppointmentOptions(appointmentId);
 
   watch(
     () => appointment.value,

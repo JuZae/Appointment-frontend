@@ -168,7 +168,9 @@ const navigateToDynamicLink = () => {
 const navigateToEditPage = () => {
   if (selected.value && selected.value.length > 0) {
     const appointmentId = selected.value[0].id;
-    router.push({ name: "editAppointment", params: { appointmentId } });
+    if (appointmentId) {
+      router.push({ name: "editAppointment", params: { appointmentId } });
+    }
   } else {
     // Handle the case when no appointment is selected
   }
