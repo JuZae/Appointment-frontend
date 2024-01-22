@@ -27,7 +27,11 @@
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Abbrechen" @click="isDialogOpen = false" />
-          <q-btn flat label="Weiter" @click="selectParticipant(userName)" />
+          <q-btn
+            flat
+            label="Weiter"
+            @click="validateAndSelectParticipant(userName)"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -137,44 +141,49 @@ const isPopupOpen = ref(false);
 const popupMessage = ref("");
 const popupType = ref(""); // 'success' or 'error'
 
-function selectParticipant(participant) {
-  console.log("Selected participant:", participant);
-  if (participant) {
+function validateAndSelectParticipant(participant) {
+  if (!participant || participant.trim() === "") {
+    popupMessage.value = "You must select or enter a Username.";
+    popupType.value = "error";
+    isPopupOpen.value = true;
+    return;
+  } else {
     user.value = participant;
     userStore.update(participant);
     userName.value = participant;
     addParticipantToAppointment();
+    isDialogOpen.value = false;
   }
-  // Handle participant selection logic here
-  isDialogOpen.value = false;
 }
 //API Call to add new participant if input field is filled
 const API_ADD_PARTI =
   "http://49.13.170.189:8080/" + "public/opt/add/addParticipant";
 // const API_ADD_PARTI = "http://localhost:8080/public/opt/add/addParticipant";
 const addParticipantToAppointment = async () => {
-  if (userName.value) {
-    try {
-      const response = await fetch(API_ADD_PARTI, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          appointmentId: route.params.appointmentId, // Make sure eventDetails has the id
-          participant: userName.value,
-        }),
-      });
+  if (!userName.value || userName.value.trim() === "") {
+    console.error("Username is empty, cannot add participant");
+    return;
+  }
+  try {
+    const response = await fetch(API_ADD_PARTI, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        appointmentId: route.params.appointmentId, // Make sure eventDetails has the id
+        participant: userName.value,
+      }),
+    });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const responseData = await response.json();
-      console.log("Participant added:", responseData);
-    } catch (error) {
-      console.error("Error adding participant:", error);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
+
+    const responseData = await response.json();
+    console.log("Participant added:", responseData);
+  } catch (error) {
+    console.error("Error adding participant:", error);
   }
 };
 
@@ -260,8 +269,11 @@ const fetchAppointmentOptions = async (appointmentId) => {
 
 // Submit user responses
 const submitUserResponses = async () => {
-  console.log("IS CALLED: " + userName.value);
-  if (userName.value) {
+  if (!userName.value || userName.value.trim() === "") {
+    popupMessage.value = "You must select or enter a Username to vote.";
+    popupType.value = "error";
+    isPopupOpen.value = true;
+  } else {
     appointmentOptions.value.forEach(async (option) => {
       const userResponse = userResponses.value[option.id];
       const updatedOption = {
@@ -272,10 +284,6 @@ const submitUserResponses = async () => {
 
       await editAppointmentOption(updatedOption); // Method to send update to backend
     });
-  } else {
-    popupMessage.value = "You have to select a Username in order to vote.";
-    popupType.value = "error";
-    isPopupOpen.value = true;
   }
 };
 
