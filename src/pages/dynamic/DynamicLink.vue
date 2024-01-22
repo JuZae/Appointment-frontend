@@ -15,7 +15,7 @@
               :key="index"
               clickable
               v-ripple
-              @click="selectParticipant(participant)"
+              @click="validateAndSelectParticipant(participant)"
             >
               <q-item-section>{{ participant }}</q-item-section>
             </q-item>
