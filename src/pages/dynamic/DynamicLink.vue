@@ -260,6 +260,7 @@ const fetchAppointmentOptions = async (appointmentId) => {
 
 // Submit user responses
 const submitUserResponses = async () => {
+  console.log("IS CALLED: " + userName.value);
   if (userName.value) {
     appointmentOptions.value.forEach(async (option) => {
       const userResponse = userResponses.value[option.id];
@@ -274,6 +275,7 @@ const submitUserResponses = async () => {
   } else {
     popupMessage.value = "You have to select a Username in order to vote.";
     popupType.value = "error";
+    isPopupOpen.value = true;
   }
 };
 
