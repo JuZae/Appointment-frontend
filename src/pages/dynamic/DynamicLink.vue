@@ -277,42 +277,44 @@ const submitUserResponses = async () => {
 const API_EDIT_APPOPT = "http://49.13.170.189:8080/" + "public/opt/edit";
 // Example of a method to edit an appointment
 const editAppointmentOption = async (appointmentOption) => {
-  console.log("Wird geschickt" + JSON.stringify(appointmentOption));
-  console.log(
-    "TeilnehmerYes" + JSON.stringify(appointmentOption.teilnehmerYes)
-  );
+  if (userName.value) {
+    console.log("Wird geschickt" + JSON.stringify(appointmentOption));
+    console.log(
+      "TeilnehmerYes" + JSON.stringify(appointmentOption.teilnehmerYes)
+    );
 
-  try {
-    const response = await fetch(API_EDIT_APPOPT, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(appointmentOption),
-    });
+    try {
+      const response = await fetch(API_EDIT_APPOPT, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(appointmentOption),
+      });
 
-    if (!response.ok) {
-      // If the response status is 403, it means the deadline has passed
-      if (response.status === 403) {
-        popupMessage.value =
-          "The deadline for editing this appointment has passed.";
-        popupType.value = "error";
+      if (!response.ok) {
+        // If the response status is 403, it means the deadline has passed
+        if (response.status === 403) {
+          popupMessage.value =
+            "The deadline for editing this appointment has passed.";
+          popupType.value = "error";
+        } else {
+          // Handle other errors
+          popupMessage.value = `Error editing appointment: ${response.statusText}`;
+          popupType.value = "error";
+        }
       } else {
-        // Handle other errors
-        popupMessage.value = `Error editing appointment: ${response.statusText}`;
-        popupType.value = "error";
+        // Handle successful edit
+        popupMessage.value = "Appointment edited successfully";
+        popupType.value = "success";
       }
-    } else {
-      // Handle successful edit
-      popupMessage.value = "Appointment edited successfully";
-      popupType.value = "success";
+      isPopupOpen.value = true; // Show the popup
+    } catch (error) {
+      console.error("Error editing appointment:", error);
+      popupMessage.value = `Error editing appointment: ${error.message}`;
+      popupType.value = "error";
+      isPopupOpen.value = true; // Show the popup
     }
-    isPopupOpen.value = true; // Show the popup
-  } catch (error) {
-    console.error("Error editing appointment:", error);
-    popupMessage.value = `Error editing appointment: ${error.message}`;
-    popupType.value = "error";
-    isPopupOpen.value = true; // Show the popup
   }
 };
 
