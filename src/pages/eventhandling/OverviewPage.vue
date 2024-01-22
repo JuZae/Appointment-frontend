@@ -188,24 +188,26 @@ const getAllAppointmentsByUserID = async () => {
   const URL_GETALLBYUID =
     "http://49.13.170.189:8080/" + "api/app/getAppByUserId/";
   // const URL_GETALLBYUID = "http://localhost:8080/api/app/getAppByUserId/";
-  let fullURL = URL_GETALLBYUID + localStorage.getItem("userId");
-  // console.log("UID: " + userStore.userId);
-  try {
-    const response = await fetch(fullURL, {
-      method: "GET",
-      headers: headers,
-    });
+  let fullURL = URL_GETALLBYUID + (await localStorage.getItem("userId"));
+  if (localStorage.getItem("userId")) {
+    // console.log("UID: " + userStore.userId);
+    try {
+      const response = await fetch(fullURL, {
+        method: "GET",
+        headers: headers,
+      });
 
-    if (!response.ok) {
-      throw new Error(
-        `Request failed with status ${response.status}: ${response.statusText}`
-      );
+      if (!response.ok) {
+        throw new Error(
+          `Request failed with status ${response.status}: ${response.statusText}`
+        );
+      }
+
+      const responseData = await response.json();
+      rows.value = responseData; //Update rows
+    } catch (error) {
+      console.error("Error:", error.message);
     }
-
-    const responseData = await response.json();
-    rows.value = responseData; //Update rows
-  } catch (error) {
-    console.error("Error:", error.message);
   }
 };
 
