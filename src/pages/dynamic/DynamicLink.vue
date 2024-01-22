@@ -260,16 +260,21 @@ const fetchAppointmentOptions = async (appointmentId) => {
 
 // Submit user responses
 const submitUserResponses = async () => {
-  appointmentOptions.value.forEach(async (option) => {
-    const userResponse = userResponses.value[option.id];
-    const updatedOption = {
-      ...option,
-      teilnehmerYes: userResponse ? [userName.value] : option.teilnehmerYes,
-      teilnehmerNo: !userResponse ? [userName.value] : option.teilnehmerNo,
-    };
+  if (userName.value) {
+    appointmentOptions.value.forEach(async (option) => {
+      const userResponse = userResponses.value[option.id];
+      const updatedOption = {
+        ...option,
+        teilnehmerYes: userResponse ? [userName.value] : option.teilnehmerYes,
+        teilnehmerNo: !userResponse ? [userName.value] : option.teilnehmerNo,
+      };
 
-    await editAppointmentOption(updatedOption); // Method to send update to backend
-  });
+      await editAppointmentOption(updatedOption); // Method to send update to backend
+    });
+  } else {
+    popupMessage.value = "You have to select a Username in order to vote.";
+    popupType.value = "error";
+  }
 };
 
 //API to Edit the participants on an appointmentOption
