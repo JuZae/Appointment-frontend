@@ -133,9 +133,11 @@ const getUser = async (userId) => {
     }
 
     const userData = await response.json();
-    console.log("User data received:", userData);
+    // console.log("User data received:", userData);
 
     userStore.saveUserInfo(userData.username, userData.email);
+    userStore.setUserId(userData.id);
+    localStorage.setItem("userId", userData.id);
 
     // Here, you can update the user store with the received data
     // For example: userStore.update(userData.username);

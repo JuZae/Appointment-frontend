@@ -188,7 +188,8 @@ const getAllAppointmentsByUserID = async () => {
   const URL_GETALLBYUID =
     "http://49.13.170.189:8080/" + "api/app/getAppByUserId/";
   // const URL_GETALLBYUID = "http://localhost:8080/api/app/getAppByUserId/";
-  let fullURL = URL_GETALLBYUID + userStore.userId;
+  let fullURL = URL_GETALLBYUID + localStorage.getItem("userId");
+  // console.log("UID: " + userStore.userId);
   try {
     const response = await fetch(fullURL, {
       method: "GET",
