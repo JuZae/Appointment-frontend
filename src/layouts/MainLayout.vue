@@ -89,6 +89,12 @@ const menuList = [
     icon: "person_add",
     label: "Register",
     to: "/register",
+    separator: true,
+  },
+  {
+    icon: "feedback",
+    label: "Feedback",
+    to: "/feedback",
     separator: false,
   },
 ];

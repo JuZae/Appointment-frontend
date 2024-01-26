@@ -52,6 +52,11 @@ const routes = [
         component: () => import("pages/eventhandling/EditAppointment.vue"),
         name: "editAppointment",
       },
+      {
+        path: "/feedback",
+        component: () => import("pages/feedback/FeedbackPage.vue"),
+        name: "feedback",
+      },
     ],
   },
 
