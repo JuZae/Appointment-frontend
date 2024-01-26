@@ -258,21 +258,47 @@ const deleteAppointment = async () => {
   }
 };
 
+// Function to copy text to clipboard using execCommand (as a fallback)
+function unsecuredCopyToClipboard(text) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    const successful = document.execCommand("copy");
+    const msg = successful ? "successful" : "unsuccessful";
+    console.log("Fallback: Copying text command was " + msg);
+  } catch (err) {
+    console.error("Fallback: Oops, unable to copy", err);
+  }
+  document.body.removeChild(textArea);
+}
+
 // Build the dynamic-link and copy it to the clipboard
 const copyLinkToClipboard = () => {
   if (selected.value && selected.value.length > 0) {
     const dynamicId = selected.value[0].id;
     const dynamicLink = `${window.location.origin}/dynamic-link/${dynamicId}`;
 
-    // Copy the dynamic link to the clipboard
-    navigator.clipboard
-      .writeText(dynamicLink)
-      .then(() => {
-        console.log("Link copied to clipboard:", dynamicLink);
-      })
-      .catch((err) => {
-        console.error("Failed to copy link to clipboard:", err);
-      });
+    // Check if Clipboard API is available, otherwise use the fallback
+    if (navigator.clipboard) {
+      navigator.clipboard
+        .writeText(dynamicLink)
+        .then(() => {
+          console.log("Link copied to clipboard:", dynamicLink);
+        })
+        .catch((err) => {
+          console.error(
+            "Failed to copy link to clipboard. Using fallback method:",
+            err
+          );
+          unsecuredCopyToClipboard(dynamicLink);
+        });
+    } else {
+      console.log("Clipboard API not available. Using fallback method.");
+      unsecuredCopyToClipboard(dynamicLink);
+    }
   } else {
     console.error("No appointment selected to copy the link.");
   }
