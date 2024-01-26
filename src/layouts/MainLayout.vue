@@ -40,7 +40,9 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <q-pull-to-refresh @refresh="refreshPage">
+        <router-view />
+      </q-pull-to-refresh>
     </q-page-container>
   </q-layout>
 </template>
@@ -100,7 +102,9 @@ const username = ref("");
 
 const refreshPage = () => {
   // Refresh the current page
-  location.reload();
+  setTimeout(() => {
+    location.reload();
+  }, 1000);
 };
 
 const logout = () => {
