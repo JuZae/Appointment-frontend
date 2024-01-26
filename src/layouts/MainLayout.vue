@@ -2,6 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
+        <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
         <q-toolbar-title id="title">A-Point </q-toolbar-title>
         <q-toolbar-title id="username"
           ><div>{{ username }}</div></q-toolbar-title
@@ -11,10 +12,32 @@
             >Abmelden</q-btn
           >
         </RouterLink>
+        <q-btn icon="refresh" @click="refreshPage" />
       </q-toolbar>
     </q-header>
 
-    <!-- Hier den Username vom current User displayen in der toolbar! -->
+    <!-- Slide Menu -->
+    <q-drawer show-if-above v-model="drawer" side="left" bordered>
+      <q-scroll-area class="fit">
+        <q-list>
+          <!-- Drawer Header -->
+          <q-item-label header>Navigation</q-item-label>
+
+          <!-- Menu Items -->
+          <template v-for="(menuItem, index) in menuList" :key="index">
+            <q-item clickable v-ripple :to="menuItem.to">
+              <q-item-section avatar>
+                <q-icon :name="menuItem.icon" />
+              </q-item-section>
+              <q-item-section>
+                {{ menuItem.label }}
+              </q-item-section>
+            </q-item>
+            <q-separator :key="'sep' + index" v-if="menuItem.separator" />
+          </template>
+        </q-list>
+      </q-scroll-area>
+    </q-drawer>
 
     <q-page-container>
       <router-view />
@@ -23,9 +46,50 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import UserStore from "src/stores/user";
 import AuthStore from "src/stores/authStore";
+
+const drawer = ref(false);
+
+const menuList = [
+  {
+    icon: "home",
+    label: "Home",
+    to: "/",
+    separator: true,
+  },
+  {
+    icon: "dashboard",
+    label: "Overview",
+    to: "/overviewpage",
+    separator: true,
+  },
+  {
+    icon: "event",
+    label: "Add Event",
+    to: "/addevent",
+    separator: false,
+  },
+  {
+    icon: "email",
+    label: "Mail",
+    to: "/mailevent",
+    separator: true,
+  },
+  {
+    icon: "login",
+    label: "Login",
+    to: "/login",
+    separator: false,
+  },
+  {
+    icon: "person_add",
+    label: "Register",
+    to: "/register",
+    separator: false,
+  },
+];
 
 //Stores
 const userStore = UserStore.useStore();
@@ -33,6 +97,11 @@ const authStore = AuthStore.useStore();
 
 // Reactive reference for the username
 const username = ref("");
+
+const refreshPage = () => {
+  // Refresh the current page
+  location.reload();
+};
 
 const logout = () => {
   authStore.logout();
