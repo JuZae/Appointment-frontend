@@ -39,6 +39,17 @@
     </div>
     <div class="flex-item">
       <q-btn
+        id="copyLink"
+        fab
+        icon="content_copy"
+        color="blue"
+        @click="copyLinkToClipboard"
+        :disable="!selected.length"
+        >Copy Link</q-btn
+      >
+    </div>
+    <div class="flex-item">
+      <q-btn
         id="mail"
         fab
         icon="mail"
@@ -244,6 +255,26 @@ const deleteAppointment = async () => {
     } catch (error) {
       console.error("Error deleting appointment:", error);
     }
+  }
+};
+
+// Build the dynamic-link and copy it to the clipboard
+const copyLinkToClipboard = () => {
+  if (selected.value && selected.value.length > 0) {
+    const dynamicId = selected.value[0].id;
+    const dynamicLink = `${window.location.origin}/dynamic-link/${dynamicId}`;
+
+    // Copy the dynamic link to the clipboard
+    navigator.clipboard
+      .writeText(dynamicLink)
+      .then(() => {
+        console.log("Link copied to clipboard:", dynamicLink);
+      })
+      .catch((err) => {
+        console.error("Failed to copy link to clipboard:", err);
+      });
+  } else {
+    console.error("No appointment selected to copy the link.");
   }
 };
 
