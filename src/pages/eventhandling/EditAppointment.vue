@@ -194,7 +194,6 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import UserStore from "src/stores/user";
 import AuthStore from "src/stores/authStore";
 
 const router = useRouter();
@@ -202,7 +201,6 @@ const route = useRoute();
 
 //Stores
 const authStore = AuthStore.useStore();
-const userStore = UserStore.useStore();
 
 const appointmentId = route.params.appointmentId;
 const appointment = ref(null);

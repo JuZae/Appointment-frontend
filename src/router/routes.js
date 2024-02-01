@@ -35,9 +35,10 @@ const routes = [
       //   component: () => import("pages/login/RegistrationPage.vue"),
       // },
       {
-        path: "/mailevent",
+        path: "/mailevent/:appointmentId",
         component: () => import("pages/dynamic/EventPage.vue"),
-        name: "mailPage",
+        name: "MailPage",
+        props: true,
       },
       // {
       //   path: "/google",

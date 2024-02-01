@@ -188,7 +188,15 @@ const navigateToEditPage = () => {
 };
 
 const navigateToMailPage = () => {
-  router.push({ name: "mailPage" });
+  if (selected.value && selected.value.length > 0) {
+    const appointmentId = selected.value[0].id;
+    router.push({
+      name: "MailPage",
+      params: { appointmentId },
+    });
+  } else {
+    // Handle case where no appointment is selected
+  }
 };
 
 /**

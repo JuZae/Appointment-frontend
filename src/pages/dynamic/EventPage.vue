@@ -12,7 +12,15 @@
             required
           />
           <q-input v-model="subject" label="Subject" outlined dense required />
-          <textarea v-model="body" label="Email Body" outlined dense required />
+          <!-- <q-input
+            type="textarea"
+            v-model="body"
+            label="Email Body"
+            outlined
+            readonly
+            dense
+          /> -->
+          <q-editor v-model="body" min-height="100px" />
           <div>
             <q-btn
               label="Send Email"
@@ -28,11 +36,28 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import AuthStore from "src/stores/authStore";
+
+const route = useRoute();
+
+const authStore = AuthStore.useStore();
+
+const appointmentId = route.params.appointmentId;
 
 const recipient = ref("");
 const subject = ref("");
-const body = ref("");
+const body = ref(``);
+
+//Authentication stuff
+const jwtToken = authStore.token; //JWT Token (if exists)
+// Create the authorization header
+const headers = {
+  Authorization: `Bearer ${jwtToken}`,
+  "Content-Type": "application/json",
+  Accept: "application/json", // You can include other headers as needed
+};
 
 const sendEmail = async (event) => {
   event.preventDefault();
@@ -47,9 +72,7 @@ const sendEmail = async (event) => {
   try {
     const response = await fetch(URL_EMAIL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: headers,
       body: JSON.stringify(emailData),
     });
 
@@ -66,4 +89,50 @@ const sendEmail = async (event) => {
     console.error("Error:", error.message);
   }
 };
+
+const fetchAppointment = async (appointmentId) => {
+  const API_GET_APP =
+    "http://49.13.170.189:8080/" + "api/app/getAppById/" + appointmentId;
+  // Fetch appointment details from backend and populate appointmentData
+  try {
+    const response = await fetch(API_GET_APP, {
+      method: "GET",
+      headers: headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Request failed with status ${response.status}: ${response.statusText}`
+      );
+    }
+    const responseData = await response.json();
+    const appointment = responseData;
+
+    if (responseData) {
+      appointment.value = responseData;
+      subject.value = `Einladung: ${appointment.bez}`;
+      body.value = `
+    <html>
+    <body>
+      <p>Du wurdest zu einer Veranstaltung in ${appointment.ort} eingeladen.</p>
+      <p>Mögliche Termine hierfür findest du unter folgendem Link: 
+        <a href="http://49.13.170.189:9000/dynamic-link/${appointment.id}">
+          Terminabstimmung
+        </a>.
+      </p>
+      <p>Beschreibung der Veranstaltung: ${appointment.beschreibung}</p>
+    </body>
+    </html>
+  `;
+    }
+  } catch (error) {
+    console.error("Error fetching appointment:", error);
+  }
+};
+
+onMounted(async () => {
+  if (appointmentId) {
+    await fetchAppointment(appointmentId);
+  }
+});
 </script>
