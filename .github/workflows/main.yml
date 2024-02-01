@@ -1,0 +1,42 @@
+name: Deploy Frontend to Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh/
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan 49.13.170.189 >> ~/.ssh/known_hosts
+
+    - name: Stop existing container
+      run: ssh root@49.13.170.189 "docker stop apoint-frontend"
+
+    - name: Remove existing container
+      run: ssh root@49.13.170.189 "docker rm apoint-frontend"
+
+    - name: Remove existing image
+      run: ssh root@49.13.170.189 "docker rmi apoint-frontend"
+
+    - name: Remove existing files
+      run: ssh root@49.13.170.189 "rm -rf /var/www/myapp/frontend"
+
+    - name: Clone the repository
+      run: ssh root@49.13.170.189 "git clone https://github.com/JuZae/Appointment-frontend.git /var/www/myapp/frontend"
+
+    - name: Build the Docker image
+      run: ssh root@49.13.170.189 "cd /var/www/myapp/frontend && docker build -t apoint-frontend:latest ."
+
+    - name: Run the Docker container
+      run: ssh root@49.13.170.189 "docker run -d --name apoint-frontend --network apoint -p 9000:80 apoint-frontend:latest"
