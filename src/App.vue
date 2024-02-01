@@ -8,7 +8,7 @@ import { defineComponent, provide } from "vue";
 export default defineComponent({
   name: "App",
   setup() {
-    provide("BACKEND_BASE_URL", "http://apoint-backend:8080/");
+    provide("BACKEND_BASE_URL", "http://172.18.0.4:8080/");
   },
 });
 </script>
