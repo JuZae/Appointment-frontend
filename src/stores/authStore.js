@@ -33,8 +33,8 @@ export const useStore = defineStore("auth", {
     },
 
     async login(email, password) {
-      const BACKEND_BASE_URL = inject("BACKEND_BASE_URL");
-      const URL_LOGIN = BACKEND_BASE_URL + "api/auth/login";
+      // const BACKEND_BASE_URL = inject("BACKEND_BASE_URL");
+      const URL_LOGIN = "http://49.13.170.189/" + "api/auth/login";
       try {
         const response = await fetch(URL_LOGIN, {
           method: "POST",
