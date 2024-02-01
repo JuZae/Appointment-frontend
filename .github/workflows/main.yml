@@ -39,4 +39,4 @@ jobs:
       run: ssh root@49.13.170.189 "cd /var/www/myapp/frontend && docker build -t apoint-frontend2:latest ."
 
     - name: Run the Docker container
-      run: ssh root@49.13.170.189 "docker run -d --name apoint-frontend --network apoint -p 9000:80 apoint-frontend2:latest"
+      run: ssh root@49.13.170.189 "docker run -d --name apoint-frontend2 --network apoint -p 9000:80 apoint-frontend2:latest"
