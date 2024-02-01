@@ -123,6 +123,7 @@ const getUser = async (userId) => {
 
   const URL = API_GETUSERBYID + userId;
   console.log("GETUSERURL " + URL);
+  console.log("BACKENDAPIURL: " + BACKEND_BASE_URL);
 
   try {
     const response = await fetch(URL, {
