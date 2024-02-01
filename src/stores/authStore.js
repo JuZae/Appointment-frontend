@@ -1,8 +1,7 @@
 // authStore.js
 // src/stores/authStore.js
 import { defineStore } from "pinia";
-import UserStore from "/src/stores/user.js";
-import user from "./user";
+import { inject } from "vue";
 
 export const useStore = defineStore("auth", {
   state: () => ({
@@ -34,7 +33,8 @@ export const useStore = defineStore("auth", {
     },
 
     async login(email, password) {
-      const URL_LOGIN = "http://49.13.170.189:8080/" + "api/auth/login";
+      const BACKEND_BASE_URL = inject("BACKEND_BASE_URL");
+      const URL_LOGIN = BACKEND_BASE_URL + "api/auth/login";
       try {
         const response = await fetch(URL_LOGIN, {
           method: "POST",

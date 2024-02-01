@@ -116,11 +116,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, inject } from "vue";
 import { useRoute } from "vue-router";
 import UserStore from "src/stores/user";
 
 const route = useRoute();
+
+const BACKEND_BASE_URL = inject("BACKEND_BASE_URL");
 
 const userStore = UserStore.useStore();
 
@@ -156,8 +158,7 @@ function validateAndSelectParticipant(participant) {
   }
 }
 //API Call to add new participant if input field is filled
-const API_ADD_PARTI =
-  "http://49.13.170.189:8080/" + "public/opt/add/addParticipant";
+const API_ADD_PARTI = BACKEND_BASE_URL + "public/opt/add/addParticipant";
 // const API_ADD_PARTI = "http://localhost:8080/public/opt/add/addParticipant";
 const addParticipantToAppointment = async () => {
   if (!userName.value || userName.value.trim() === "") {
@@ -189,7 +190,7 @@ const addParticipantToAppointment = async () => {
 
 //API Call to get Appointment by id
 // const API_GET_APP = "http://localhost:8080/public/opt/getApp/";
-const API_GET_APP = "http://49.13.170.189:8080/" + "public/opt/getApp/";
+const API_GET_APP = BACKEND_BASE_URL + "public/opt/getApp/";
 
 const fetchAppointment = async (appointmentId) => {
   let fullURL = API_GET_APP + appointmentId;
@@ -232,7 +233,7 @@ const fetchAppointment = async (appointmentId) => {
 
 ////API Call to get AppointmentOptions by Appoinment id
 // const API_GET_APP_OPT = "http://localhost:8080/public/opt/getOpt/";
-const API_GET_APP_OPT = "http://49.13.170.189:8080/" + "public/opt/getOpt/";
+const API_GET_APP_OPT = BACKEND_BASE_URL + "public/opt/getOpt/";
 const fetchAppointmentOptions = async (appointmentId) => {
   let fullURL = API_GET_APP_OPT + appointmentId;
   try {
@@ -304,7 +305,7 @@ const submitUserResponses = async () => {
 
 //API to Edit the participants on an appointmentOption
 // const API_EDIT_APPOPT = "http://localhost:8080/public/opt/edit";
-const API_EDIT_APPOPT = "http://49.13.170.189:8080/" + "public/opt/edit";
+const API_EDIT_APPOPT = BACKEND_BASE_URL + "public/opt/edit";
 // Example of a method to edit an appointment
 const editAppointmentOption = async (appointmentOption) => {
   if (userName.value) {

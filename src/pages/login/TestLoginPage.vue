@@ -52,13 +52,15 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, inject } from "vue";
 import { useRouter } from "vue-router";
 import AuthStore from "src/stores/authStore";
 import UserStore from "src/stores/user";
 
 //Router
 const router = useRouter();
+
+const BACKEND_BASE_URL = inject("BACKEND_BASE_URL");
 
 //Stores
 const authStore = AuthStore.useStore();
@@ -82,7 +84,7 @@ watch(
 
 //APIs
 // const API_GETUSERBYID = "http://localhost:8080/api/user/get/";
-const API_GETUSERBYID = "http://49.13.170.189:8080/" + "api/user/get/";
+const API_GETUSERBYID = BACKEND_BASE_URL + "api/user/get/";
 
 //LoginDTO that is sent to backend
 const loginDTO = ref({

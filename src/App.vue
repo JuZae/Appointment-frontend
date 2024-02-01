@@ -3,9 +3,12 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, provide } from "vue";
 
 export default defineComponent({
   name: "App",
+  setup() {
+    provide("BACKEND_BASE_URL", "http://apoint-backend2:8081/");
+  },
 });
 </script>

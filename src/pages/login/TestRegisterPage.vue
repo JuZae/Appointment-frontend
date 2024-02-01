@@ -55,10 +55,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, inject } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+
+const BACKEND_BASE_URL = inject("BACKEND_BASE_URL");
 
 // Dialog state
 const isDialogOpen = ref(false);
@@ -94,7 +96,7 @@ const passwordRules = [
 ];
 
 const registerUser = async () => {
-  const URL_REGISTER = "http://49.13.170.189:8080/" + "api/auth/register";
+  const URL_REGISTER = BACKEND_BASE_URL + "api/auth/register";
   try {
     const response = await fetch(URL_REGISTER, {
       method: "POST",

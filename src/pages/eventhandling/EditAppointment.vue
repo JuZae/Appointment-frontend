@@ -192,12 +192,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, inject } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import AuthStore from "src/stores/authStore";
 
 const router = useRouter();
 const route = useRoute();
+
+const BACKEND_BASE_URL = inject("BACKEND_BASE_URL");
 
 //Stores
 const authStore = AuthStore.useStore();
@@ -226,8 +228,7 @@ const fetchAppointment = async (appointmentId) => {
   // const appointmentId = route.params.appointmentId;
   // const API_GET_APP =
   //   "http://localhost:8080/api/app/getAppById/" + appointmentId;
-  const API_GET_APP =
-    "http://49.13.170.189:8080/" + "api/app/getAppById/" + appointmentId;
+  const API_GET_APP = BACKEND_BASE_URL + "api/app/getAppById/" + appointmentId;
   // Fetch appointment details from backend and populate appointmentData
   try {
     const response = await fetch(API_GET_APP, {
@@ -257,8 +258,7 @@ const fetchAppointmentOptions = async (appointmentId) => {
   // const appointmentId = route.params.appointmentId;
   // const API_GET_APP =
   //   "http://localhost:8080/public/opt/getOpt/" + appointmentId;
-  const API_GET_APP =
-    "http://49.13.170.189:8080/" + "public/opt/getOpt/" + appointmentId;
+  const API_GET_APP = BACKEND_BASE_URL + "public/opt/getOpt/" + appointmentId;
   // Fetch appointment details from backend and populate appointmentData
   try {
     const response = await fetch(API_GET_APP, {
@@ -294,9 +294,9 @@ const saveAppointment = async () => {
   appointment.value.teilnehmer = participantList.value.join(",");
 
   // const API_SAVE_APP = "http://localhost:8080/api/app/saveApp";
-  const API_SAVE_APP = "http://49.13.170.189:8080/" + "api/app/saveApp";
+  const API_SAVE_APP = BACKEND_BASE_URL + "api/app/saveApp";
   // const API_SAVE_OPT = "http://localhost:8080/api/app/saveAppOption";
-  const API_SAVE_OPT = "http://49.13.170.189:8080/" + "api/app/saveAppOption";
+  const API_SAVE_OPT = BACKEND_BASE_URL + "api/app/saveAppOption";
   // Submit updated appointment data to the backend
   try {
     const appResponse = await fetch(API_SAVE_APP, {
@@ -341,8 +341,7 @@ const addAppointmentOption = () => {
 
 const removeAppointmentOption = async (index) => {
   const option = appointmentOptions.value[index];
-  const URL_REMOVE_APP_OPT =
-    "http://49.13.170.189:8080/" + "api/app/deleteAppOption/";
+  const URL_REMOVE_APP_OPT = BACKEND_BASE_URL + "api/app/deleteAppOption/";
   if (option.id) {
     // If option has an ID, remove from backend
     try {

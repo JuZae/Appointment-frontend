@@ -101,13 +101,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, inject } from "vue";
 import { useRouter } from "vue-router";
 import UserStore from "src/stores/user";
 import AuthStore from "src/stores/authStore";
 
 //Router
 const router = useRouter(); // Vue Router instance
+
+const BACKEND_BASE_URL = inject("BACKEND_BASE_URL");
 
 //Stores
 const userStore = UserStore.useStore();
@@ -206,8 +208,7 @@ const navigateToMailPage = () => {
 //GET Call for all app by userid
 const getAllAppointmentsByUserID = async () => {
   //API
-  const URL_GETALLBYUID =
-    "http://49.13.170.189:8080/" + "api/app/getAppByUserId/";
+  const URL_GETALLBYUID = BACKEND_BASE_URL + "api/app/getAppByUserId/";
   // const URL_GETALLBYUID = "http://localhost:8080/api/app/getAppByUserId/";
   let fullURL = URL_GETALLBYUID + (await localStorage.getItem("userId"));
   if (localStorage.getItem("userId")) {
@@ -243,7 +244,7 @@ const confirmDelete = () => {
 const deleteAppointment = async () => {
   if (selected.value && selected.value.length > 0) {
     const appointmentId = selected.value[0].id; // Assuming single selection
-    const API_DELETE_APP = `http://49.13.170.189:8080/api/app/deleteAppById/${appointmentId}`;
+    const API_DELETE_APP = `${BACKEND_BASE_URL}api/app/deleteAppById/${appointmentId}`;
     // const API_DELETE_APP = `http://localhost:8080/api/app/deleteAppById/${appointmentId}`;
 
     try {

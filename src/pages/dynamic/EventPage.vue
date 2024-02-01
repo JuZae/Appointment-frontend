@@ -36,11 +36,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, inject } from "vue";
 import { useRoute } from "vue-router";
 import AuthStore from "src/stores/authStore";
 
 const route = useRoute();
+
+const BACKEND_BASE_URL = inject("BACKEND_BASE_URL");
 
 const authStore = AuthStore.useStore();
 
@@ -68,7 +70,7 @@ const sendEmail = async (event) => {
     body: body.value,
   };
 
-  const URL_EMAIL = "http://49.13.170.189:8080/" + "email/sendEmail";
+  const URL_EMAIL = BACKEND_BASE_URL + "email/sendEmail";
   try {
     const response = await fetch(URL_EMAIL, {
       method: "POST",
@@ -91,8 +93,7 @@ const sendEmail = async (event) => {
 };
 
 const fetchAppointment = async (appointmentId) => {
-  const API_GET_APP =
-    "http://49.13.170.189:8080/" + "api/app/getAppById/" + appointmentId;
+  const API_GET_APP = BACKEND_BASE_URL + "api/app/getAppById/" + appointmentId;
   // Fetch appointment details from backend and populate appointmentData
   try {
     const response = await fetch(API_GET_APP, {
