@@ -274,16 +274,31 @@ const submitUserResponses = async () => {
     popupType.value = "error";
     isPopupOpen.value = true;
   } else {
-    appointmentOptions.value.forEach(async (option) => {
+    for (const option of appointmentOptions.value) {
       const userResponse = userResponses.value[option.id];
-      const updatedOption = {
-        ...option,
-        teilnehmerYes: userResponse ? [userName.value] : option.teilnehmerYes,
-        teilnehmerNo: !userResponse ? [userName.value] : option.teilnehmerNo,
-      };
+      let updatedOption = { ...option };
 
-      await editAppointmentOption(updatedOption); // Method to send update to backend
-    });
+      // initialize participant lists if they don't already exist
+      updatedOption.teilnehmerYes = updatedOption.teilnehmerYes || [];
+      updatedOption.teilnehmerNo = updatedOption.teilnehmerNo || [];
+
+      // remove usernaem from both lists initially
+      const yesIndex = updatedOption.teilnehmerYes.indexOf(userName.value);
+      if (yesIndex >= 0) updatedOption.teilnehmerYes.splice(yesIndex, 1);
+
+      const noIndex = updatedOption.teilnehmerNo.indexOf(userName.value);
+      if (noIndex >= 0) updatedOption.teilnehmerNo.splice(noIndex, 1);
+
+      // add the username back to the appropriate list
+      if (userResponse) {
+        updatedOption.teilnehmerYes.push(userName.value);
+      } else {
+        updatedOption.teilnehmerNo.push(userName.value);
+      }
+
+      // Call the method to update the backend
+      await editAppointmentOption(updatedOption);
+    }
   }
 };
 
