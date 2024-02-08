@@ -32,9 +32,10 @@ export const useStore = defineStore("auth", {
       localStorage.setItem("userId", userId);
     },
 
-    async login(email, password) {
-      // const BACKEND_BASE_URL = inject("BACKEND_BASE_URL");
-      const URL_LOGIN = "http://49.13.170.189/" + "api/auth/login";
+    async login(email, password, BACKEND_BASE_URL) {
+      console.log("CHILD URL: " + BACKEND_BASE_URL);
+      const URL_LOGIN = BACKEND_BASE_URL + "api/auth/login";
+      console.log("INJECTED URL" + BACKEND_BASE_URL);
       try {
         const response = await fetch(URL_LOGIN, {
           method: "POST",

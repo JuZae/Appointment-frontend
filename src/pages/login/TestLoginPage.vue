@@ -101,7 +101,11 @@ const passwordRules = [(val) => !!val || "Password is required"];
 
 const login = async () => {
   try {
-    await authStore.login(loginDTO.value.email, loginDTO.value.password);
+    await authStore.login(
+      loginDTO.value.email,
+      loginDTO.value.password,
+      BACKEND_BASE_URL
+    );
 
     if (authStore.isAuthenticated) {
       getUser(localStorage.getItem("userId"));
