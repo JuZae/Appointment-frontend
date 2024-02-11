@@ -62,6 +62,13 @@
                 @click.stop.prevent="navigateToEditPage(scope.row)"
               ></q-btn>
               <q-btn
+                id="share"
+                fab
+                icon="share"
+                class="btn-share"
+                @click="shareSocial(scope.row)"
+              ></q-btn>
+              <q-btn
                 id="copy"
                 fab
                 icon="content_copy"
@@ -208,6 +215,21 @@ const columns = [
 /**
  * Navigation
  */
+
+const shareSocial = () => {
+  if (navigator.share) {
+    navigator.share({
+      text: "Checkout this App for coordinating Appointments!",
+      url: "http://a-point.lica.digital:9001",
+      title: "A-Point",
+    });
+  }
+  //Fallback if sharing is not supported in native Browser (copy to clipboard)
+  else {
+    copyLinkToClipboard();
+  }
+};
+
 const navigateToAddEvent = () => {
   router.push("/addEvent");
 };
