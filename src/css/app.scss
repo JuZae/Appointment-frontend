@@ -1,1 +1,53 @@
-// app global css in SCSS form
+/* Light Theme Variables */
+:root {
+  --primary-bg-color: #ffffff;
+  --secondary-bg-color: #f4f5f7;
+  --primary-text-color: #333333;
+  --secondary-text-color: #555555;
+  --accent-color: #6200ee; /* JetBrains Purple */
+  --header-bg-color: #eeeeee;
+  --button-color: #9b27b0; /* JetBrains Blue */
+
+  // --btn-open-color: #4caf50; /* Green for open/action buttons */
+  // --btn-edit-color: #ffeb3b; /* Yellow for edit buttons */
+  // --btn-copy-color: #2196f3; /* Blue for copy buttons */
+  // --btn-mail-color: #9b27b0; /* Purple for mail buttons */
+  // --btn-delete-color: #f44336; /* Red for delete buttons */
+
+  --input-text-color: #333; /* Dark text for light background */
+  --input-icon-color: #333; /* Dark icon for light background */
+
+  --q-table-card-bg: #ffffff; /* Light theme card background */
+  --q-table-card-text: #333; /* Light theme card text color */
+
+  /* Light theme accent colors */
+  --light-accent-color: #e0e0e0; /* Light grey for light mode */
+  --dark-accent-color: #37474f; /* Dark grey for dark mode */
+  --card-color: #858585;
+}
+
+/* Dark Theme Variables */
+[data-theme="dark"] {
+  --primary-bg-color: #121212;
+  --secondary-bg-color: #1e1e1e;
+  --primary-text-color: #ffffff;
+  --secondary-text-color: #aaaaaa;
+  --accent-color: #bb86fc; /* Lighter Purple for dark theme */
+  --header-bg-color: #333333;
+  --button-color: #3700b3; /* Darker Blue for dark theme */
+
+  // --btn-open-color: #388e3c; /* Darker green for dark theme */
+  // --btn-edit-color: #fbc02d; /* Darker yellow for dark theme */
+  // --btn-copy-color: #1976d2; /* Darker blue for dark theme */
+  // --btn-mail-color: #7b1fa2; /* Darker purple for dark theme */
+  // --btn-delete-color: #d32f2f; /* Darker red for dark theme */
+
+  --input-text-color: #ffffff; /* Dark text for light background */
+  --input-icon-color: #ffffff; /* Dark icon for light background */
+
+  --q-table-card-bg: #ffffff; /* Light theme card background */
+  --q-table-card-text: #333; /* Light theme card text color */
+
+  --light-accent-color: #424242; /* Darker grey for light mode */
+  --dark-accent-color: #78909c; /* Light blue-grey for dark mode */
+}

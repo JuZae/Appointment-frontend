@@ -7,10 +7,16 @@
         <q-toolbar-title id="username"
           ><div>{{ username }}</div></q-toolbar-title
         >
+        <q-btn
+          @click="toggleTheme"
+          icon="brightness_4"
+          round
+          flat
+          class="q-ml-md"
+        />
+
         <RouterLink to="/registration">
-          <q-btn id="logout" @click="logout()" color="primary" no-caps
-            >Abmelden</q-btn
-          >
+          <q-btn id="logout" @click="logout()" no-caps>Abmelden</q-btn>
         </RouterLink>
         <q-btn icon="refresh" @click="refreshPage" />
       </q-toolbar>
@@ -48,9 +54,10 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch, provide } from "vue";
+import { onMounted, ref, watch, provide, computed } from "vue";
 import UserStore from "src/stores/user";
 import AuthStore from "src/stores/authStore";
+import "src/css/app.scss";
 
 const BACKEND_BASE_URL = "http://49.13.170.189:8080/";
 provide("BACKEND_BASE_URL", BACKEND_BASE_URL);
@@ -128,6 +135,13 @@ if (userStore.username) {
   username.value = userStore.username;
 }
 
+// Assuming you have a reactive property for the theme
+const theme = ref("dark"); // or 'dark' based on user preference or system settings
+
+function toggleTheme() {
+  theme.value = theme.value === "light" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", theme.value);
+}
 // Watch for changes in the user store's username
 watch(
   () => userStore.username,
@@ -135,27 +149,68 @@ watch(
     username.value = newUsername;
   }
 );
+
+// Call toggleTheme on mount to apply the initial theme
+onMounted(() => {
+  document.documentElement.setAttribute("data-theme", theme.value);
+});
 </script>
 
 <style>
-#title {
-  text-align: left;
-  padding: 10px;
+#title,
+#username,
+#logout {
   margin: 10px;
-  width: 100%;
+  color: var(--primary-text-color); /* Ensuring text color consistency */
 }
 
+#title,
 #username {
-  text-align: right;
-  padding: 10px;
-  margin: 10px;
+  text-align: left;
   width: 100%;
 }
 
 #logout {
-  padding: 10px;
-  margin: 10px;
   border-radius: 5px;
-  background: #1976d2;
+  background-color: var(--accent-color);
+  color: white;
+  border: none; /* Removing border for a cleaner look */
+}
+
+#logout {
+  background-color: var(--button-color); /* Use the custom property */
+  color: var(--primary-text-color);
+}
+
+.q-header {
+  background-color: var(--header-bg-color);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1); /* Adding subtle shadow */
+}
+
+.q-toolbar {
+  color: white; /* For better visibility against the header background */
+}
+
+.q-btn {
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+}
+
+.q-btn:hover {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.q-drawer {
+  background-color: var(--secondary-bg-color);
+  border-right: 1px solid #ccc; /* Adding a border for visual separation */
+}
+
+.q-item {
+  color: var(--secondary-text-color);
+}
+
+.q-page-container {
+  background-color: var(--primary-bg-color);
 }
 </style>
