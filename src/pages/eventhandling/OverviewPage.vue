@@ -12,86 +12,85 @@
         class="custom-table"
       >
         <template v-slot:item="scope">
-          <q-card
-            flat
-            class="my-card"
-            :class="{ 'selected-card': isSelected(scope.row.id) }"
-          >
-            <q-card-section @click="handleRowClick(scope.row)">
-              <div class="card-content">
-                <div class="text-h6">
-                  <q-icon name="event" /> {{ scope.row.bez }}
-                </div>
-                <div class="row items-center q-mb-sm">
-                  <q-icon name="description" class="q-mr-sm" />{{
-                    scope.row.beschreibung
-                  }}
-                </div>
-                <div class="row items-center q-mb-sm">
-                  <q-icon name="place" class="q-mr-sm" />{{ scope.row.ort }}
-                </div>
-                <div class="row items-center q-mb-sm">
-                  <q-icon name="group" class="q-mr-sm" />{{
-                    scope.row.teilnehmer
-                  }}
-                </div>
-                <div class="row items-center">
-                  <q-icon name="schedule" class="q-mr-sm" />{{
-                    scope.row.deadline
-                  }}
-                </div>
-              </div>
-            </q-card-section>
-            <!-- <q-slide-transition> -->
-            <q-card-actions
-              v-if="isSelected(scope.row.id)"
-              class="card-actions"
+          <div class="card-parent">
+            <q-card
+              flat
+              class="my-card"
+              :class="{ 'selected-card': isSelected(scope.row.id) }"
             >
-              <q-btn
-                id="open"
-                fab
-                icon="add"
-                class="btn-open"
-                @click="navigateToDynamicLink(scope.row)"
-              ></q-btn>
-              <q-btn
-                id="edit"
-                fab
-                icon="edit"
-                class="btn-edit"
-                @click.stop.prevent="navigateToEditPage(scope.row)"
-              ></q-btn>
-              <q-btn
-                id="share"
-                fab
-                icon="share"
-                class="btn-share"
-                @click="shareSocial(scope.row)"
-              ></q-btn>
-              <q-btn
-                id="copy"
-                fab
-                icon="content_copy"
-                class="btn-copy"
-                @click.stop.prevent="copyLinkToClipboard(scope.row)"
-              ></q-btn>
-              <q-btn
-                id="mail"
-                fab
-                icon="mail"
-                class="btn-mail"
-                @click.stop.prevent="navigateToMailPage(scope.row)"
-              ></q-btn>
-              <q-btn
-                id="delete"
-                fab
-                icon="delete"
-                class="btn-delete"
-                @click.stop.prevent="confirmDelete(scope.row)"
-              ></q-btn>
-            </q-card-actions>
-            <!-- </q-slide-transition> -->
-          </q-card>
+              <q-card-section @click="handleRowClick(scope.row)">
+                <div class="card-content">
+                  <div class="text-h6">
+                    <q-icon name="event" /> {{ scope.row.bez }}
+                  </div>
+                  <div class="row items-center q-mb-sm">
+                    <q-icon name="description" class="q-mr-sm" />
+                    {{ scope.row.beschreibung }}
+                  </div>
+                  <div class="row items-center q-mb-sm">
+                    <q-icon name="place" class="q-mr-sm" /> {{ scope.row.ort }}
+                  </div>
+                  <div class="row items-center q-mb-sm">
+                    <q-icon name="group" class="q-mr-sm" />
+                    {{ scope.row.teilnehmer }}
+                  </div>
+                  <div class="row items-center">
+                    <q-icon name="schedule" class="q-mr-sm" />
+                    {{ scope.row.deadline }}
+                  </div>
+                </div>
+              </q-card-section>
+              <q-card-actions
+                v-if="isSelected(scope.row.id)"
+                class="card-actions"
+              >
+                <div class="button-container">
+                  <q-btn
+                    id="open"
+                    fab
+                    icon="add"
+                    class="btn-open"
+                    @click="navigateToDynamicLink(scope.row)"
+                  ></q-btn>
+                  <q-btn
+                    id="edit"
+                    fab
+                    icon="edit"
+                    class="btn-edit"
+                    @click.stop.prevent="navigateToEditPage(scope.row)"
+                  ></q-btn>
+                  <q-btn
+                    id="copy"
+                    fab
+                    icon="content_copy"
+                    class="btn-copy"
+                    @click.stop.prevent="copyLinkToClipboard(scope.row)"
+                  ></q-btn>
+                  <q-btn
+                    id="share"
+                    fab
+                    icon="share"
+                    class="btn-share"
+                    @click.stop.prevent="shareSocial(scope.row)"
+                  ></q-btn>
+                  <q-btn
+                    id="mail"
+                    fab
+                    icon="mail"
+                    class="btn-mail"
+                    @click.stop.prevent="navigateToMailPage(scope.row)"
+                  ></q-btn>
+                  <q-btn
+                    id="delete"
+                    fab
+                    icon="delete"
+                    class="btn-delete"
+                    @click.stop.prevent="confirmDelete(scope.row)"
+                  ></q-btn>
+                </div>
+              </q-card-actions>
+            </q-card>
+          </div>
         </template>
       </q-table>
     </div>
@@ -102,32 +101,28 @@
         <q-card-section class="row items-center">
           <div class="text-h6">Confirm Delete</div>
         </q-card-section>
-        <q-card-section>
-          Are you sure you want to delete this appointment?
-        </q-card-section>
+        <q-card-section
+          >Are you sure you want to delete this appointment?</q-card-section
+        >
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
+          <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
           <q-btn
             flat
             label="Delete"
             class="btn-delete"
             @click="deleteAppointment"
-          />
+          ></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
 
-    <!-- <RouterLink to="/addEvent"> -->
     <div class="flex-container">
       <q-page-sticky id="addEvent" position="bottom-right" :offset="[10, 10]">
-        <div class="flex-item">
-          <q-btn fab icon="add" class="btn-open" @click="navigateToAddEvent"
-            >Neuen Termin</q-btn
-          >
-        </div>
+        <q-btn fab icon="add" class="btn-open" @click="navigateToAddEvent"
+          >Neuen Termin</q-btn
+        >
       </q-page-sticky>
     </div>
-    <!-- </RouterLink> -->
   </body>
 </template>
 
@@ -216,6 +211,7 @@ const columns = [
  * Navigation
  */
 
+//Share button using Web Share API
 const shareSocial = () => {
   if (navigator.share) {
     navigator.share({
@@ -230,6 +226,7 @@ const shareSocial = () => {
   }
 };
 
+//Navigates to add Event page
 const navigateToAddEvent = () => {
   router.push("/addEvent");
 };
@@ -391,21 +388,13 @@ onMounted(async () => {
 </script>
 
 <style>
-/* General adjustments */
-.container,
-.q-page,
-.q-table,
-.q-table__top,
-.q-table__bottom,
-body,
-.q-page,
-.q-table,
-.q-input,
-.q-btn {
+body {
   background-color: var(--primary-bg-color);
-  color: var(--primary-text-color);
+  /* color: var(--primary-text-color); */
+  /* color: var(--button-text-color); */
 }
 
+/* General adjustments for flex containers and card display */
 .flex-container {
   display: flex;
   justify-content: space-between;
@@ -418,20 +407,7 @@ body,
   padding: 1rem;
 }
 
-/* Button adjustments */
-.q-btn {
-  --q-btn-primary-bg: #f5f5f5; /* Light grey background */
-  --q-btn-primary-text-color: var(--accent-color); /* Accent color text */
-  --q-btn-flat-primary-text-color: var(
-    --accent-color
-  ); /* Ensure flat buttons also use accent color */
-}
-
-.q-btn:hover {
-  background-color: var(--accent-color); /* Stronger accent color on hover */
-}
-
-/* Card styles */
+/* Style adjustments specific to card layouts within QTable */
 .custom-table .q-table__middle {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -444,7 +420,8 @@ body,
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 360px;
+  min-height: 280px;
+  /* Keeps card height uniform */
   cursor: pointer;
   border-radius: 8px;
   box-shadow: var(--q-shadow);
@@ -452,67 +429,44 @@ body,
   color: var(--primary-text-color);
   overflow: hidden;
   margin-bottom: 16px;
+  width: calc(
+    100vw - 40px
+  ); /* Adjust card width to be viewport width minus 40px */
+  max-width: 410px; /* Optional: max-width to ensure cards don't get too wide on large screens */
+  margin: 20px auto; /* Center the card with automatic margins and provide some space around it */
 }
 
-.card-content {
-  padding: 16px;
-  text-align: left;
-}
-
-.card-content .row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
+/* Icon style needed for the cards */
 .q-icon {
   margin-right: 8px;
-  color: var(--accent-color); /* Accent color icons */
+  color: var(--accent-color); /* Adjust icon color within cards */
 }
 
+/* Highlighting selected cards */
 .selected-card {
-  border: 2px solid var(--accent-color);
+  border: 2px solid var(--accent-color); /* Highlight border for selected cards */
 }
 
-/* Action button visibility and styling */
-.card-actions {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 10px 0;
-  background-color: var(--primary-bg-color);
-  transform: translateY(100%);
-  opacity: 0;
-  transition: transform 0.5s ease, opacity 0.5s ease;
-}
-
-.selected-card .card-actions {
-  transform: translateY(0);
-  opacity: 1;
-}
-
+/* Button spacing within card actions */
 .btn-open,
 .btn-edit,
 .btn-copy,
+.btn-share,
 .btn-mail,
 .btn-delete {
   margin: 0 4px;
+  font-size: 12px;
+  margin-bottom: 4px;
+  margin-top: 4px;
+  /* margin: 5px; */
 }
 
+/* Responsive design adjustments for action buttons in smaller viewports */
 @media (max-width: 599px) {
-  .card-actions {
-    justify-content: center;
-  }
-  .btn-open,
-  .btn-edit,
-  .btn-copy,
-  .btn-mail,
-  .btn-delete {
-    font-size: 12px;
+  .my-card {
+    width: calc(
+      100vw - 20px
+    ); /* Slightly larger cards on smaller screens if desired */
   }
 }
 </style>
