@@ -10,6 +10,8 @@
         dense
         grid
         class="custom-table"
+        :rows-per-page-options="[rows.length]"
+        :hide-bottom="true"
       >
         <template v-slot:item="scope">
           <div class="card-parent">
@@ -40,6 +42,9 @@
                   </div>
                 </div>
               </q-card-section>
+
+              <q-separator class="separator" />
+
               <q-card-actions
                 v-if="isSelected(scope.row.id)"
                 class="card-actions"
@@ -48,45 +53,52 @@
                   <q-btn
                     id="open"
                     fab
-                    icon="add"
+                    icon="event"
                     class="btn-open"
                     @click="navigateToDynamicLink(scope.row)"
-                  ></q-btn>
+                  >
+                    <q-tooltip>Abstimmung öffnen</q-tooltip></q-btn
+                  >
                   <q-btn
                     id="edit"
                     fab
                     icon="edit"
                     class="btn-edit"
                     @click.stop.prevent="navigateToEditPage(scope.row)"
-                  ></q-btn>
+                    ><q-tooltip>Appointment bearbeiten</q-tooltip></q-btn
+                  >
                   <q-btn
                     id="copy"
                     fab
                     icon="content_copy"
                     class="btn-copy"
                     @click.stop.prevent="copyLinkToClipboard(scope.row)"
-                  ></q-btn>
+                    ><q-tooltip>In Zwischenablage kopieren</q-tooltip></q-btn
+                  >
                   <q-btn
                     id="share"
                     fab
                     icon="share"
                     class="btn-share"
                     @click.stop.prevent="shareSocial(scope.row)"
-                  ></q-btn>
+                    ><q-tooltip>Termin teilen</q-tooltip></q-btn
+                  >
                   <q-btn
                     id="mail"
                     fab
                     icon="mail"
                     class="btn-mail"
                     @click.stop.prevent="navigateToMailPage(scope.row)"
-                  ></q-btn>
+                    ><q-tooltip>Einladung versenden</q-tooltip></q-btn
+                  >
                   <q-btn
                     id="delete"
                     fab
                     icon="delete"
                     class="btn-delete"
                     @click.stop.prevent="confirmDelete(scope.row)"
-                  ></q-btn>
+                    ><q-tooltip>Termin löschen</q-tooltip></q-btn
+                  >
                 </div>
               </q-card-actions>
             </q-card>
@@ -118,7 +130,7 @@
 
     <div class="flex-container">
       <q-page-sticky id="addEvent" position="bottom-right" :offset="[10, 10]">
-        <q-btn fab icon="add" class="btn-open" @click="navigateToAddEvent"
+        <q-btn fab icon="add" class="btn-new" @click="navigateToAddEvent"
           >Neuen Termin</q-btn
         >
       </q-page-sticky>
@@ -391,7 +403,7 @@ onMounted(async () => {
 body {
   background-color: var(--primary-bg-color);
   /* color: var(--primary-text-color); */
-  /* color: var(--button-text-color); */
+  color: var(--button-text-color);
 }
 
 /* General adjustments for flex containers and card display */
@@ -429,9 +441,8 @@ body {
   color: var(--primary-text-color);
   overflow: hidden;
   margin-bottom: 16px;
-  width: calc(
-    100vw - 40px
-  ); /* Adjust card width to be viewport width minus 40px */
+  width: calc(100vw - 40px);
+  /* Adjust card width to be viewport width minus 40px */
   max-width: 410px; /* Optional: max-width to ensure cards don't get too wide on large screens */
   margin: 20px auto; /* Center the card with automatic margins and provide some space around it */
 }
@@ -439,12 +450,22 @@ body {
 /* Icon style needed for the cards */
 .q-icon {
   margin-right: 8px;
-  color: var(--accent-color); /* Adjust icon color within cards */
+  /* color: var(--accent-color); */
+  color: var(--primary-text-color);
 }
 
 /* Highlighting selected cards */
 .selected-card {
   border: 2px solid var(--accent-color); /* Highlight border for selected cards */
+  .separator {
+    /* color: white; */
+    transition-property: background-color;
+    transition-duration: 0.25s;
+    transition-timing-function: linear;
+    transition-delay: 0.25s;
+    background-color: var(--accent-color);
+    height: 2px;
+  }
 }
 
 /* Button spacing within card actions */
@@ -461,11 +482,21 @@ body {
   /* margin: 5px; */
 }
 
+.btn-new {
+  color: var(--primary-text-color);
+  background-color: var(--primary-bg-color);
+}
+
+.btn-new:hover {
+  /* color: var(--primary-text-color); */
+  background-color: var(--accent-color);
+}
+
 /* Responsive design adjustments for action buttons in smaller viewports */
 @media (max-width: 599px) {
   .my-card {
     width: calc(
-      100vw - 20px
+      100vw - 30px
     ); /* Slightly larger cards on smaller screens if desired */
   }
 }

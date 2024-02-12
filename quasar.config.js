@@ -12,6 +12,10 @@ const { configure } = require("quasar/wrappers");
 
 module.exports = configure(function (/* ctx */) {
   return {
+    // brand: {
+    //   accent: "#3700b3",
+    // },
+
     eslint: {
       // fix: true,
       // include: [],

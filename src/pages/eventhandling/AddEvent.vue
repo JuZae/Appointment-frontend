@@ -1,240 +1,180 @@
 <template>
-  <head>
-    <title>Appointment Erstellen</title>
-    <title>Buttons</title>
-    <title>Icons</title>
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
+  <div class="appointment-erstellen-container">
     <h4>Appointment Erstellen</h4>
 
-    <table>
-      <tr>
-        <td><i class="material-icons">label</i></td>
-        <td><label for="bezeichnung">Bezeichnung:</label></td>
-        <td>
-          <input
-            v-model="bez"
-            type="text"
-            id="bezeichnung"
-            name="bezeichnung"
-          />
-        </td>
-      </tr>
-      <tr>
-        <td><i class="material-icons">today</i></td>
-        <td><label for="deadline">Datum hinzufügen</label></td>
-        <td>
-          <div class="q-pa-md deadline-input-container">
-            <q-input filled v-model="date" class="deadline-input">
-              <template v-slot:prepend>
-                <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy
-                    cover
-                    transition-show="scale"
-                    transition-hide="scale"
-                  >
-                    <q-date v-model="date" mask="YYYY-MM-DD HH:mm">
-                      <div class="row items-center justify-end">
-                        <q-btn
-                          v-close-popup
-                          label="Save"
-                          color="primary"
-                          flat
-                        />
-                      </div>
-                    </q-date>
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-              <template v-slot:append>
-                <q-icon name="access_time" class="cursor-pointer">
-                  <q-popup-proxy
-                    cover
-                    transition-show="scale"
-                    transition-hide="scale"
-                  >
-                    <q-time v-model="date" mask="YYYY-MM-DD HH:mm" format24h>
-                      <div class="row items-center justify-end">
-                        <q-btn
-                          v-close-popup
-                          label="Save"
-                          color="primary"
-                          flat
-                        />
-                      </div>
-                    </q-time>
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-            </q-input>
-          </div>
-        </td>
-        <td>
-          <q-btn
-            v-close-popup
-            icon="add"
-            label="Add"
-            color="primary"
-            @click="addDateToList"
-          />
-        </td>
-      </tr>
-      <tr>
-        <td />
-        <td />
-        <td>
-          <div class="added-dates-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Mögliche Zeitpunkte</th>
-                  <th>Löschen</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(addedDate, index) in addedDates" :key="index">
-                  <td>{{ addedDate }}</td>
-                  <td>
-                    <q-btn
-                      icon="delete"
-                      flat
-                      @click="deleteDateFromList(index)"
-                    ></q-btn>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td><i class="material-icons">location_on</i></td>
-        <td><label for="standort">Standort:</label></td>
-        <td>
-          <q-select
-            outlined
-            ref="selection"
-            use-input
-            :options="options"
-            v-model="select"
-            @input-value="onInput($event)"
-            option-value="value"
-            option-label="label"
-            clearable
-          >
-          </q-select>
-        </td>
-      </tr>
-      <tr>
-        <td><i class="material-icons">person</i></td>
-        <td><label for="teilnehmer">Teilnehmer:</label></td>
-        <td>
-          <q-select
-            outlined
-            label="Hinzufügen"
-            v-model="parti"
-            use-input
-            use-chips
-            multiple
-            hide-dropdown-icon
-            input-debounce="0"
-            new-value-mode="add"
-          />
-        </td>
-      </tr>
-      <tr>
-        <td><i class="material-icons"> description</i></td>
-        <td><label for="beschreibung">Beschreibung:</label></td>
-        <td>
-          <textarea
-            v-model="descr"
-            id="beschreibung"
-            name="beschreibung"
-          ></textarea>
-        </td>
-      </tr>
-      <tr>
-        <td><i class="material-icons">deadline</i></td>
-        <td><label for="deadline">Deadline setzen</label></td>
-        <td>
-          <div class="q-pa-md deadline-input-container">
-            <q-input filled v-model="deadlineDate" class="deadline-input">
-              <template v-slot:prepend>
-                <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy
-                    cover
-                    transition-show="scale"
-                    transition-hide="scale"
-                  >
-                    <q-date v-model="deadlineDate" mask="YYYY-MM-DD HH:mm">
-                      <div class="row items-center justify-end">
-                        <q-btn
-                          v-close-popup
-                          label="Save"
-                          color="primary"
-                          flat
-                        />
-                      </div>
-                    </q-date>
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-              <template v-slot:append>
-                <q-icon name="access_time" class="cursor-pointer">
-                  <q-popup-proxy
-                    cover
-                    transition-show="scale"
-                    transition-hide="scale"
-                  >
-                    <q-time
-                      v-model="deadlineDate"
-                      mask="YYYY-MM-DD HH:mm"
-                      format24h
-                    >
-                      <div class="row items-center justify-end">
-                        <q-btn
-                          v-close-popup
-                          label="Save"
-                          color="primary"
-                          flat
-                        />
-                      </div>
-                    </q-time>
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-            </q-input>
-          </div>
-        </td>
-      </tr>
-    </table>
+    <div class="form-container">
+      <!-- Bezeichnung -->
+      <div class="form-row">
+        <label for="bezeichnung">Bezeichnung:</label>
+        <q-input filled v-model="bez" placeholder="Bezeichnung eingeben" />
+      </div>
 
-    <div class="button-container">
-      <RouterLink to="/overviewpage">
-        <q-btn label="Abbrechen" color="negative"></q-btn>
-      </RouterLink>
+      <!-- Datum hinzufügen mit Zeitpicker -->
+      <div class="form-row">
+        <label for="datetime">Datum hinzufügen:</label>
+        <!-- DAS HIER EINRÜCKEN -->
+        <div class="datetime-input-container">
+          <q-input filled v-model="date" class="datetime-input">
+            <template v-slot:prepend>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-date v-model="date" mask="YYYY-MM-DD HH:mm">
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Save" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+            <template v-slot:append>
+              <q-icon name="access_time" class="cursor-pointer">
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-time v-model="date" mask="YYYY-MM-DD HH:mm" format24h>
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Save" color="primary" flat />
+                    </div>
+                  </q-time>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+          <q-btn v-close-popup icon="add" label="Add" @click="addDateToList" />
+        </div>
+        <!-- DAS HIER KORREKT EINRÜCKEN -->
+        <div class="added-dates-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Mögliche Zeitpunkte</th>
+                <th>Löschen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(addedDate, index) in addedDates" :key="index">
+                <td>{{ addedDate }}</td>
+                <td>
+                  <q-btn
+                    icon="delete"
+                    flat
+                    @click="deleteDateFromList(index)"
+                  ></q-btn>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      <q-btn label="Löschen" color="orange" @click="this.$router.go(0)"></q-btn>
+      <!-- Standort -->
+      <div class="form-row">
+        <label for="standort">Standort:</label>
+        <q-select
+          outlined
+          ref="selection"
+          use-input
+          :options="options"
+          v-model="select"
+          @input-value="onInput($event)"
+          option-value="value"
+          option-label="label"
+          clearable
+        />
+      </div>
 
-      <RouterLink to="/overviewpage">
-        <q-btn
-          label="Speichern"
-          color="positive"
-          @click="createAppointment"
-        ></q-btn>
-      </RouterLink>
+      <!-- Teilnehmer -->
+      <div class="form-row">
+        <label for="teilnehmer">Teilnehmer:</label>
+        <q-select
+          outlined
+          label="Hinzufügen"
+          v-model="parti"
+          use-input
+          use-chips
+          multiple
+          hide-dropdown-icon
+          input-debounce="0"
+          new-value-mode="add"
+        />
+      </div>
+
+      <!-- Deadline -->
+      <div class="form-row">
+        <label for="deadline">Deadline setzen</label>
+        <q-input filled v-model="deadlineDate" class="deadline-input">
+          <template v-slot:prepend>
+            <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy
+                cover
+                transition-show="scale"
+                transition-hide="scale"
+              >
+                <q-date v-model="deadlineDate" mask="YYYY-MM-DD HH:mm">
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Save" flat />
+                  </div>
+                </q-date>
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+          <template v-slot:append>
+            <q-icon name="access_time" class="cursor-pointer">
+              <q-popup-proxy
+                cover
+                transition-show="scale"
+                transition-hide="scale"
+              >
+                <q-time
+                  v-model="deadlineDate"
+                  mask="YYYY-MM-DD HH:mm"
+                  format24h
+                >
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Save" flat />
+                  </div>
+                </q-time>
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input>
+      </div>
+
+      <!-- Beschreibung -->
+      <div class="form-row">
+        <label for="beschreibung">Beschreibung:</label>
+        <q-input
+          type="textarea"
+          v-model="descr"
+          placeholder="Beschreibung eingeben"
+        />
+      </div>
+
+      <!-- Button-Container -->
+      <div class="button-container">
+        <router-link to="/overviewpage">
+          <q-btn label="Abbrechen" />
+        </router-link>
+        <q-btn label="Eingaben zurücksetzen" @click="this.$router.go(0)" />
+        <router-link to="/overviewpage">
+          <q-btn label="Speichern" @click="createAppointment" />
+        </router-link>
+      </div>
     </div>
-  </body>
+  </div>
 </template>
 
 <script setup>
 import { ref, toRaw, inject } from "vue";
 import UserStore from "src/stores/user.js";
 import AuthStore from "src/stores/authStore.js";
+import "src/css/app.scss";
 
 const BACKEND_BASE_URL = inject("BACKEND_BASE_URL");
 
@@ -381,129 +321,72 @@ const createAppointmentOptions = async (appointmentId) => {
 </script>
 
 <style>
-/* Reset CSS to remove default styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.appointment-erstellen-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  /* background-color: #f9f9f9; */
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--primary-bg-color);
+  color: var(--primary-text-color);
 }
 
-body {
-  font-family: Arial, sans-serif;
-  background-color: #fff;
-  padding: 10px;
-}
-
-/* Style the heading */
-h4 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-/* Style the table and its contents for left alignment */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-table tr,
-table td,
-table th {
-  text-align: left;
-  padding: 10px;
-}
-
-/* Style for input fields, textarea, and select boxes */
-input[type="text"],
-input[type="time"],
-textarea,
-.q-select {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  text-align: left; /* Ensure left alignment for text in inputs */
-}
-
-/* New style for the button container */
-.button-container {
+.datetime-input-container,
+.deadline-intput-container {
   display: flex;
-  justify-content: flex-end; /* Align buttons to the right */
-  gap: 10px; /* Space between buttons */
-  margin-top: 20px; /* Space above the button container */
+  flex-direction: column;
+  margin-bottom: 20px;
 }
 
-/* Adjusting button styles */
-button {
-  padding: 10px;
-  color: #fff;
-  background-color: #0056b3;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  /* Removing absolute positioning */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--primary-bg-color);
+  color: var(--primary-text-color);
 }
 
-button:hover {
-  background-color: #00408b;
+.form-row {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  background-color: var(--primary-bg-color);
+  color: var(--primary-text-color);
 }
 
-/* Style for the deadline input */
-.deadline-input .q-field__control {
-  background: white;
-  color: black; /* Adjust the text color if needed */
+/* .test {
+  color: var(--accent-color);
+} */
+
+.added-dates-list {
+  display: flex;
+  flex-direction: column;
 }
 
-/* Style for the popup date and time pickers */
-.deadline-input .q-date,
-.deadline-input .q-time {
-  background: white;
-  color: black; /* Adjust the text color if needed */
-}
-
-.deadline-input-container {
+.added-date {
   display: flex;
   align-items: center;
-  padding-left: 0;
-  padding-right: 0;
-  margin-left: auto; /* Align to the right */
-  margin-right: auto; /* Align to the right */
+  justify-content: space-between;
+  background-color: #fff;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.deadline-input {
-  width: 100%;
-}
-
-/* Styles for the added dates table */
-.added-dates-table table {
-  width: 100%;
+.button-container {
+  display: flex;
+  justify-content: space-between;
   margin-top: 20px;
-  border-collapse: collapse;
 }
 
-.added-dates-table th,
-.added-dates-table td {
-  padding: 8px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-.added-dates-table th {
-  background-color: #f4f4f4;
-}
-
-/* Responsive adjustments for the added dates table */
-@media screen and (max-width: 480px) {
-  .added-dates-table table {
-    font-size: 14px;
+@media (max-width: 480px) {
+  .appointment-erstellen-container {
+    padding: 10px;
   }
-}
 
-@media screen and (max-width: 360px) {
-  .added-dates-table table {
-    font-size: 12px;
+  .form-row label {
+    display: block;
+    margin-bottom: 5px;
   }
 }
 </style>
