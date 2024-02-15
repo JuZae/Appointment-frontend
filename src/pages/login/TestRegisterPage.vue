@@ -119,7 +119,7 @@ const registerUser = async () => {
     // Display success message and navigate to login page
     displayMessage("Registration successful. Please log in.", "success");
 
-    localStorage.setItem("userId", data.userId);
+    localStorage.setItem("userId", responseData.userId);
 
     // Wait for 3 seconds before navigating to login page
     setTimeout(() => {
