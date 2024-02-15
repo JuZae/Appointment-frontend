@@ -38,12 +38,11 @@
           {{ errorMessage }}
         </q-card-section>
         <q-card-actions>
+          <q-btn flat label="Close" v-close-popup @click="closeDialog" />
           <q-btn
             flat
-            label="Close"
-            color="primary"
-            v-close-popup
-            @click="closeDialog"
+            label="Resend Verification Email"
+            @click="resendVerificationEmail"
           />
         </q-card-actions>
       </q-card>
@@ -81,6 +80,16 @@ watch(
     isDialogOpen.value = !!newMessage;
   }
 );
+
+const showSuccessMessage = (message) => {
+  errorMessage.value = message;
+  isDialogOpen.value = true;
+};
+
+const showErrorMessage = (message) => {
+  errorMessage.value = message;
+  isDialogOpen.value = true;
+};
 
 //APIs
 // const API_GETUSERBYID = "http://localhost:8080/api/user/get/";
@@ -150,6 +159,48 @@ const getUser = async (userId) => {
     // For example: userStore.update(userData.username);
   } catch (error) {
     console.error("Error fetching user data:", error);
+  }
+};
+
+const resendVerificationEmail = async () => {
+  // Assuming you have the user's email available, possibly from the login form
+  try {
+    const response = await fetch(
+      `${BACKEND_BASE_URL}api/auth/resend-verification`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: loginDTO.value.email }), // Adjust according to your data structure
+      }
+    );
+    const data = await response.json(); // Assuming the backend sends a JSON response
+
+    if (response.ok) {
+      // Handle success
+      console.log("Verification email resent. Please check your inbox.");
+      // Close the current dialog if open
+      isDialogOpen.value = false;
+      // Show a success message to the user
+      showSuccessMessage(
+        data.message ||
+          "Verification email resent successfully. Please check your inbox."
+      );
+    } else {
+      // Handle failure
+      console.error("Failed to resend verification email.");
+      // Show an error message
+      showErrorMessage(
+        data.message ||
+          "Failed to resend verification email. Please try again later."
+      );
+    }
+  } catch (error) {
+    console.error("Error resending verification email:", error);
+    showErrorMessage(
+      "An error occurred while trying to resend the verification email. Please try again later."
+    );
   }
 };
 

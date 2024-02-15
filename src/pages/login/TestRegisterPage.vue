@@ -118,9 +118,12 @@ const registerUser = async () => {
     console.log("Registration successful", responseData.message);
     // Display success message and navigate to login page
     displayMessage("Registration successful. Please log in.", "success");
-    // Wait for 2 seconds before navigating to login page
+
+    localStorage.setItem("userId", data.userId);
+
+    // Wait for 3 seconds before navigating to login page
     setTimeout(() => {
-      router.push({ name: "loginPage" });
+      router.push("/login");
     }, 3000);
   } catch (error) {
     console.error("Registration error:", error);
