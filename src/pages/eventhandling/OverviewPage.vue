@@ -475,21 +475,33 @@ body {
 .btn-share,
 .btn-mail,
 .btn-delete {
-  margin: 0 4px;
-  font-size: 12px;
+  margin: 0 2px;
   margin-bottom: 4px;
-  margin-top: 4px;
-  /* margin: 5px; */
+  /* margin-top: 0px; */
+  transform: scale(0.9);
 }
 
 .btn-new {
-  color: var(--primary-text-color);
+  color: var(--button-text-color);
   background-color: var(--primary-bg-color);
 }
 
 .btn-new:hover {
   /* color: var(--primary-text-color); */
   background-color: var(--accent-color);
+}
+
+.card-actions {
+  display: flex;
+  justify-content: center; /* Zentriert die Buttons horizontal */
+  align-items: center; /* Zentriert die Buttons vertikal */
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Zentriert die Buttons im Container */
+  gap: 2px; /* Definiert den horizontalen Abstand zwischen den Buttons */
+  width: 90%; /* Stellt sicher, dass der Container die volle Breite einnimmt */
 }
 
 /* Responsive design adjustments for action buttons in smaller viewports */

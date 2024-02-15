@@ -35,7 +35,6 @@ export const useStore = defineStore("auth", {
     async login(email, password, BACKEND_BASE_URL) {
       console.log("CHILD URL: " + BACKEND_BASE_URL);
       const URL_LOGIN = BACKEND_BASE_URL + "api/auth/login";
-      console.log("INJECTED URL" + BACKEND_BASE_URL);
       try {
         const response = await fetch(URL_LOGIN, {
           method: "POST",
@@ -54,7 +53,7 @@ export const useStore = defineStore("auth", {
         this.setToken(data.token);
         this.setUserId(data.userId);
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
     },
 

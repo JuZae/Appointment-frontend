@@ -12,6 +12,7 @@ export default function () {
   router.beforeEach((to, from, next) => {
     const authStore = AuthStore.useStore();
     const isPublicRoute =
+      to.path.startsWith("/verify") ||
       to.path.startsWith("/dynamic-link") ||
       ["/login", "/register"].includes(to.path);
 

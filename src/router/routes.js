@@ -58,6 +58,11 @@ const routes = [
         component: () => import("pages/feedback/FeedbackPage.vue"),
         name: "feedback",
       },
+      {
+        path: "/verify",
+        component: () => import("pages/login/VerificationPage.vue"),
+        name: "verify",
+      },
     ],
   },
 
