@@ -1,53 +1,44 @@
 <template>
-  <q-page class="flex flex-center">
-    <q-card>
+  <q-page class="register-page">
+    <q-card class="register-card">
       <q-card-section>
         <q-form @submit.prevent="onSubmitRegister" @reset="onReset">
           <q-input
             v-model="register.username"
             label="Username"
             :rules="[(val) => !!val || 'Username is required']"
+            class="custom-q-input"
           />
-          <q-input v-model="register.email" label="Email" :rules="emailRules" />
+          <q-input
+            v-model="register.email"
+            label="Email"
+            :rules="emailRules"
+            class="custom-q-input"
+          />
           <q-input
             v-model="register.password"
             type="password"
             label="Password"
             :rules="passwordRules"
+            class="custom-q-input"
           />
-          <div>
-            <q-btn
-              label="Register"
-              type="submit"
-              color="primary"
-              :disable="!isFormValid"
-            />
-            <q-btn
-              label="Back to Login"
-              color="primary"
-              flat
-              @click="goToLogin"
-            />
+          <div class="q-gutter-md">
+            <q-btn label="Register" type="submit" :disable="!isFormValid" />
+            <q-btn label="Back to Login" flat @click="goToLogin" />
           </div>
         </q-form>
       </q-card-section>
     </q-card>
 
     <q-dialog v-model="isDialogOpen">
-      <q-card>
-        <q-card-section class="row items-center justify-between">
-          <div
-            class="text-h6"
-            :class="{
-              'text-green': dialogType === 'success',
-              'text-red': dialogType === 'error',
-            }"
-          >
+      <q-card class="my-dialog-card">
+        <q-card-section class="text-center">
+          <div class="dialog-message">
             {{ dialogMessage }}
           </div>
         </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Close" color="primary" @click="closeDialog" />
+        <q-card-actions align="right" class="dialog-actions">
+          <q-btn flat label="Close" @click="closeDialog" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -164,11 +155,84 @@ const goToLogin = () => {
 </script>
 
 <style>
-.text-green {
+/* .text-green {
   color: green;
 }
 
 .text-red {
   color: red;
+} */
+
+/**
+* Page and Card
+*/
+.register-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: var(--primary-bg-color);
+  color: var(--primary-text-color);
+}
+
+.register-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--secondary-bg-color);
+}
+
+.full-width {
+  width: 100%;
+}
+
+/**
+* Custom input field
+*/
+.custom-q-input .q-field__control {
+  background-color: var(--secondary-bg-color); /* bg-color */
+  color: var(--accent-color);
+}
+
+.custom-q-input .q-field__label {
+  color: var(--accent-color); /* label-color */
+}
+
+.custom-q-input .q-field--focused .q-field__control {
+  border-color: var(
+    --accent-color
+  ); /* You might want to adjust the border color on focus to match the accent color */
+}
+
+.custom-q-input .q-field--focused .q-field__label {
+  color: var(--accent-color);
+}
+
+.custom-q-input .q-field__native {
+  color: var(--primary-text-color); /* Set text color for input */
+}
+
+.custom-q-input .q-field__native::placeholder {
+  color: var(--primary-text-color); /* Lighter color for placeholder text */
+}
+
+/**
+* Custom dialog card
+*/
+.my-dialog-card {
+  background-color: var(--secondary-bg-color);
+  color: var(--primary-text-color);
+}
+
+.dialog-message {
+  color: var(--primary-text-color);
+}
+
+.dialog-actions {
+  color: var(--button-text-color);
+}
+
+/* Optionally, if you want to specifically style the flat buttons */
+.dialog-actions {
+  color: var(--accent-color);
 }
 </style>
