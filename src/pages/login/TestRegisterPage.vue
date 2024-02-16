@@ -117,7 +117,10 @@ const registerUser = async () => {
 
     console.log("Registration successful", responseData.message);
     // Display success message and navigate to login page
-    displayMessage("Registration successful. Please log in.", "success");
+    displayMessage(
+      "Registration successful. Please check you E-Mail to verify your account.",
+      "success"
+    );
 
     localStorage.setItem("userId", responseData.userId);
 

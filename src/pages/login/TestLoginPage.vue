@@ -1,30 +1,29 @@
 <template>
-  <q-page class="flex flex-center">
-    <q-card>
+  <q-page class="login-page">
+    <q-card class="login-card q-pa-md">
       <q-card-section>
-        <q-form
-          @submit.prevent="login"
-          @reset="onReset"
-          v-on:keyup.enter="goToOverview"
-        >
-          <q-input v-model="loginDTO.email" label="Email" :rules="emailRules" />
+        <q-form @submit.prevent="login" class="q-gutter-md">
           <q-input
+            filled
+            v-model="loginDTO.email"
+            label="Email"
+            :rules="emailRules"
+            class="custom-q-input"
+          />
+          <q-input
+            filled
             v-model="loginDTO.password"
             type="password"
             label="Password"
             :rules="passwordRules"
+            class="custom-q-input"
           />
-          <div>
-            <q-btn
-              label="Login"
-              type="submit"
-              color="primary"
-              @click="goToOverview"
-            />
+          <div class="q-gutter-md">
+            <q-btn label="Login" type="submit" class="full-width" />
             <q-btn
               label="Register"
-              color="primary"
               flat
+              class="full-width"
               @click="goToRegister"
             />
           </div>
@@ -33,11 +32,11 @@
     </q-card>
 
     <q-dialog v-model="isDialogOpen">
-      <q-card>
-        <q-card-section>
-          {{ errorMessage }}
+      <q-card class="my-dialog-card">
+        <q-card-section class="text-center">
+          <div class="dialog-message">{{ errorMessage }}</div>
         </q-card-section>
-        <q-card-actions>
+        <q-card-actions align="around" class="dialog-actions">
           <q-btn flat label="Close" v-close-popup @click="closeDialog" />
           <q-btn
             flat
@@ -245,4 +244,74 @@ const closeDialog = () => {
 };
 </script>
 
-<style></style>
+<style>
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: var(--primary-bg-color);
+  color: var(--primary-text-color);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--secondary-bg-color);
+}
+
+.full-width {
+  width: 100%;
+}
+
+/**
+* Custom input field
+*/
+.custom-q-input .q-field__control {
+  background-color: var(--secondary-bg-color); /* bg-color */
+  color: var(--accent-color);
+}
+
+.custom-q-input .q-field__label {
+  color: var(--accent-color); /* label-color */
+}
+
+.custom-q-input .q-field--focused .q-field__control {
+  border-color: var(
+    --accent-color
+  ); /* You might want to adjust the border color on focus to match the accent color */
+}
+
+.custom-q-input .q-field--focused .q-field__label {
+  color: var(--accent-color);
+}
+
+.custom-q-input .q-field__native {
+  color: var(--primary-text-color); /* Set text color for input */
+}
+
+.custom-q-input .q-field__native::placeholder {
+  color: var(--primary-text-color); /* Lighter color for placeholder text */
+}
+
+/**
+* Custom dialog card
+*/
+.my-dialog-card {
+  background-color: var(--secondary-bg-color);
+  color: var(--primary-text-color);
+}
+
+.dialog-message {
+  color: var(--primary-text-color);
+}
+
+.dialog-actions {
+  color: var(--button-text-color);
+}
+
+/* Optionally, if you want to specifically style the flat buttons */
+.dialog-actions {
+  color: var(--accent-color);
+}
+</style>
