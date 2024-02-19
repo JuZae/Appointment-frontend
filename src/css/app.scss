@@ -1,5 +1,6 @@
 /* Light Theme Variables */
 :root {
+  --q-primary: var(--accent-color);
   --primary-bg-color: #ffffff;
   --secondary-bg-color: #f4f5f7;
   --primary-text-color: #333333;
@@ -29,6 +30,7 @@
 
 /* Dark Theme Variables */
 [data-theme="dark"] {
+  --q-primary: var(--accent-color);
   --primary-bg-color: #121212;
   --secondary-bg-color: #1e1e1e;
   --primary-text-color: #ffffff;

@@ -455,7 +455,7 @@ const createAppointmentOptions = async (appointmentId) => {
   color: var(--accent-color);
 }
 
-.custom-q-select .q-field__label {
+.custom-q-select {
   color: var(--accent-color);
 }
 
@@ -463,7 +463,7 @@ const createAppointmentOptions = async (appointmentId) => {
   border-color: var(--accent-color);
 }
 
-.custom-q-select .q-field--focused .q-field__label {
+.custom-q-select .q-field--focused {
   color: var(--accent-color);
 }
 
@@ -488,7 +488,6 @@ const createAppointmentOptions = async (appointmentId) => {
 .custom-dropdown-style {
   background-color: var(--secondary-bg-color);
   color: var(--accent-color);
-  /* Apply other styling as needed to match q-select */
 }
 
 /* Additional customizations for the dropdown items, if necessary */
@@ -505,29 +504,23 @@ const createAppointmentOptions = async (appointmentId) => {
   background-color: var(--secondary-bg-color);
 }
 
-/* Custom date Weekday color */
-.q-date .q-date__calendar-item {
-  color: var(--primary-text-color) !important;
-}
-
-/* Custom date Header Text color */
+/* Header color */
 .q-date .q-date__header {
-  color: var(--primary-text-color) !important;
-  background-color: var(--accent-color) !important;
+  color: var(--primary-text-color);
+  background-color: var(--accent-color);
 }
 
-/* Customizes the background color of the selected day */
-.q-date .q-btn {
-  background-color: var(--secondary-bg-color) !important;
-  color: var(--primary-text-color) !important;
+/* Weekday color */
+.q-date .q-date__calendar-item {
+  color: var(--primary-text-color);
 }
 
-.q-date .q-btn--selected {
-  background-color: var(--accent-color) !important;
+.q-date .q-date__calendar-item {
+  color: var(--primary-text-color);
 }
 
 .q-date .q-btn:hover {
-  background-color: var(--accent-color) !important;
+  background-color: var(--accent-color);
 }
 
 /**
@@ -536,36 +529,23 @@ const createAppointmentOptions = async (appointmentId) => {
 /* Background color for whole card */
 .q-time {
   background-color: var(--secondary-bg-color);
+  color: var(--primary-text-color);
 }
 
 /* Custom date Header Text color */
 .q-time .q-time__header {
-  color: var(--primary-text-color) !important;
-  background-color: var(--accent-color) !important;
+  color: var(--primary-text-color);
+  background-color: var(--accent-color);
 }
 
-/* Customizes the background color of the selected day */
-.q-time .q-btn {
-  background-color: var(--secondary-bg-color) !important;
-  color: var(--primary-text-color) !important;
-}
-
-.q-time .q-btn--selected {
-  background-color: var(--accent-color) !important;
-}
-
-.q-time .q-btn:hover {
-  background-color: var(--accent-color) !important;
-}
-
-.q-time {
-  color: var(--primary-text-color) !important;
-}
-
-/* clock hand color */
-/* Target the clock hand */
-
+/* Clock Hand */
 .q-time .q-time__clock-pointer {
-  background: var(--accent-color) !important;
+  background-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* Selected Time */
+.q-time .q-time__clock-position--active {
+  background-color: var(--accent-color);
 }
 </style>
