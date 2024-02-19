@@ -6,7 +6,12 @@
       <!-- Bezeichnung -->
       <div class="form-row">
         <label for="bezeichnung">Bezeichnung:</label>
-        <q-input filled v-model="bez" placeholder="Bezeichnung eingeben" />
+        <q-input
+          filled
+          v-model="bez"
+          placeholder="Bezeichnung eingeben"
+          class="custom-q-input"
+        />
       </div>
 
       <!-- Datum hinzufügen mit Zeitpicker -->
@@ -14,9 +19,14 @@
         <label for="datetime">Datum hinzufügen:</label>
         <!-- DAS HIER EINRÜCKEN -->
         <div class="datetime-input-container">
-          <q-input filled v-model="date" class="datetime-input">
+          <q-input
+            filled
+            v-model="date"
+            class="custom-q-input"
+            mask="####-##-## ##:##"
+          >
             <template v-slot:prepend>
-              <q-icon name="event" class="cursor-pointer">
+              <q-icon name="event" class="cursor-pointer custom-q-icon">
                 <q-popup-proxy
                   cover
                   transition-show="scale"
@@ -24,14 +34,14 @@
                 >
                   <q-date v-model="date" mask="YYYY-MM-DD HH:mm">
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Save" color="primary" flat />
+                      <q-btn v-close-popup label="Save" flat />
                     </div>
                   </q-date>
                 </q-popup-proxy>
               </q-icon>
             </template>
             <template v-slot:append>
-              <q-icon name="access_time" class="cursor-pointer">
+              <q-icon name="access_time" class="cursor-pointer custom-q-icon">
                 <q-popup-proxy
                   cover
                   transition-show="scale"
@@ -39,14 +49,19 @@
                 >
                   <q-time v-model="date" mask="YYYY-MM-DD HH:mm" format24h>
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Save" color="primary" flat />
+                      <q-btn v-close-popup label="Save" flat />
                     </div>
                   </q-time>
                 </q-popup-proxy>
               </q-icon>
             </template>
           </q-input>
-          <q-btn v-close-popup icon="add" label="Add" @click="addDateToList" />
+          <q-btn
+            v-close-popup
+            align="center"
+            icon="add"
+            @click="addDateToList"
+          />
         </div>
         <!-- DAS HIER KORREKT EINRÜCKEN -->
         <div class="added-dates-table">
@@ -77,6 +92,7 @@
       <div class="form-row">
         <label for="standort">Standort:</label>
         <q-select
+          filled
           outlined
           ref="selection"
           use-input
@@ -86,6 +102,8 @@
           option-value="value"
           option-label="label"
           clearable
+          class="custom-q-select"
+          popup-content-class="custom-dropdown-style"
         />
       </div>
 
@@ -93,6 +111,7 @@
       <div class="form-row">
         <label for="teilnehmer">Teilnehmer:</label>
         <q-select
+          filled
           outlined
           label="Hinzufügen"
           v-model="parti"
@@ -102,15 +121,21 @@
           hide-dropdown-icon
           input-debounce="0"
           new-value-mode="add"
+          class="custom-q-select"
         />
       </div>
 
       <!-- Deadline -->
       <div class="form-row">
         <label for="deadline">Deadline setzen</label>
-        <q-input filled v-model="deadlineDate" class="deadline-input">
+        <q-input
+          filled
+          v-model="deadlineDate"
+          class="custom-q-input"
+          mask="####-##-## ##:##"
+        >
           <template v-slot:prepend>
-            <q-icon name="event" class="cursor-pointer">
+            <q-icon name="event" class="cursor-pointer custom-q-icon">
               <q-popup-proxy
                 cover
                 transition-show="scale"
@@ -125,7 +150,7 @@
             </q-icon>
           </template>
           <template v-slot:append>
-            <q-icon name="access_time" class="cursor-pointer">
+            <q-icon name="access_time" class="cursor-pointer custom-q-icon">
               <q-popup-proxy
                 cover
                 transition-show="scale"
@@ -150,9 +175,11 @@
       <div class="form-row">
         <label for="beschreibung">Beschreibung:</label>
         <q-input
+          filled
           type="textarea"
           v-model="descr"
           placeholder="Beschreibung eingeben"
+          class="custom-q-input"
         />
       </div>
 
@@ -332,13 +359,6 @@ const createAppointmentOptions = async (appointmentId) => {
   color: var(--primary-text-color);
 }
 
-.datetime-input-container,
-.deadline-intput-container {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
-
 .form-container {
   display: flex;
   flex-direction: column;
@@ -388,5 +408,164 @@ const createAppointmentOptions = async (appointmentId) => {
     display: block;
     margin-bottom: 5px;
   }
+}
+
+/**
+* Custom input field
+*/
+.custom-q-input .q-field__control {
+  background-color: var(--secondary-bg-color); /* bg-color */
+  color: var(--accent-color);
+}
+
+.custom-q-input .q-field__label {
+  color: var(--accent-color); /* label-color */
+}
+
+.custom-q-input .q-field--focused .q-field__control {
+  border-color: var(
+    --accent-color
+  ); /* You might want to adjust the border color on focus to match the accent color */
+}
+
+.custom-q-input .q-field--focused .q-field__label {
+  color: var(--accent-color);
+}
+
+.custom-q-input .q-field__native {
+  color: var(--primary-text-color); /* Set text color for input */
+}
+
+.custom-q-input .q-field__native::placeholder {
+  color: var(--primary-text-color); /* Lighter color for placeholder text */
+}
+
+/**
+* Custom icon
+*/
+.custom-q-icon {
+  color: var(--primary-text-color);
+}
+
+/**
+* Custom select field
+*/
+.custom-q-select .q-field__control {
+  background-color: var(--secondary-bg-color);
+  color: var(--accent-color);
+}
+
+.custom-q-select .q-field__label {
+  color: var(--accent-color);
+}
+
+.custom-q-select .q-field--focused .q-field__control {
+  border-color: var(--accent-color);
+}
+
+.custom-q-select .q-field--focused .q-field__label {
+  color: var(--accent-color);
+}
+
+.custom-q-select .q-field__native {
+  color: var(--primary-text-color);
+}
+
+.custom-q-select .q-field__native::placeholder {
+  color: var(--primary-text-color);
+}
+
+.custom-q-select .q-field__native input,
+.custom-q-select .q-select__input,
+.custom-q-select .q-field__native .q-placeholder {
+  color: var(--primary-text-color) !important;
+}
+
+/**
+* Custom dropdown for q-select
+*/
+.custom-q-select,
+.custom-dropdown-style {
+  background-color: var(--secondary-bg-color);
+  color: var(--accent-color);
+  /* Apply other styling as needed to match q-select */
+}
+
+/* Additional customizations for the dropdown items, if necessary */
+.custom-dropdown-style .q-item {
+  color: var(--primary-text-color);
+  /* More styling rules as needed */
+}
+
+/**
+* Custom q-date
+*/
+/* Background color for whole card */
+.q-date {
+  background-color: var(--secondary-bg-color);
+}
+
+/* Custom date Weekday color */
+.q-date .q-date__calendar-item {
+  color: var(--primary-text-color) !important;
+}
+
+/* Custom date Header Text color */
+.q-date .q-date__header {
+  color: var(--primary-text-color) !important;
+  background-color: var(--accent-color) !important;
+}
+
+/* Customizes the background color of the selected day */
+.q-date .q-btn {
+  background-color: var(--secondary-bg-color) !important;
+  color: var(--primary-text-color) !important;
+}
+
+.q-date .q-btn--selected {
+  background-color: var(--accent-color) !important;
+}
+
+.q-date .q-btn:hover {
+  background-color: var(--accent-color) !important;
+}
+
+/**
+* Custom q-time
+*/
+/* Background color for whole card */
+.q-time {
+  background-color: var(--secondary-bg-color);
+}
+
+/* Custom date Header Text color */
+.q-time .q-time__header {
+  color: var(--primary-text-color) !important;
+  background-color: var(--accent-color) !important;
+}
+
+/* Customizes the background color of the selected day */
+.q-time .q-btn {
+  background-color: var(--secondary-bg-color) !important;
+  color: var(--primary-text-color) !important;
+}
+
+.q-time .q-btn--selected {
+  background-color: var(--accent-color) !important;
+}
+
+.q-time .q-btn:hover {
+  background-color: var(--accent-color) !important;
+}
+
+.q-time {
+  color: var(--primary-text-color) !important;
+}
+
+/* clock hand color */
+/* Target the clock hand */
+
+.q-time .q-time__clock-pointer {
+  background: var(--accent-color) !important;
 }
 </style>

@@ -130,9 +130,12 @@
 
     <div class="flex-container">
       <q-page-sticky id="addEvent" position="bottom-right" :offset="[10, 10]">
-        <q-btn fab icon="add" class="btn-new" @click="navigateToAddEvent"
-          >Neuen Termin</q-btn
-        >
+        <q-btn
+          fab
+          icon="add"
+          class="btn-new"
+          @click="navigateToAddEvent"
+        ></q-btn>
       </q-page-sticky>
     </div>
   </body>
