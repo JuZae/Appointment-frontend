@@ -273,7 +273,7 @@ const closeDialog = () => {
 }
 
 .custom-q-input .q-field__label {
-  color: var(--accent-color); /* label-color */
+  color: var(--secondary-text-color);
 }
 
 .custom-q-input .q-field--focused .q-field__control {
