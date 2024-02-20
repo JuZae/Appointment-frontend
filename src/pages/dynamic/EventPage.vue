@@ -3,15 +3,39 @@
     <q-card>
       <q-card-section>
         <q-form @submit="sendEmail">
-          <q-input
+          <!-- <q-input
             v-model="recipient"
             label="Recipient Email"
             type="email"
             outlined
             dense
             required
+            filled
+            class="custom-q-input"
+          /> -->
+          <q-select
+            filled
+            outlined
+            label="Recipients"
+            v-model="recipient"
+            use-input
+            use-chips
+            multiple
+            hide-dropdown-icon
+            input-debounce="0"
+            new-value-mode="add"
+            class="custom-q-select"
+            placeholder="Enter recipient emails"
           />
-          <q-input v-model="subject" label="Subject" outlined dense required />
+          <q-input
+            v-model="subject"
+            label="Subject"
+            outlined
+            dense
+            required
+            filled
+            class="custom-q-input"
+          />
           <!-- <q-input
             type="textarea"
             v-model="body"
@@ -22,12 +46,7 @@
           /> -->
           <q-editor v-model="body" min-height="100px" />
           <div>
-            <q-btn
-              label="Send Email"
-              color="primary"
-              type="submit"
-              class="q-mt-md"
-            />
+            <q-btn label="Send Email" type="submit" class="q-mt-md" />
           </div>
         </q-form>
       </q-card-section>
@@ -48,7 +67,7 @@ const authStore = AuthStore.useStore();
 
 const appointmentId = route.params.appointmentId;
 
-const recipient = ref("");
+const recipient = ref(null);
 const subject = ref("");
 const body = ref(``);
 
@@ -65,7 +84,7 @@ const sendEmail = async (event) => {
   event.preventDefault();
 
   const emailData = {
-    to: recipient.value.trim(),
+    to: recipient.value,
     subject: subject.value,
     body: body.value,
   };
@@ -117,7 +136,7 @@ const fetchAppointment = async (appointmentId) => {
     <body>
       <p>Du wurdest zu einer Veranstaltung in ${appointment.ort} eingeladen.</p>
       <p>Mögliche Termine hierfür findest du unter folgendem Link: 
-        <a href="http://49.13.170.189:9000/dynamic-link/${appointment.id}">
+        <a href="${window.location.origin}/dynamic-link/${appointment.id}">
           Terminabstimmung
         </a>.
       </p>
@@ -137,3 +156,103 @@ onMounted(async () => {
   }
 });
 </script>
+
+<style>
+.q-card {
+  background-color: var(--secondary-bg-color);
+  color: var(--primary-text-color);
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--primary-bg-color);
+  color: var(--primary-text-color);
+}
+
+.q-editor {
+  background-color: var(--secondary-bg-color);
+  color: var(--primary-text-color);
+}
+
+/**
+* Custom input field
+*/
+.custom-q-input .q-field__control {
+  background-color: var(--secondary-bg-color);
+  color: var(--accent-color);
+}
+
+.custom-q-input .q-field__label {
+  color: var(--accent-color); /* label-color */
+}
+
+.custom-q-input .q-field--focused .q-field__control {
+  border-color: var(
+    --accent-color
+  ); /* You might want to adjust the border color on focus to match the accent color */
+}
+
+.custom-q-input .q-field--focused .q-field__label {
+  color: var(--accent-color);
+}
+
+.custom-q-input .q-field__native {
+  color: var(--primary-text-color); /* Set text color for input */
+}
+
+.custom-q-input .q-field__native::placeholder {
+  color: var(--primary-text-color); /* Lighter color for placeholder text */
+}
+
+/**
+* Custom select field
+*/
+.custom-q-select .q-field__control {
+  background-color: var(--secondary-bg-color);
+  color: var(--accent-color);
+}
+
+.custom-q-select {
+  color: var(--accent-color);
+}
+
+.custom-q-select .q-field__label {
+  color: var(--secondary-text-color);
+}
+
+.custom-q-select .q-field--focused .q-field__control {
+  border-color: var(--accent-color);
+}
+
+.custom-q-select .q-field--focused {
+  color: var(--accent-color);
+}
+
+.custom-q-select .q-field__native {
+  color: var(--primary-text-color);
+}
+
+.custom-q-select .q-field__native::placeholder {
+  color: var(--primary-text-color);
+}
+
+.custom-q-select .q-field__native input,
+.custom-q-select .q-select__input,
+.custom-q-select .q-field__native .q-placeholder {
+  color: var(--primary-text-color) !important;
+}
+
+/**
+* Custom dropdown for q-select
+*/
+.custom-q-select,
+.custom-dropdown-style {
+  background-color: var(--secondary-bg-color);
+  color: var(--accent-color);
+}
+
+/* Additional customizations for the dropdown items, if necessary */
+.custom-dropdown-style .q-item {
+  color: var(--primary-text-color);
+  /* More styling rules as needed */
+}
+</style>
