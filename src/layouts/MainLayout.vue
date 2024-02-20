@@ -59,8 +59,8 @@ import UserStore from "src/stores/user";
 import AuthStore from "src/stores/authStore";
 import "src/css/app.scss";
 
-// const BACKEND_BASE_URL = "http://49.13.170.189:8081/";
-const BACKEND_BASE_URL = "http://localhost:8080/";
+const BACKEND_BASE_URL = "http://49.13.170.189:8081/";
+// const BACKEND_BASE_URL = "http://localhost:8080/";
 provide("BACKEND_BASE_URL", BACKEND_BASE_URL);
 
 console.log("PARENT URL_BACKEND: " + BACKEND_BASE_URL);
@@ -86,12 +86,12 @@ const menuList = [
     to: "/addevent",
     separator: false,
   },
-  {
-    icon: "email",
-    label: "Mail",
-    to: "/mailevent",
-    separator: true,
-  },
+  // {
+  //   icon: "email",
+  //   label: "Mail",
+  //   to: "/mailevent",
+  //   separator: true,
+  // },
   {
     icon: "login",
     label: "Login",
