@@ -213,4 +213,11 @@ onMounted(() => {
 .q-page-container {
   background-color: var(--primary-bg-color);
 }
+
+.q-icon {
+  align-self: center;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
 </style>

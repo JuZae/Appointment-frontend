@@ -107,7 +107,38 @@
       </q-table>
     </div>
 
-    <!-- Confirmation Dialog -->
+    <!-- Delete Confirmation Dialog -->
+    <q-dialog v-model="isSocialDialogOpen">
+      <q-card>
+        <q-card-section class="row items-center">
+          <div class="text-h6">Share</div>
+        </q-card-section>
+        <q-card-actions>
+          <ShareNetwork
+            class="share"
+            v-for="network in networks"
+            :network="network.network"
+            :key="network.network"
+            :style="{ backgroundColor: network.color }"
+            :url="sharing.url"
+            :title="sharing.title"
+            :description="sharing.description"
+            :quote="sharing.quote"
+            :hashtags="sharing.hashtags"
+            :twitterUser="sharing.twitterUser"
+            @click="shareSocial()"
+          >
+            <i :class="network.icon"></i>
+            <span>{{ network.name }}</span>
+          </ShareNetwork>
+        </q-card-actions>
+        <q-card-actions>
+          <q-btn flat label="Cancel" v-close-popup></q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <!-- Delete Confirmation Dialog -->
     <q-dialog v-model="isDeleteDialogOpen">
       <q-card>
         <q-card-section class="row items-center">
@@ -117,13 +148,8 @@
           >Are you sure you want to delete this appointment?</q-card-section
         >
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
-          <q-btn
-            flat
-            label="Delete"
-            class="btn-delete"
-            @click="deleteAppointment"
-          ></q-btn>
+          <q-btn flat label="Cancel" v-close-popup></q-btn>
+          <q-btn flat label="Delete" @click="deleteAppointment"></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -142,10 +168,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, inject, computed } from "vue";
+import { ref, onMounted, inject } from "vue";
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import AuthStore from "src/stores/authStore";
+import { ShareNetwork } from "vue-social-sharing";
 import "src/css/app.scss";
 
 const $q = useQuasar();
@@ -223,23 +250,119 @@ const columns = [
 ];
 
 /**
- * Navigation
+ * Share Flow
  */
+const isSocialDialogOpen = ref(false);
 
-//Share button using Web Share API
+//Show share dialog
 const shareSocial = () => {
-  if (navigator.share) {
-    navigator.share({
-      text: "Checkout this App for coordinating Appointments!",
-      url: "http://a-point.lica.digital:9001",
-      title: "A-Point",
-    });
-  }
-  //Fallback if sharing is not supported in native Browser (copy to clipboard)
-  else {
-    copyLinkToClipboard();
+  setURLForSharing(); // Update the URL before showing the dialog
+  isSocialDialogOpen.value = true;
+};
+
+const setURLForSharing = () => {
+  if (selectedCardId.value && selected.value > 0) {
+    const url = `${window.location.origin}/dynamic-link/${selectedCardId.value}`;
+
+    const title = `Einladung: ${JSON.stringify(selected.value[0].bez)}`;
+    const description = `Du wurdest zu einer Veranstaltung in ${selected.value[0].ort} eingeladen.
+    ${selected.value[0].beschreibung}`;
+
+    sharing.value.url = url;
+    sharing.value.title = title;
+    sharing.value.description = description;
   }
 };
+
+const sharing = ref({
+  url: "",
+  title: "",
+  description: "",
+  quote: "The hot reload is so fast it's near instant. - Evan You",
+  hashtags: "vuejs,vite,javascript,apoint",
+  twitterUser: "apoint",
+});
+
+const networks = [
+  {
+    network: "email",
+    name: "Email",
+    icon: "far fah fa-lg fa-envelope",
+    color: "#333333",
+  },
+  {
+    network: "facebook",
+    name: "Facebook",
+    icon: "fab fah fa-lg fa-facebook-f",
+    color: "#1877f2",
+  },
+  {
+    network: "flipboard",
+    name: "Flipboard",
+    icon: "fab fah fa-lg fa-flipboard",
+    color: "#e12828",
+  },
+  {
+    network: "linkedin",
+    name: "LinkedIn",
+    icon: "fab fah fa-lg fa-linkedin",
+    color: "#007bb5",
+  },
+  {
+    network: "messenger",
+    name: "Messenger",
+    icon: "fab fah fa-lg fa-facebook-messenger",
+    color: "#0084ff",
+  },
+  {
+    network: "reddit",
+    name: "Reddit",
+    icon: "fab fah fa-lg fa-reddit-alien",
+    color: "#ff4500",
+  },
+  {
+    network: "skype",
+    name: "Skype",
+    icon: "fab fah fa-lg fa-skype",
+    color: "#00aff0",
+  },
+  {
+    network: "sms",
+    name: "SMS",
+    icon: "far fah fa-lg fa-comment-dots",
+    color: "#333333",
+  },
+  {
+    network: "telegram",
+    name: "Telegram",
+    icon: "fab fah fa-lg fa-telegram-plane",
+    color: "#0088cc",
+  },
+  {
+    network: "twitter",
+    name: "Twitter",
+    icon: "fab fah fa-lg fa-twitter",
+    color: "#1da1f2",
+  },
+  {
+    network: "whatsapp",
+    name: "Whatsapp",
+    icon: "fab fah fa-lg fa-whatsapp",
+    color: "#25d366",
+  },
+  {
+    network: "wordpress",
+    name: "Wordpress",
+    icon: "fab fah fa-lg fa-wordpress",
+    color: "#21759b",
+  },
+  {
+    network: "xing",
+    name: "Xing",
+    icon: "fab fah fa-lg fa-xing",
+    color: "#026466",
+  },
+];
 
 //Navigates to add Event page
 const navigateToAddEvent = () => {
@@ -478,8 +601,8 @@ body {
 .btn-share,
 .btn-mail,
 .btn-delete {
-  margin: 0 2px;
-  margin-bottom: 4px;
+  /* margin: 0 0px; */
+  margin-bottom: 2px;
   /* margin-top: 0px; */
   transform: scale(0.9);
 }
@@ -496,23 +619,64 @@ body {
 
 .card-actions {
   display: flex;
-  justify-content: center; /* Zentriert die Buttons horizontal */
-  align-items: center; /* Zentriert die Buttons vertikal */
+  justify-content: center;
+  align-items: center;
 }
 
 .button-container {
   display: flex;
-  justify-content: center; /* Zentriert die Buttons im Container */
-  gap: 2px; /* Definiert den horizontalen Abstand zwischen den Buttons */
-  width: 90%; /* Stellt sicher, dass der Container die volle Breite einnimmt */
+  justify-content: space-around; /* Adjusted for even spacing around items */
+  align-items: center;
+  gap: 0px;
+  width: 100%;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
 }
 
 /* Responsive design adjustments for action buttons in smaller viewports */
-@media (max-width: 599px) {
+@media (max-width: 360px) {
   .my-card {
     width: calc(
       100vw - 30px
     ); /* Slightly larger cards on smaller screens if desired */
   }
+}
+
+.q-card {
+  background-color: var(--primary-bg-color);
+  color: var(--primary-text-color);
+}
+
+/**
+* Share button stuff
+*/
+
+.q-card__actions .share {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin: 5px;
+  color: #fff; /* Default text color, will be overridden */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Icon and text styling */
+.share-network i {
+  margin-right: 20px;
+}
+.share-network span {
+  font-weight: bold;
+}
+
+.q-card__actions a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.q-card__actions a i {
+  margin-right: 8px;
 }
 </style>

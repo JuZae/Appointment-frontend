@@ -188,7 +188,7 @@
         <router-link to="/overviewpage">
           <q-btn label="Abbrechen" />
         </router-link>
-        <q-btn label="Eingaben zurücksetzen" @click="this.$router.go(0)" />
+        <q-btn label="Zurücksetzen" @click="this.$router.go(0)" />
         <router-link to="/overviewpage">
           <q-btn label="Speichern" @click="createAppointment" />
         </router-link>
@@ -397,9 +397,13 @@ const createAppointmentOptions = async (appointmentId) => {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
+  align-items: center;
+  /* Adjust padding and font-size for smaller screens */
+  padding: 8px 12px; /* Default padding */
+  font-size: 16px; /* Default font size */
 }
 
-@media (max-width: 480px) {
+@media (max-width: 360px) {
   .appointment-erstellen-container {
     padding: 10px;
   }
@@ -408,13 +412,24 @@ const createAppointmentOptions = async (appointmentId) => {
     display: block;
     margin-bottom: 5px;
   }
+
+  .button-container {
+    padding: 4px 8px; /* Even smaller padding */
+    font-size: 12px; /* Even smaller font size */
+    flex: 1; /* Make buttons take equal space */
+    margin: 0 4px; /* Add some margin between buttons */
+  }
+  .button-container {
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 10px; /* Add some space between stacked buttons */
+  }
 }
 
 /**
 * Custom input field
 */
 .custom-q-input .q-field__control {
-  background-color: var(--secondary-bg-color); /* bg-color */
+  background-color: var(--secondary-bg-color);
   color: var(--accent-color);
 }
 
@@ -457,6 +472,10 @@ const createAppointmentOptions = async (appointmentId) => {
 
 .custom-q-select {
   color: var(--accent-color);
+}
+
+.custom-q-select .q-field__label {
+  color: var(--secondary-text-color);
 }
 
 .custom-q-select .q-field--focused .q-field__control {
