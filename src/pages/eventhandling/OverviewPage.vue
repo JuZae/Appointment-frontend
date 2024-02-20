@@ -261,8 +261,9 @@ const shareSocial = () => {
 };
 
 const setURLForSharing = () => {
-  if (selectedCardId.value && selected.value > 0) {
+  if (selectedCardId.value && selected.value.length > 0) {
     const url = `${window.location.origin}/dynamic-link/${selectedCardId.value}`;
+    console.log("URL !!!" + url.value);
 
     const title = `Einladung: ${JSON.stringify(selected.value[0].bez)}`;
     const description = `Du wurdest zu einer Veranstaltung in ${selected.value[0].ort} eingeladen.
@@ -271,12 +272,14 @@ const setURLForSharing = () => {
     sharing.value.url = url;
     sharing.value.title = title;
     sharing.value.description = description;
+
+    console.log(JSON.stringify(sharing.value));
   }
 };
 
 const sharing = ref({
-  url: "",
-  title: "",
+  url: ``,
+  title: ``,
   description: "",
   quote: "The hot reload is so fast it's near instant. - Evan You",
   hashtags: "vuejs,vite,javascript,apoint",
