@@ -61,6 +61,7 @@
             align="center"
             icon="add"
             @click="addDateToList"
+            align:center
           />
         </div>
         <!-- DAS HIER KORREKT EINRÜCKEN -->

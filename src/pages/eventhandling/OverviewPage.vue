@@ -173,6 +173,7 @@ import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import AuthStore from "src/stores/authStore";
 import { ShareNetwork } from "vue-social-sharing";
+import draggable from "vuedraggable";
 import "src/css/app.scss";
 
 const $q = useQuasar();
@@ -574,6 +575,13 @@ body {
   /* Adjust card width to be viewport width minus 40px */
   max-width: 410px; /* Optional: max-width to ensure cards don't get too wide on large screens */
   margin: 20px auto; /* Center the card with automatic margins and provide some space around it */
+
+  border: 2px solid transparent; /* Transparent border by default */
+  transition: border-color 0.25s;
+
+  .separator {
+    background-color: var(--primary-bg-color);
+  }
 }
 
 /* Icon style needed for the cards */
@@ -585,7 +593,8 @@ body {
 
 /* Highlighting selected cards */
 .selected-card {
-  border: 2px solid var(--accent-color); /* Highlight border for selected cards */
+  /* border: 2px solid var(--accent-color); Highlight border for selected cards */
+  border-color: var(--accent-color);
   .separator {
     /* color: white; */
     transition-property: background-color;
@@ -613,6 +622,10 @@ body {
 .btn-new {
   color: var(--button-text-color);
   background-color: var(--primary-bg-color);
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
 }
 
 .btn-new:hover {
