@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch, provide, computed } from "vue";
+import { onMounted, ref, watch, provide } from "vue";
 import UserStore from "src/stores/user";
 import AuthStore from "src/stores/authStore";
 import "src/css/app.scss";
