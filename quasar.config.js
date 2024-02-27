@@ -89,12 +89,12 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
-      // https: true
-      https: {
-        key: fs.readFileSync("C:/dev/keys/localhost.key"),
-        cert: fs.readFileSync("C:/dev/keys/localhost.crt"),
-      },
-      open: true, // opens browser window automatically
+      https: true,
+      //   https: {
+      //     key: fs.readFileSync("C:/dev/keys/localhost.key"),
+      //     cert: fs.readFileSync("C:/dev/keys/localhost.crt"),
+      //   },
+      //   open: true, // opens browser window automatically
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
