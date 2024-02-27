@@ -109,7 +109,7 @@ const registerUser = async () => {
     console.log("Registration successful", responseData.message);
     // Display success message and navigate to login page
     displayMessage(
-      "Registration successful. Please check you E-Mail to verify your account.",
+      "Registration successful. Please check your E-Mail to verify your account.",
       "success"
     );
 

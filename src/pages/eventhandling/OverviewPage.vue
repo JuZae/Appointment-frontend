@@ -524,7 +524,6 @@ const copyLinkToClipboard = () => {
 };
 
 onMounted(async () => {
-  // console.log("TOKEN :" + localStorage.getItem("userToken"));
   await getAllAppointmentsByUserID();
 });
 </script>

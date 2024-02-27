@@ -45,6 +45,11 @@
       </q-scroll-area>
     </q-drawer>
 
+    <div v-if="showInstallPrompt" class="install-btn q-pa-md">
+      <q-btn icon="download" @click="promptInstall">Install App</q-btn>
+      <q-btn icon="close" flat @click="dismissInstallPrompt"></q-btn>
+    </div>
+
     <q-page-container>
       <q-pull-to-refresh @refresh="refreshPage">
         <router-view />
@@ -59,8 +64,8 @@ import UserStore from "src/stores/user";
 import AuthStore from "src/stores/authStore";
 import "src/css/app.scss";
 
-const BACKEND_BASE_URL = "http://49.13.170.189:8081/";
-// const BACKEND_BASE_URL = "http://localhost:8080/";
+// const BACKEND_BASE_URL = "http://49.13.170.189:8081/";
+const BACKEND_BASE_URL = "https://localhost:8443/";
 provide("BACKEND_BASE_URL", BACKEND_BASE_URL);
 
 console.log("PARENT URL_BACKEND: " + BACKEND_BASE_URL);
@@ -151,9 +156,54 @@ watch(
   }
 );
 
+/**
+ * PWA Install Button
+ */
+const showInstallPrompt = ref(false);
+let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  console.log("beforeinstallprompt event fired");
+
+  // Prevent the mini-infobar from appearing on mobile
+  e.preventDefault();
+  // Stash the event so it can be triggered later.
+  deferredPrompt = e;
+  // Update UI to show the install button
+  showInstallPrompt.value = true;
+});
+
+function promptInstall() {
+  console.log("Install button clicked.");
+
+  if (deferredPrompt) {
+    // Show the install prompt to the user
+    deferredPrompt.prompt();
+
+    // Wait for the user to respond to the prompt
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === "accepted") {
+        console.log("User accepted the install prompt");
+      } else {
+        console.log("User dismissed the install prompt");
+      }
+      // We no longer need the prompt. Clear it up.
+      deferredPrompt = null;
+      showInstallPrompt.value = false;
+    });
+  }
+}
+
 // Call toggleTheme on mount to apply the initial theme
 onMounted(() => {
   document.documentElement.setAttribute("data-theme", theme.value);
+  // For testing purposes only
+  setTimeout(() => {
+    if (!deferredPrompt) {
+      console.log("Showing install prompt button for testing.");
+      showInstallPrompt.value = true;
+    }
+  }, 2000);
 });
 </script>
 
@@ -220,5 +270,15 @@ onMounted(() => {
   margin-right: 0px;
   margin-bottom: 0px;
   margin-top: 0px;
+}
+
+.install-btn {
+  position: absolute;
+  margin-left: 5%;
+  align-self: center;
+  right: 100px;
+  bottom: 20px;
+  z-index: 999;
+  overflow: visible;
 }
 </style>

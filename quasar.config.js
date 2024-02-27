@@ -9,6 +9,7 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
 const { configure } = require("quasar/wrappers");
+const fs = require("fs");
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -89,6 +90,10 @@ module.exports = configure(function (/* ctx */) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
       // https: true
+      https: {
+        key: fs.readFileSync("C:/dev/keys/localhost.key"),
+        cert: fs.readFileSync("C:/dev/keys/localhost.crt"),
+      },
       open: true, // opens browser window automatically
     },
 
@@ -159,6 +164,7 @@ module.exports = configure(function (/* ctx */) {
       // extendInjectManifestOptions (cfg) {},
       // extendManifestJson (json) {}
       // extendPWACustomSWConf (esbuildConf) {}
+      manifest: { name: "A-Point" },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova
