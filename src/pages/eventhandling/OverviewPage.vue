@@ -573,7 +573,7 @@ body {
   width: calc(100vw - 40px);
   /* Adjust card width to be viewport width minus 40px */
   max-width: 410px; /* Optional: max-width to ensure cards don't get too wide on large screens */
-  margin: 20px auto; /* Center the card with automatic margins and provide some space around it */
+  margin: 0px auto; /* Center the card with automatic margins and provide some space around it */
 
   border: 2px solid transparent; /* Transparent border by default */
   transition: border-color 0.25s;

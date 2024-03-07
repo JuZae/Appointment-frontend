@@ -7,14 +7,12 @@
       </div>
       <div class="q-pa-md">
         <q-btn
-          color="primary"
           label="View Overview"
           size="lg"
           class="q-ma-md"
           @click="navigateToOverview"
         />
         <q-btn
-          color="secondary"
           label="Add New Event"
           size="lg"
           class="q-ma-md"

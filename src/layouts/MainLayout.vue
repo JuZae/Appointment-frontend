@@ -64,7 +64,8 @@ import UserStore from "src/stores/user";
 import AuthStore from "src/stores/authStore";
 import "src/css/app.scss";
 
-const BACKEND_BASE_URL = "https://49.13.170.189:8443/";
+// const BACKEND_BASE_URL = "https://49.13.170.189:8443/";
+const BACKEND_BASE_URL = "https://apoint-backend-new:8443/";
 // const BACKEND_BASE_URL = "https://localhost:8443/";
 provide("BACKEND_BASE_URL", BACKEND_BASE_URL);
 
