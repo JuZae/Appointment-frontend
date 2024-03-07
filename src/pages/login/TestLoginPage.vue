@@ -1,5 +1,6 @@
 <template>
   <q-page class="login-page">
+    <h1>AAAAAAA</h1>
     <q-card class="login-card q-pa-md">
       <q-card-section>
         <q-form @submit.prevent="login" class="q-gutter-md">
@@ -19,7 +20,7 @@
             class="custom-q-input"
           />
           <div class="q-gutter-md">
-            <q-btn color="red" label="Login" type="submit" class="full-width" />
+            <q-btn label="Login" type="submit" class="full-width" />
             <q-btn
               label="Register"
               flat
