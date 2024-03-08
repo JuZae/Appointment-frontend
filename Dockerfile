@@ -15,9 +15,5 @@ RUN quasar build -m pwa
 # production stage
 FROM nginx:stable-alpine as production-stage
 COPY --from=build-stage /app/dist/pwa /usr/share/nginx/html
-
-# (Optional) Copy a simplified NGINX config
-COPY nginx.conf /etc/nginx/nginx.conf
-
-EXPOSE 80
+EXPOSE 9001
 CMD ["nginx", "-g", "daemon off;"]

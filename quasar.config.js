@@ -94,7 +94,7 @@ module.exports = configure(function (/* ctx */) {
       //   key: fs.readFileSync("C:/dev/keys/localhost.key", "utf-8"),
       //   cert: fs.readFileSync("C:/dev/keys/localhost.crt", "utf-8"),
       // },
-      // open: true, // opens browser window automatically
+      open: true, // opens browser window automatically
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
