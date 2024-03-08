@@ -19,7 +19,7 @@
             class="custom-q-input"
           />
           <div class="q-gutter-md">
-            <q-btn color="red" label="Login" type="submit" class="full-width" />
+            <q-btn label="Login" type="submit" class="full-width" />
             <q-btn
               label="Register"
               flat
