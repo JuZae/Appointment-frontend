@@ -20,23 +20,11 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan 49.13.170.189 >> ~/.ssh/known_hosts
 
-    - name: Stop existing container
-      run: ssh root@49.13.170.189 "docker stop apoint-frontend-new"
-
-    - name: Remove existing container
-      run: ssh root@49.13.170.189 "docker rm apoint-frontend-new"
-
-    - name: Remove existing image
-      run: ssh root@49.13.170.189 "docker rmi apoint-frontend-new"
-
     - name: Remove existing files
       run: ssh root@49.13.170.189 "rm -rf /var/www/myapp/frontend"
 
     - name: Clone the repository
       run: ssh root@49.13.170.189 "git clone https://github.com/JuZae/Appointment-frontend.git /var/www/myapp/frontend"
 
-    - name: Build the Docker image
-      run: ssh root@49.13.170.189 "cd /var/www/myapp/frontend && docker build -t apoint-frontend-new:latest ."
-
-    - name: Run the Docker container
-      run: ssh root@49.13.170.189 "docker run -d --restart unless-stopped --name apoint-frontend-new --network apoint -p 9001:80 apoint-frontend-new:latest"
+    - name: Run the Docker Compose
+      run: ssh root@49.13.170.189 "cd /var/www/myapp && docker-compose up -d --build"
