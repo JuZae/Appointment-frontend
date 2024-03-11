@@ -10,21 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up SSH
-      run: |
-        mkdir -p ~/.ssh/
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan 49.13.170.189 >> ~/.ssh/known_hosts
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan 49.13.170.189 >> ~/.ssh/known_hosts
 
-    - name: Remove existing files
-      run: ssh root@49.13.170.189 "rm -rf /var/www/myapp/frontend"
+      - name: Remove existing files
+        run: ssh root@49.13.170.189 "rm -rf /var/www/myapp/frontend"
 
-    - name: Clone the repository
-      run: ssh root@49.13.170.189 "git clone https://github.com/JuZae/Appointment-frontend.git /var/www/myapp/frontend"
+      - name: Clone the repository
+        run: ssh root@49.13.170.189 "git clone https://github.com/JuZae/Appointment-frontend.git /var/www/myapp/frontend"
 
-    - name: Run the Docker Compose
-      run: ssh root@49.13.170.189 "cd /var/www/myapp && docker-compose up -d --build"
+      - name: Run the Docker Compose
+        run: ssh root@49.13.170.189 "cd /var/www/myapp && docker-compose build --no-cache"
+
+      - name: Run the Docker Compose
+        run: ssh root@49.13.170.189 "cd /var/www/myapp && docker-compose up -d --build"
+
+      - name: Post Docker Compose Cleanup
+        run: ssh root@49.13.170.189 "cd /var/www/myapp && docker image prune -f"
+
+      - name: Reload Nginx
+        run: ssh root@49.13.170.189 "sudo nginx -s reload"
