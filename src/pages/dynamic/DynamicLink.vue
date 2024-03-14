@@ -182,7 +182,7 @@ const addParticipantToAppointment = async () => {
     }
 
     const responseData = await response.json();
-    console.log("Participant added:", responseData);
+    // console.log("Participant added:", responseData);
   } catch (error) {
     console.error("Error adding participant:", error);
   }
@@ -254,7 +254,7 @@ const fetchAppointmentOptions = async (appointmentId) => {
     if (responseData) {
       //TODO:Hier dann die AppointmentOptions für die Darstellung setzen
       appointmentOptions.value = responseData;
-      console.log("APPOPTIONSDYNAMIC: " + JSON.stringify(appointmentOptions));
+      // console.log("APPOPTIONSDYNAMIC: " + JSON.stringify(appointmentOptions));
 
       // Initialize userResponses
       responseData.forEach((opt) => {
@@ -309,10 +309,10 @@ const API_EDIT_APPOPT = BACKEND_BASE_URL + "public/opt/edit";
 // Example of a method to edit an appointment
 const editAppointmentOption = async (appointmentOption) => {
   if (userName.value) {
-    console.log("Wird geschickt" + JSON.stringify(appointmentOption));
-    console.log(
-      "TeilnehmerYes" + JSON.stringify(appointmentOption.teilnehmerYes)
-    );
+    // console.log("Wird geschickt" + JSON.stringify(appointmentOption));
+    // console.log(
+    //   "TeilnehmerYes" + JSON.stringify(appointmentOption.teilnehmerYes)
+    // );
 
     try {
       const response = await fetch(API_EDIT_APPOPT, {

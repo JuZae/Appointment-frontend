@@ -3,11 +3,22 @@
     <div class="q-pa-md" v-if="appointment">
       <h4>Appointment bearbeiten</h4>
       <q-form @submit.prevent="saveChanges">
-        <q-input filled v-model="appointment.bez" label="Bezeichnung" />
+        <q-input
+          filled
+          v-model="appointment.bez"
+          label="Bezeichnung"
+          class="custom-q-input"
+        />
 
-        <q-input filled v-model="appointment.ort" label="Ort" />
+        <q-input
+          filled
+          v-model="appointment.ort"
+          label="Ort"
+          class="custom-q-input"
+        />
 
         <q-select
+          filled
           outlined
           label="Teilnehmer"
           v-model="participantList"
@@ -17,19 +28,22 @@
           hide-dropdown-icon
           input-debounce="0"
           new-value-mode="add"
+          class="custom-q-select"
         />
 
         <q-input
           type="textarea"
           v-model="appointment.beschreibung"
           label="Beschreibung"
+          class="custom-q-input"
+          filled
         />
 
         <!-- NEW -->
         <div class="q-pa-md deadline-input-container">
-          <q-input filled v-model="appointment.deadline" class="deadline-input">
+          <q-input filled v-model="appointment.deadline" class="custom-q-input">
             <template v-slot:prepend>
-              <q-icon name="event" class="cursor-pointer">
+              <q-icon name="event" class="cursor-pointer custom-q-icon">
                 <q-popup-proxy
                   cover
                   transition-show="scale"
@@ -40,14 +54,14 @@
                     mask="YYYY-MM-DD HH:mm"
                   >
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Save" color="primary" flat />
+                      <q-btn v-close-popup label="Save" flat />
                     </div>
                   </q-date>
                 </q-popup-proxy>
               </q-icon>
             </template>
             <template v-slot:append>
-              <q-icon name="access_time" class="cursor-pointer">
+              <q-icon name="access_time" class="cursor-pointer custom-q-icon">
                 <q-popup-proxy
                   cover
                   transition-show="scale"
@@ -60,7 +74,7 @@
                     format24h
                   >
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Save" color="primary" flat />
+                      <q-btn v-close-popup label="Save" flat />
                     </div>
                   </q-time>
                 </q-popup-proxy>
@@ -103,9 +117,9 @@
             :key="index"
           >
             <div class="q-pa-md deadline-input-container">
-              <q-input filled v-model="option.datum" class="deadline-input">
+              <q-input filled v-model="option.datum" class="custom-q-input">
                 <template v-slot:prepend>
-                  <q-icon name="event" class="cursor-pointer">
+                  <q-icon name="event" class="cursor-pointer custom-q-icon">
                     <q-popup-proxy
                       cover
                       transition-show="scale"
@@ -113,19 +127,17 @@
                     >
                       <q-date v-model="option.datum" mask="YYYY-MM-DD HH:mm">
                         <div class="row items-center justify-end">
-                          <q-btn
-                            v-close-popup
-                            label="Save"
-                            color="primary"
-                            flat
-                          />
+                          <q-btn v-close-popup label="Save" flat />
                         </div>
                       </q-date>
                     </q-popup-proxy>
                   </q-icon>
                 </template>
                 <template v-slot:append>
-                  <q-icon name="access_time" class="cursor-pointer">
+                  <q-icon
+                    name="access_time"
+                    class="cursor-pointer custom-q-icon"
+                  >
                     <q-popup-proxy
                       cover
                       transition-show="scale"
@@ -137,12 +149,7 @@
                         format24h
                       >
                         <div class="row items-center justify-end">
-                          <q-btn
-                            v-close-popup
-                            label="Save"
-                            color="primary"
-                            flat
-                          />
+                          <q-btn v-close-popup label="Save" flat />
                         </div>
                       </q-time>
                     </q-popup-proxy>
@@ -150,22 +157,14 @@
                 </template>
               </q-input>
             </div>
-            <q-btn
-              icon="delete"
-              color="negative"
-              @click="removeAppointmentOption(index)"
-            />
+            <q-btn icon="delete" @click="removeAppointmentOption(index)" />
           </div>
-          <q-btn
-            label="Add Option"
-            color="primary"
-            @click="addAppointmentOption"
-          />
+          <q-btn label="Add Option" @click="addAppointmentOption" />
         </div>
         <!-- NEW -->
         <div class="row justify-center q-mt-md">
-          <q-btn label="Speichern" type="submit" color="primary" />
-          <q-btn label="Abbrechen" color="negative" @click="cancel" />
+          <q-btn label="Speichern" type="submit" />
+          <q-btn label="Abbrechen" @click="cancel" />
         </div>
         ></q-form
       >
@@ -388,6 +387,11 @@ onMounted(async () => {
 </script>
 
 <style>
+h4,
+h5 {
+  color: var(--primary-text-color);
+}
+
 .page-container {
   display: grid;
   grid-template-columns: 1fr;
@@ -452,5 +456,133 @@ onMounted(async () => {
   .added-dates-table table {
     font-size: 12px;
   }
+}
+
+/**
+* Custom input field
+*/
+.custom-q-input .q-field__control {
+  background-color: var(--secondary-bg-color);
+  color: var(--accent-color);
+}
+
+.custom-q-input .q-field__label {
+  color: var(--accent-color); /* label-color */
+}
+
+.custom-q-input .q-field--focused .q-field__control {
+  border-color: var(
+    --accent-color
+  ); /* You might want to adjust the border color on focus to match the accent color */
+}
+
+.custom-q-input .q-field--focused .q-field__label {
+  color: var(--accent-color);
+}
+
+.custom-q-input .q-field__native {
+  color: var(--primary-text-color); /* Set text color for input */
+}
+
+.custom-q-input .q-field__native::placeholder {
+  color: var(--primary-text-color); /* Lighter color for placeholder text */
+}
+
+/**
+* Custom icon
+*/
+.custom-q-icon {
+  color: var(--primary-text-color);
+}
+
+/**
+* Custom select field
+*/
+.custom-q-select .q-field__control {
+  background-color: var(--secondary-bg-color);
+  color: var(--accent-color);
+}
+
+.custom-q-select {
+  color: var(--accent-color);
+}
+
+.custom-q-select .q-field__label {
+  color: var(--secondary-text-color);
+}
+
+.custom-q-select .q-field--focused .q-field__control {
+  border-color: var(--accent-color);
+}
+
+.custom-q-select .q-field--focused {
+  color: var(--accent-color);
+}
+
+.custom-q-select .q-field__native {
+  color: var(--primary-text-color);
+}
+
+.custom-q-select .q-field__native::placeholder {
+  color: var(--primary-text-color);
+}
+
+.custom-q-select .q-field__native input,
+.custom-q-select .q-select__input,
+.custom-q-select .q-field__native .q-placeholder {
+  color: var(--primary-text-color) !important;
+}
+
+/**
+* Custom q-date
+*/
+/* Background color for whole card */
+.q-date {
+  background-color: var(--secondary-bg-color);
+}
+
+/* Header color */
+.q-date .q-date__header {
+  color: var(--primary-text-color);
+  background-color: var(--accent-color);
+}
+
+/* Weekday color */
+.q-date .q-date__calendar-item {
+  color: var(--primary-text-color);
+}
+
+.q-date .q-date__calendar-item {
+  color: var(--primary-text-color);
+}
+
+.q-date .q-btn:hover {
+  background-color: var(--accent-color);
+}
+
+/**
+* Custom q-time
+*/
+/* Background color for whole card */
+.q-time {
+  background-color: var(--secondary-bg-color);
+  color: var(--primary-text-color);
+}
+
+/* Custom date Header Text color */
+.q-time .q-time__header {
+  color: var(--primary-text-color);
+  background-color: var(--accent-color);
+}
+
+/* Clock Hand */
+.q-time .q-time__clock-pointer {
+  background-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* Selected Time */
+.q-time .q-time__clock-position--active {
+  background-color: var(--accent-color);
 }
 </style>

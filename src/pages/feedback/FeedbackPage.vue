@@ -6,7 +6,6 @@
         id="send"
         fab
         icon="send"
-        color="secondary"
         no-caps
         href="https://github.com/JuZae/Appointment-frontend/issues"
         >Feedback abgeben</q-btn
