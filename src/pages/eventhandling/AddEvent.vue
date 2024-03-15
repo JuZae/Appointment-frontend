@@ -429,6 +429,7 @@ const createAppointmentOptions = async (appointmentId) => {
 /**
 * Custom input field
 */
+
 .custom-q-input .q-field__control {
   background-color: var(--secondary-bg-color);
   color: var(--accent-color);

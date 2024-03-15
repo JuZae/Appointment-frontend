@@ -23,7 +23,12 @@
         </q-card-section>
         <q-card-section>
           <div class="text-h6">Username eingeben</div>
-          <q-input v-model="userName" label="Name" />
+          <q-input
+            filled
+            v-model="userName"
+            placeholder="Name eingeben"
+            class="custom-q-input"
+          />
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Abbrechen" @click="isDialogOpen = false" />
@@ -412,5 +417,42 @@ onMounted(async () => {
 .participant-not-available {
   background-color: #ffcdd2; /* Light red background */
   color: #c63737; /* Dark red text */
+}
+
+/**
+* Custom input field
+*/
+.custom-q-input .q-field__control {
+  background-color: var(--secondary-bg-color);
+  color: var(--accent-color);
+}
+
+.custom-q-input .q-field__label {
+  color: var(--accent-color); /* label-color */
+}
+
+.custom-q-input .q-field--focused .q-field__control {
+  border-color: var(
+    --accent-color
+  ); /* You might want to adjust the border color on focus to match the accent color */
+}
+
+.custom-q-input .q-field--focused .q-field__label {
+  color: var(--accent-color);
+}
+
+.custom-q-input .q-field__native {
+  color: var(--primary-text-color); /* Set text color for input */
+}
+
+.custom-q-input .q-field__native::placeholder {
+  color: var(--primary-text-color); /* Lighter color for placeholder text */
+}
+
+/**NEW */
+.event-details {
+  background-color: var(--primary-bg-color);
+  border-color: var(--primary-bg-color);
+  color: var(--primary-text-color);
 }
 </style>

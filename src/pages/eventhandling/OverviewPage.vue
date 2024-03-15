@@ -576,7 +576,7 @@ body {
   margin: 0px auto; /* Center the card with automatic margins and provide some space around it */
 
   border: 2px solid transparent; /* Transparent border by default */
-  transition: border-color 0.25s;
+  transition: border-color 0s;
 
   .separator {
     background-color: var(--primary-bg-color);
@@ -675,7 +675,7 @@ body {
   color: #fff; /* Default text color, will be overridden */
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0s ease;
 }
 
 /* Icon and text styling */

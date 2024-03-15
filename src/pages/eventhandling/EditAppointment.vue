@@ -40,7 +40,7 @@
         />
 
         <!-- NEW -->
-        <div class="q-pa-md deadline-input-container">
+        <div class="deadline-input-container">
           <q-input filled v-model="appointment.deadline" class="custom-q-input">
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer custom-q-icon">
@@ -82,33 +82,7 @@
             </template>
           </q-input>
         </div>
-        <!-- Appointment Options Section -->
-        <!-- <div class="appointment-options">
-          <h5>Appointment Options</h5>
-          <div
-            class="appointment-option"
-            v-for="(option, index) in appointmentOptions"
-            :key="index"
-          >
-            <q-input
-              filled
-              v-model="option.datum"
-              mask="YYYY-MM-DD HH:mm"
-              label="Option Date"
-            />
-            <q-btn
-              icon="delete"
-              color="negative"
-              @click="removeAppointmentOption(index)"
-            />
-          </div>
-          <q-btn
-            label="Add Option"
-            color="primary"
-            @click="addAppointmentOption"
-          />
-        </div> -->
-        <!-- NEW -->
+
         <div class="appointment-options">
           <h5>Appointment Options</h5>
           <div
@@ -116,7 +90,8 @@
             v-for="(option, index) in appointmentOptions"
             :key="index"
           >
-            <div class="q-pa-md deadline-input-container">
+            <!-- <div class="q-pa-md flex-row-align"> -->
+            <div class="deadline-input-container">
               <q-input filled v-model="option.datum" class="custom-q-input">
                 <template v-slot:prepend>
                   <q-icon name="event" class="cursor-pointer custom-q-icon">
@@ -157,7 +132,12 @@
                 </template>
               </q-input>
             </div>
-            <q-btn icon="delete" @click="removeAppointmentOption(index)" />
+            <q-btn
+              class="q-btn-delete"
+              icon="delete"
+              @click="removeAppointmentOption(index)"
+            />
+            <!-- </div> -->
           </div>
           <q-btn label="Add Option" @click="addAppointmentOption" />
         </div>
@@ -166,8 +146,7 @@
           <q-btn label="Speichern" type="submit" />
           <q-btn label="Abbrechen" @click="cancel" />
         </div>
-        ></q-form
-      >
+      </q-form>
     </div>
 
     <!-- Success Dialog -->
@@ -178,12 +157,7 @@
           <span class="q-ml-sm">Appointment updated successfully!</span>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn
-            flat
-            label="Close"
-            color="primary"
-            @click="closeSuccessDialog"
-          />
+          <q-btn flat label="Close" @click="closeSuccessDialog" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -427,12 +401,17 @@ h5 {
   margin-bottom: 10px;
 }
 
-.appointment-option q-input {
-  margin-right: 10px;
+.deadline-input-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 50px;
+  margin-right: 20px;
 }
 
 .q-btn {
-  margin-top: 10px;
+  margin-top: 0px;
+  margin-right: 20px;
 }
 
 .q-btn:hover {
@@ -461,13 +440,18 @@ h5 {
 /**
 * Custom input field
 */
+
+.custom-q-input {
+  margin-bottom: 20px;
+}
+
 .custom-q-input .q-field__control {
   background-color: var(--secondary-bg-color);
   color: var(--accent-color);
 }
 
 .custom-q-input .q-field__label {
-  color: var(--accent-color); /* label-color */
+  color: var(--secondary-text-color); /* label-color */
 }
 
 .custom-q-input .q-field--focused .q-field__control {
@@ -498,6 +482,10 @@ h5 {
 /**
 * Custom select field
 */
+.custom-q-select {
+  margin-bottom: 20px;
+}
+
 .custom-q-select .q-field__control {
   background-color: var(--secondary-bg-color);
   color: var(--accent-color);
