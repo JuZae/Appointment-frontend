@@ -48,54 +48,101 @@
       <p><strong>Beschreibung:</strong> {{ eventDetails.beschreibung }}</p>
       <p><strong>Deadline:</strong> {{ eventDetails.deadline }}</p>
 
-      <!-- Display AppointmentOptions with toggle switches -->
-      <div
-        v-for="option in appointmentOptions"
-        :key="option.id"
-        class="q-mb-md"
-      >
-        <div>{{ option.datum }}</div>
-        <q-toggle
-          color="green"
-          checked-icon="check"
-          unchecked-icon="clear"
-          v-model="userResponses[option.id]"
-        />
+      <!-- Display AppointmentOptions with q-slider -->
+      <div class="q-mb-md">
+        <q-slide-item
+          v-for="option in appointmentOptions"
+          :key="option.id"
+          @left="userResponses[option.id] = true"
+          @right="userResponses[option.id] = false"
+          @action="resetSlide"
+          left-color="green"
+          right-color="red"
+        >
+          <template v-slot:left>
+            <q-icon name="done" />
+          </template>
+          <template v-slot:right>
+            <q-icon name="clear" />
+          </template>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-avatar icon="alarm" class="slide-right-hint" />
+            </q-item-section>
+            <q-item-section>{{ option.datum }}</q-item-section>
+            <q-item-section side>
+              <q-icon
+                :name="userResponses[option.id] ? 'done' : 'clear'"
+                :color="userResponses[option.id] ? 'green' : 'red'"
+            /></q-item-section>
+          </q-item>
+        </q-slide-item>
+        <q-btn label="Abstimmen" @click="submitUserResponses" />
       </div>
+
       <!-- NEW -->
       <div
         v-for="option in appointmentOptions"
         :key="option.id"
         class="appointment-option q-mb-md"
       >
-        <div class="q-mb-md">
-          <strong>{{ option.datum }}</strong>
-        </div>
-        <div class="participant-list">
-          <div class="participant-yes">
-            <strong>Verfügbar:</strong>
-            <span
-              v-for="participant in option.teilnehmerYes"
-              :key="participant"
-              class="participant participant-available"
-            >
-              {{ participant }}
-            </span>
-          </div>
-          <div class="participant-no">
-            <strong>Nicht Verfügbar:</strong>
-            <span
-              v-for="participant in option.teilnehmerNo"
-              :key="participant"
-              class="participant participant-not-available"
-            >
-              {{ participant }}
-            </span>
-          </div>
-        </div>
+        <q-card class="my-card">
+          <q-card-section class="bg-primary text-white">
+            <div class="text-h6">{{ option.datum }}</div>
+          </q-card-section>
+
+          <q-separator />
+
+          <q-card-section>
+            <div class="q-mb-md">Verfügbar:</div>
+            <q-list dense>
+              <q-item
+                v-for="participant in option.teilnehmerYes"
+                :key="participant + 'yes'"
+                clickable
+                v-ripple
+              >
+                <q-item-section avatar>
+                  <q-avatar color="green" text-color="white">
+                    <q-icon name="check" />
+                  </q-avatar>
+                </q-item-section>
+
+                <q-item-section>
+                  <q-item-label>{{ participant }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-card-section>
+
+          <q-separator />
+
+          <q-card-section>
+            <div class="q-mb-md">Nicht Verfügbar:</div>
+            <q-list dense>
+              <q-item
+                v-for="participant in option.teilnehmerNo"
+                :key="participant + 'no'"
+                clickable
+                v-ripple
+              >
+                <q-item-section avatar>
+                  <q-avatar color="red" text-color="white">
+                    <q-icon name="clear" />
+                  </q-avatar>
+                </q-item-section>
+
+                <q-item-section>
+                  <q-item-label>{{ participant }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-card-section>
+        </q-card>
       </div>
+
       <!-- NEW -->
-      <q-btn label="Abstimmen" color="green" @click="submitUserResponses" />
     </div>
 
     <!-- Success/Error Popup Dialog -->
@@ -147,6 +194,26 @@ const appointmentOptions = ref([]);
 const isPopupOpen = ref(false);
 const popupMessage = ref("");
 const popupType = ref(""); // 'success' or 'error'
+
+function finalize(reset) {
+  let timer = setTimeout(() => {
+    reset();
+  }, 1000);
+}
+
+function resetSlide({ reset }) {
+  finalize(reset);
+}
+
+const startSlideAnimation = () => {
+  const icons = document.querySelectorAll(".slideRightHint");
+  icons.forEach((icon) => {
+    icon.style.animation = "none";
+    setTimeout(() => {
+      icon.style.animation = "";
+    }, 10);
+  });
+};
 
 function validateAndSelectParticipant(participant) {
   if (!participant || participant.trim() === "") {
@@ -367,21 +434,17 @@ onMounted(async () => {
 </script>
 
 <style>
+h2,
+p {
+  color: var(--primary-text-color);
+  margin-bottom: 10px;
+}
+
 .event-details {
   margin: 20px;
   padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #f9f9f9;
 }
-.event-details h2 {
-  margin-bottom: 10px;
-  color: #333;
-}
-.event-details p {
-  margin-bottom: 5px;
-  color: #555;
-}
+
 .text-green {
   color: green;
 }
@@ -390,34 +453,6 @@ onMounted(async () => {
 }
 
 /* NEW */
-.appointment-option {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-}
-
-.participant-list {
-  display: flex;
-  justify-content: space-between;
-}
-
-.participant {
-  margin-right: 5px;
-  padding: 2px 5px;
-  border-radius: 5px;
-  font-size: 14px;
-}
-
-.participant-available {
-  background-color: #c8e6c9; /* Light green background */
-  color: #256029; /* Dark green text */
-}
-
-.participant-not-available {
-  background-color: #ffcdd2; /* Light red background */
-  color: #c63737; /* Dark red text */
-}
 
 /**
 * Custom input field
@@ -454,5 +489,63 @@ onMounted(async () => {
   background-color: var(--primary-bg-color);
   border-color: var(--primary-bg-color);
   color: var(--primary-text-color);
+}
+
+/**
+* Slider
+*/
+.q-slide-item {
+  border: 1px solid var(--secondary-bg-color); /* Match your theme */
+  border-radius: 20px; /* Rounded corners */
+  overflow: hidden; /* Ensure the background color fills the border radius */
+  margin-bottom: 5px;
+  background-color: var(--secondary-bg-color);
+}
+
+/**
+* Participant List/Card
+*/
+.appointment-option {
+  background-color: var(--secondary-bg-color);
+  border-radius: 20px;
+}
+
+.my-card {
+  border-radius: 20px;
+  max-width: 400px;
+  margin: auto;
+  display: contents;
+  padding: 0px;
+  background-color: var(--secondary-bg-color);
+}
+
+.q-avatar {
+  /* Anpassung der Größe und des Stils der Avatare */
+  font-size: 20px;
+  color: var(--primary-text-color);
+  background-color: var(--accent-color);
+}
+
+.q-item {
+  margin-bottom: 5px;
+}
+
+/**
+* Slide indicator (bounce animation)
+*/
+@keyframes slideRightHint {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.slide-right-hint {
+  animation: slideRightHint 2s ease-in-out infinite;
 }
 </style>
